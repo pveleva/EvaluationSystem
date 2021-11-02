@@ -10,7 +10,9 @@ namespace EvaluationSystem.Application.Profiles
         {
             CreateMap<Question, QuestionDto>();
             CreateMap<CreateQuestionDto, Question>();
+            CreateMap<CreateQuestionDto, QuestionDto>();
             CreateMap<UpdateQuestionDto, Question>();
+            CreateMap<UpdateQuestionDto, QuestionDto>();
         }
     }
 }

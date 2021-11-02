@@ -7,11 +7,10 @@ namespace EvaluationSystem.Application.Questions
 {
     public interface IQuestionRepository
     {
+        List<Question> GetAllQuestions();
         Question GetQuestionById(int questionId);
-        Answer GetQuestionAnswer(int questionId, int answerId);
         void AddQuestionToDatabase(Question question);
-        bool UpdateQuestion(Question question);
-        bool DeleteQuestion(int id);
-        string DeleteQuestionAnswer(int questionId, int answerId);
+        void UpdateQuestion(Question question);
+        void DeleteQuestion(int id);
     }
 }

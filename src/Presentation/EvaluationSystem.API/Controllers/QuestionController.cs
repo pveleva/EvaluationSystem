@@ -9,48 +9,45 @@ using System.Threading.Tasks;
 
 namespace EvaluationSystem.API.Controllers
 {
+    [Route("api/question")]
+    [ApiController]
     public class QuestionController : ControllerBase
     {
-        private IQuestionService service;
+        private IQuestionService _service;
         public QuestionController(IQuestionService service)
         {
-            this.service = service;
+            _service = service;
         }
 
-        [HttpGet("QuestionById")]
+        [HttpGet()]
+        public List<QuestionDto> GetAllQuestions()
+        {
+            return _service.GetAllQuestions();
+        }
+
+        [HttpGet("{questionId}")]
         public QuestionDto GetQuestionById(int id)
         {
-            return service.GetQuestionById(id);
+            return _service.GetQuestionById(id);
         }
 
-        [HttpGet("QuestionAnswer")]
-        public AnswerDto GetQuestionAnswer(int questionId, int answerId)
+        [HttpPut()]
+        public QuestionDto CreateQuestion(CreateQuestionDto questionDto)
         {
-            return service.GetQuestionAnswer(questionId, answerId);
+            return _service.CreateQuestion(questionDto);
         }
 
-        [HttpPut("CreateQuestion")]
-        public Question CreateQuestion(CreateQuestionDto questionDto)
+        [HttpPatch("{questionId}")]
+        public QuestionDto UpdateQuestion(UpdateQuestionDto questionDto)
         {
-            return service.CreateQuestion(questionDto);
+            return _service.UpdateQuestion(questionDto);
         }
 
-        [HttpPatch("UpdateQuestion")]
-        public string UpdateQuestion(UpdateQuestionDto questionDto)
+        [HttpDelete("{questionId}")]
+        public IActionResult DeleteQuestion(int id)
         {
-            return service.UpdateQuestion(questionDto);
-        }
-
-        [HttpDelete("DeleteQuestion")]
-        public string DeleteQuestion(int id)
-        {
-            return service.DeleteQuestion(id);
-        }
-
-        [HttpDelete("DeleteQuestionAnswer")]
-        public string DeleteQuestionAnswer(int questionId, int answerId)
-        {
-            return service.DeleteQuestionAnswer(questionId, answerId);
+            _service.DeleteQuestion(id);
+            return StatusCode(204);
         }
     }
 }

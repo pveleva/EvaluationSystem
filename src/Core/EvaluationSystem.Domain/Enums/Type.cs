@@ -6,9 +6,9 @@ namespace EvaluationSystem.Domain.Entities
 {
     public enum Type
     {
-        TextField,
-        RadioButton,
-        CheckBox,
-        Numeric
+        TextField = 1,
+        RadioButton = 2,
+        CheckBox = 3,
+        Numeric = 4
     }
 }

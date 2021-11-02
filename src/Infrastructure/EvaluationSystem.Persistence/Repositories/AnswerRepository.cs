@@ -13,7 +13,11 @@ namespace EvaluationSystem.Persistence.Repositories
 
         public Answer GetAnswerById(int questionId, int answerId)
         {
-            return data.answerData.Where(x => x.QuestionId == questionId).ToList().FirstOrDefault(x => x.Id == answerId);
+            return data.answerData.FirstOrDefault(a => a.QuestionId == questionId && a.Id == answerId);
+        }
+        public List<Answer> GetAllAnswers(int questionId)
+        {
+            return data.answerData.Where(a => a.QuestionId == questionId).ToList();
         }
 
         public void AddAnswerToDatabase(Answer answer)
@@ -21,26 +25,16 @@ namespace EvaluationSystem.Persistence.Repositories
             data.answerData.Add(answer);
         }
 
-        public bool UpdateAnswer(Answer answer)
+        public Answer UpdateAnswer(Answer answer)
         {
-            Answer answerToUpdate = data.answerData.FirstOrDefault(x => x.Id == answer.Id);
-            if (answerToUpdate != null)
-            {
-                answerToUpdate = answer;
-                return true;
-            }
-            return false;
+            Answer answerToUpdate = data.answerData.FirstOrDefault(a => a.Id == answer.Id);
+            return answerToUpdate = answer;
         }
 
-        public bool DeleteAnswer(int id)
+        public void DeleteAnswer(int questionId, int answerId)
         {
-            Answer answer = data.answerData.FirstOrDefault(x => x.Id == id);
-            if (answer != null)
-            {
-                data.answerData.Remove(answer);
-                return true;
-            }
-            return false;
+            Answer answer = data.answerData.FirstOrDefault(a => a.QuestionId == questionId && a.Id == answerId);
+            data.answerData.Remove(answer);
         }
     }
 }

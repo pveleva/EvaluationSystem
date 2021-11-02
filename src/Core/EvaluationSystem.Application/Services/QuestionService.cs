@@ -10,58 +10,48 @@ namespace EvaluationSystem.Application.Services
 {
     public class QuestionService : IQuestionService
     {
-        private IMapper mapper;
-        private IQuestionRepository repository;
+        private IMapper _mapper;
+        private IQuestionRepository _questionRepository;
 
         public QuestionService(IMapper mapper, IQuestionRepository repository)
         {
-            this.mapper = mapper;
-            this.repository = repository;
+            _mapper = mapper;
+            _questionRepository = repository;
         }
+        public List<QuestionDto> GetAllQuestions()
+        {
+            List<Question> questions = _questionRepository.GetAllQuestions();
 
+            List<QuestionDto> questionDtos = _mapper.Map<List<QuestionDto>>(questions);
+            return questionDtos;
+        }
         public QuestionDto GetQuestionById(int id)
         {
-            Question question = repository.GetQuestionById(id);
+            Question question = _questionRepository.GetQuestionById(id);
 
-            QuestionDto questionDto = mapper.Map<QuestionDto>(question);
+            QuestionDto questionDto = _mapper.Map<QuestionDto>(question);
             return questionDto;
         }
 
-        public AnswerDto GetQuestionAnswer(int questionId, int answerId)
+        public QuestionDto CreateQuestion(CreateQuestionDto questionDto)
         {
-            Answer answer = repository.GetQuestionAnswer(questionId, answerId);
-
-            AnswerDto answerDto = mapper.Map<AnswerDto>(answer);
-            return answerDto;
+            Question question = _mapper.Map<Question>(questionDto);
+            return _mapper.Map<QuestionDto>(questionDto);
         }
 
-        public Question CreateQuestion(CreateQuestionDto questionDto)
+        public QuestionDto UpdateQuestion(UpdateQuestionDto question)
         {
-            Question question = mapper.Map<Question>(questionDto);
-            return question;
-        }
-
-        public string UpdateQuestion(UpdateQuestionDto question)
-        {
-            Question questionToUpdate = mapper.Map<Question>(question);
-            if (repository.UpdateQuestion(questionToUpdate))
+            if (_questionRepository.GetQuestionById(question.Id) == null)
             {
-                return "Successfully updated!";
+                throw new Exception($"Question with {question.Id} does not exist!");
             }
-            return $"Question with id: {question.Id} does not exist!";
-        }
-        public string DeleteQuestion(int id)
-        {
-            if (repository.DeleteQuestion(id))
-            {
-                return "Question successfully deleted!";
-            }
-            return $"Question with id: {id} does not exist!";
-        }
 
-        public string DeleteQuestionAnswer(int questionId, int answerId)
+            Question questionToUpdate = _mapper.Map<Question>(question);
+            return _mapper.Map<QuestionDto>(question);
+        }
+        public void DeleteQuestion(int id)
         {
-            return repository.DeleteQuestionAnswer(questionId, answerId);
+            _questionRepository.DeleteQuestion(id);
         }
     }
 }

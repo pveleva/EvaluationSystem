@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EvaluationSystem.Application.Answers;
+using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -9,43 +10,69 @@ namespace EvaluationSystem.Application.Services
 {
     public class AnswerService : IAnswerService
     {
-        private IMapper mapper;
-        private IAnswerRepository repository;
-        public AnswerService(IMapper mapper, IAnswerRepository repository)
+        private readonly IMapper _mapper;
+        private readonly IAnswerRepository _answerRepository;
+        private readonly IQuestionRepository _questionRepository;
+        public AnswerService(IMapper mapper, IAnswerRepository answerRepository, IQuestionRepository questionRepository)
         {
-            this.mapper = mapper;
-            this.repository = repository;
+            _mapper = mapper;
+            _answerRepository = answerRepository;
+            _questionRepository = questionRepository;
+        }
+        public List<AnswerDto> GetAllAnswers(int questionId)
+        {
+            List<Answer> answer = _answerRepository.GetAllAnswers(questionId);
+
+            return _mapper.Map<List<AnswerDto>>(answer);
         }
         public AnswerDto GetAnswerById(int questionId, int answerId)
         {
-            Answer answer = repository.GetAnswerById(questionId, answerId);
+            Answer answer = _answerRepository.GetAnswerById(questionId, answerId);
 
-            AnswerDto answerDto = mapper.Map<AnswerDto>(answer);
-            return answerDto;
+            return _mapper.Map<AnswerDto>(answer);
         }
-        public Answer CreateAnswer(CreateAnswerDto answerDto)
+        public AnswerDto CreateAnswer(CreateAnswerDto answerDto)
         {
-            Answer answer = mapper.Map<Answer>(answerDto);
-            return answer;
-        }
-
-        public string UpdateAnswer(UpdateAnswerDto answer)
-        {
-            Answer answerToUpdate = mapper.Map<Answer>(answer);
-            if (repository.UpdateAnswer(answerToUpdate))
+            if (_questionRepository.GetQuestionById(answerDto.QuestionId) == null)
             {
-                return "Successfully updated!";
+                throw new Exception($"Question with {answerDto.QuestionId} does not exist!");
             }
-            return $"Answer with id: {answer.Id} does not exist!";
+
+            Answer answer = _mapper.Map<Answer>(answerDto);
+            _answerRepository.AddAnswerToDatabase(answer);
+            return _mapper.Map<AnswerDto>(answerDto);
         }
 
-        public string DeleteAnswer(int id)
+        public AnswerDto UpdateAnswer(UpdateAnswerDto answer)
         {
-            if (repository.DeleteAnswer(id))
+            Question question = _questionRepository.GetQuestionById(answer.QuestionId);
+
+            if (question == null)
             {
-                return "Successfully deleted!";
+                throw new Exception($"Question with {answer.QuestionId} does not exist!");
+
+                if (_answerRepository.GetAnswerById(answer.QuestionId, answer.Id) == null)
+                {
+                    throw new Exception($"Answer with {answer.Id} does not exist!");
+                }
             }
-            return $"Answer with id: {id} does not exist!";
+
+            //if (question.Type!=answer)
+            //{
+                    //TODO: 
+            //}
+
+            Answer answerToUpdate = _mapper.Map<Answer>(answer); //това никъде не се използва? нещо май не е, както трябва?
+            return _mapper.Map<AnswerDto>(answer);
+        }
+
+        public void DeleteAnswer(int questionId, int answerId)
+        {
+            if (_questionRepository.GetQuestionById(questionId) == null)
+            {
+                throw new Exception($"Question with {questionId} does not exist!");
+            }
+            _answerRepository.DeleteAnswer(questionId, answerId);
         }
     }
 }

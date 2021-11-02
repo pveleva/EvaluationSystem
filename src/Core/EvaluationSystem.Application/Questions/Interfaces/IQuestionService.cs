@@ -8,11 +8,10 @@ namespace EvaluationSystem.Application.Questions
 {
     public interface IQuestionService
     {
+        List<QuestionDto> GetAllQuestions();
         QuestionDto GetQuestionById(int id);
-        AnswerDto GetQuestionAnswer(int questionId, int answerId);
-        Question CreateQuestion(CreateQuestionDto question);
-        string UpdateQuestion(UpdateQuestionDto questionDto);
-        string DeleteQuestion(int id);
-        string DeleteQuestionAnswer(int questionId, int answerId);
+        QuestionDto CreateQuestion(CreateQuestionDto question);
+        QuestionDto UpdateQuestion(UpdateQuestionDto questionDto);
+        void DeleteQuestion(int id);
     }
 }

@@ -5,36 +5,45 @@ using System.Collections.Generic;
 
 namespace EvaluationSystem.API.Controllers
 {
+    [Route("api/question/{questionId}/answer")]
+    [ApiController]
     public class AnswerController : ControllerBase
     {
-        private IAnswerService service;
+        private IAnswerService _service;
         public AnswerController(IAnswerService service)
         {
-            this.service = service;
+            _service = service;
         }
 
-        [HttpGet("AnswerById")]
+        [HttpGet()]
+        public List<AnswerDto> GetAllAnswer(int questionId)
+        {
+            return _service.GetAllAnswers(questionId);
+        }
+
+        [HttpGet("{answerId}")]
         public AnswerDto GetAnswerById(int questionId, int answerId)
         {
-            return service.GetAnswerById(questionId, answerId);
+            return _service.GetAnswerById(questionId, answerId);
         }
 
-        [HttpPut("CreateAnswer")]
-        public Answer CreateAnswer(CreateAnswerDto answerDto)
+        [HttpPut()]
+        public AnswerDto CreateAnswer(CreateAnswerDto answerDto)
         {
-            return service.CreateAnswer(answerDto);
+            return _service.CreateAnswer(answerDto);
         }
 
-        [HttpPatch("UpdateAnswer")]
-        public string UpdateAnswer(UpdateAnswerDto answerDto)
+        [HttpPatch("{answerId}")]
+        public AnswerDto UpdateAnswer(UpdateAnswerDto answerDto)
         {
-            return service.UpdateAnswer(answerDto);
+            return _service.UpdateAnswer(answerDto);
         }
 
-        [HttpDelete("DeleteAnswer")]
-        public string DeleteAnswer(int id)
+        [HttpDelete("{answerId}")]
+        public IActionResult DeleteAnswer(int questionId, int answerId)
         {
-            return service.DeleteAnswer(id);
+            _service.DeleteAnswer(questionId, answerId);
+            return StatusCode(204);
         }
     }
 }

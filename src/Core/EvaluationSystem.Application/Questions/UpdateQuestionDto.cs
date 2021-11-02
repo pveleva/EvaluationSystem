@@ -10,7 +10,5 @@ namespace EvaluationSystem.Application.Questions
         public int Id { get; set; }
         public string Content { get; set; }
         public Domain.Entities.Type Type { get; set; }
-
-        public ICollection<Answer> Answers = new HashSet<Answer>();
     }
 }

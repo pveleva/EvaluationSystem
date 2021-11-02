@@ -5,9 +5,10 @@ namespace EvaluationSystem.Application.Answers
 {
     public interface IAnswerService
     {
+        List<AnswerDto> GetAllAnswers(int questionId);
         AnswerDto GetAnswerById(int questionId, int answerId);
-        Answer CreateAnswer(CreateAnswerDto answer);
-        string UpdateAnswer(UpdateAnswerDto answer);
-        string DeleteAnswer(int id);
+        AnswerDto CreateAnswer(CreateAnswerDto answer);
+        AnswerDto UpdateAnswer(UpdateAnswerDto answer);
+        void DeleteAnswer(int questionId, int answerId);
     }
 }

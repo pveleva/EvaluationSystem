@@ -42,6 +42,7 @@ namespace EvaluationSystem.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EvaluationSystem.API", Version = "v1" });
+                c.DescribeAllEnumsAsStrings();  //?
             });
         }
 
