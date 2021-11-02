@@ -1,5 +1,6 @@
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Profiles;
+using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Services;
 using EvaluationSystem.Persistence.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -32,6 +33,9 @@ namespace EvaluationSystem.API
         {
             services.AddScoped<IAnswerService, AnswerService>();
             services.AddScoped<IAnswerRepository, AnswerRepository>();
+
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IQuestionRepository, QuestionRepository>();
 
             services.AddAutoMapper(typeof(AnswerProfile).Assembly);
             services.AddControllers();

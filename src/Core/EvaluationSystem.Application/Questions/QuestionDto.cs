@@ -1,4 +1,5 @@
-﻿using EvaluationSystem.Domain.Entities;
+﻿using EvaluationSystem.Application.Answers;
+using EvaluationSystem.Domain.Entities;
 using System.Collections.Generic;
 
 namespace EvaluationSystem.Application.Questions
@@ -7,6 +8,6 @@ namespace EvaluationSystem.Application.Questions
     {
         public string Content { get; set; }
         public Domain.Entities.Type Type { get; set; }
-        public ICollection<Answer> IAnswers { get; private set; }
+        public List<AnswerDto> Answers { get; set; }
     }
 }

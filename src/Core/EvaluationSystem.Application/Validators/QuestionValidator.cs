@@ -10,7 +10,7 @@ namespace EvaluationSystem.Application.Validators
         {
             RuleFor(question => question.Type).NotEmpty().NotNull().IsInEnum().WithMessage("Question type is not valid!");
 
-            RuleFor(question => question.IAnswers.Count).GreaterThan(0);
+            RuleFor(question => question.Answers.Count).GreaterThan(0);
         }
     }
 }

@@ -9,10 +9,15 @@ namespace EvaluationSystem.Persistence
     {
         public List<Question> questionData = new List<Question>
         {
-            new Question{Id = 1, Content= "Title 1" , Type = Domain.Entities.Type.CheckBox, Answers = new List<Answer>()},
-            new Question{Id = 2, Content= "Title 2" , Type = Domain.Entities.Type.Numeric, Answers = new List<Answer>()},
-            new Question{Id = 3, Content= "Title 3" ,Type = Domain.Entities.Type.RadioButton,  Answers = new List<Answer>()},
-            new Question{Id = 4, Content= "Title 4" , Type = Domain.Entities.Type.TextField, Answers = new List<Answer>()},
+            new Question{Id = 1, Content= "Question 1" , Type = Domain.Entities.Type.CheckBox, Answers = new List<Answer>()},
+            new Question{Id = 2, Content= "Question 2" , Type = Domain.Entities.Type.Numeric, Answers = new List<Answer>()},
+            new Question{Id = 3, Content= "Question 3" ,Type = Domain.Entities.Type.RadioButton,
+                Answers = new List<Answer>
+                {
+                    new Answer{Id = 1, Content = "Answer 1" , QuestionId = 1},
+                    new Answer{Id = 2, Content = "Answer 2" , QuestionId = 1}
+                } },
+            new Question{Id = 4, Content= "Question 4" , Type = Domain.Entities.Type.TextField, Answers = new List<Answer>()},
         };
 
         public List<Answer> answerData = new List<Answer>

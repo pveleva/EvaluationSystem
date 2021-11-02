@@ -16,7 +16,6 @@ namespace EvaluationSystem.Persistence.Repositories
             return data.answerData.Where(x => x.QuestionId == questionId).ToList().FirstOrDefault(x => x.Id == answerId);
         }
 
-
         public void AddAnswerToDatabase(Answer answer)
         {
             data.answerData.Add(answer);

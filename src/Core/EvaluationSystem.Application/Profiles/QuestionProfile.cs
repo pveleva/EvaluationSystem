@@ -9,6 +9,8 @@ namespace EvaluationSystem.Application.Profiles
         public QuestionProfile()
         {
             CreateMap<Question, QuestionDto>();
+            CreateMap<CreateQuestionDto, Question>();
+            CreateMap<UpdateQuestionDto, Question>();
         }
     }
 }
