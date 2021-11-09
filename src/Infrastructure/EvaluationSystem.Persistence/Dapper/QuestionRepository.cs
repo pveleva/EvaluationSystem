@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Questions.Dapper;
 using EvaluationSystem.Domain.Entities;
 using Microsoft.Extensions.Configuration;
@@ -16,26 +17,25 @@ namespace EvaluationSystem.Persistence.Dapper
             _configuration = configuration;
         }
         public IDbConnection Connection => new SqlConnection(_configuration.GetConnectionString("EvaluationSystemDBConnection"));
-        public List<Question> GetAllQuestions()
+        public List<GetQuestionsDto> GetAllQuestions()
         {
             using (IDbConnection dbConnection = Connection)
             {
-                string query = @"SELECT q.Id AS IdQuestion, q.[Name], a.AnswerText FROM AnswerTemplate AS a
-                                 RIGHT JOIN QuestionTemplate AS q ON q.Id = a.IdQuestion
-                                 GROUP BY q.Id, q.[Name], a.AnswerText
-                                 ORDER BY q.Id";
-                return dbConnection.Query<Question>(query).AsList();
+                string query = @"SELECT q.Id AS IdQuestion, q.[Name], a.Id AS IdAnswer, a.AnswerText FROM AnswerTemplate AS a
+                                     RIGHT JOIN QuestionTemplate AS q ON q.Id = a.IdQuestion
+                                     ORDER BY q.Id, a.Id";
+                return dbConnection.Query<GetQuestionsDto>(query).AsList();
             }
         }
 
-        public List<Question> GetQuestionById(int questionId)
+        public List<GetQuestionsDto> GetQuestionById(int questionId)
         {
             using (IDbConnection dbConnection = Connection)
             {
-                string query = @"SELECT q.[Name], a.AnswerText FROM AnswerTemplate AS a
+                string query = @"SELECT q.Id AS IdQuestion, q.[Name], a.Id AS IdAnswer, a.AnswerText FROM AnswerTemplate AS a
                                  RIGHT JOIN QuestionTemplate AS q ON q.Id = a.IdQuestion
                                  WHERE q.Id = @Id";
-                return dbConnection.Query<Question>(query, new { Id = questionId }).AsList();
+                return dbConnection.Query<GetQuestionsDto>(query, new { Id = questionId }).AsList();
             }
         }
 

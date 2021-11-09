@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Questions.Dapper;
@@ -22,38 +23,54 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public List<QuestionDto> GetAllQuestions()
         {
-            List<Question> questions = _questionRepository.GetAllQuestions();
+            List<GetQuestionsDto> questionsRepo = _questionRepository.GetAllQuestions();
 
-            List<GetQuestionsDto> questionsDto = _mapper.Map<List<GetQuestionsDto>>(questions);
-
-            List<QuestionDto> result = questionsDto.GroupBy(x => x.Name)
+            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion })
                 .Select(q => new QuestionDto()
                 {
-                    Name = q.Key,
-                    AnswerText = questions
-                .Where(y => y.Name == q.Key)
-                .Select(y => y.AnswerText).ToList()
+                    IdQuestion = q.Key.IdQuestion,
+                    Name = q.Key.Name,
+                    AnswerText = new List<AnswerDto>()
                 }).ToList();
 
-            return result;
+            List<AnswerDto> answers = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
+                .Select(q => new AnswerDto()
+                {
+                    IdQuestion = q.Key.IdQuestion,
+                    IdAnswer = q.Key.IdAnswer,
+                    AnswerText = q.Key.AnswerText
+                }).ToList();
+
+            foreach (var question in questions)
+            {
+                question.AnswerText = answers.Where(a => a.IdQuestion == question.IdQuestion);
+            }
+
+            return questions;
         }
 
         public QuestionDto GetQuestionById(int id)
         {
-            List<Question> questions = _questionRepository.GetQuestionById(id);
+            List<GetQuestionsDto> questionRepo = _questionRepository.GetQuestionById(id);
 
-            List<GetQuestionsDto> questionsDto = _mapper.Map<List<GetQuestionsDto>>(questions);
-
-            QuestionDto result = questionsDto.GroupBy(q => q.Name)
+            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion })
                 .Select(q => new QuestionDto()
                 {
-                    Name = q.Key,
-                    AnswerText = q
-                .Where(y => y.Name == q.Key)
-                .Select(y => y.AnswerText).ToList()
-                }).FirstOrDefault();
+                    IdQuestion = q.Key.IdQuestion,
+                    Name = q.Key.Name,
+                    AnswerText = new List<AnswerDto>()
+                }).ToList();
 
-            return result;
+            List<AnswerDto> answers = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
+                .Select(q => new AnswerDto()
+                {
+                    IdQuestion = q.Key.IdQuestion,
+                    IdAnswer = q.Key.IdAnswer,
+                    AnswerText = q.Key.AnswerText
+                }).ToList();
+
+            question.FirstOrDefault().AnswerText = answers;
+            return question.FirstOrDefault();
         }
 
         public QuestionDto CreateQuestion(CreateQuestionDto questionDto)

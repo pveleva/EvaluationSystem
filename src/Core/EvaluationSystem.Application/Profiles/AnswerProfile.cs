@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using EvaluationSystem.Application.Answers;
+using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Domain.Entities;
 
 namespace EvaluationSystem.Application.Profiles
@@ -11,6 +12,7 @@ namespace EvaluationSystem.Application.Profiles
             CreateMap<Answer, AnswerDto>();
             CreateMap<CreateUpdateAnswerDto, Answer>();
             CreateMap<CreateUpdateAnswerDto, AnswerDto>();
+            CreateMap<GetQuestionsDto, AnswerDto>();
         }
     }
 }

@@ -7,12 +7,12 @@ namespace EvaluationSystem.Application.Validators
     {
         public AnswerValidator()
         {
-            RuleFor(answer => answer.AnswerText)
-                .NotEmpty()
-                .NotNull()
-                .MinimumLength(5)
-                .MaximumLength(255)
-                .WithMessage("Answer could not be empty or null!"); //може ли да имаме празно текстово поле?
+            //RuleFor(answer => answer.AnswerText)
+            //    .NotEmpty()
+            //    .NotNull()
+            //    .MinimumLength(5)
+            //    .MaximumLength(255)
+            //    .WithMessage("Answer could not be empty or null!"); //може ли да имаме празно текстово поле?
         }
     }
 }
