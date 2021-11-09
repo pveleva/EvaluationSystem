@@ -1,5 +1,5 @@
 ﻿using EvaluationSystem.Application.Answers;
-using EvaluationSystem.Domain.Entities;
+using EvaluationSystem.Application.Answers.Dapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -16,7 +16,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpGet()]
-        public List<AnswerDto> GetAllAnswer(int questionId)
+        public IEnumerable<AnswerDto> GetAllAnswer(int questionId)
         {
             return _service.GetAllAnswers(questionId);
         }
@@ -27,16 +27,16 @@ namespace EvaluationSystem.API.Controllers
             return _service.GetAnswerById(questionId, answerId);
         }
 
-        [HttpPut()]
-        public AnswerDto CreateAnswer(CreateAnswerDto answerDto)
+        [HttpPost()]
+        public AnswerDto CreateAnswer(int questionId, [FromBody] CreateUpdateAnswerDto answerDto)
         {
-            return _service.CreateAnswer(answerDto);
+            return _service.CreateAnswer(questionId, answerDto);
         }
 
-        [HttpPatch("{answerId}")]
-        public AnswerDto UpdateAnswer(UpdateAnswerDto answerDto)
+        [HttpPut("{answerId}")]
+        public AnswerDto UpdateAnswer(int questionId, int answerId, [FromBody] CreateUpdateAnswerDto answerDto)
         {
-            return _service.UpdateAnswer(answerDto);
+            return _service.UpdateAnswer(questionId, answerId, answerDto);
         }
 
         [HttpDelete("{answerId}")]

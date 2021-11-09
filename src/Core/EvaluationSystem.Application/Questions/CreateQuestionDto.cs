@@ -1,18 +1,15 @@
-﻿using EvaluationSystem.Domain.Entities;
-using System;
+﻿using EvaluationSystem.Application.Answers;
 using System.Collections.Generic;
-using System.Text;
+using Type = EvaluationSystem.Domain.Entities.Type;
 
 namespace EvaluationSystem.Application.Questions
 {
     public class CreateQuestionDto
     {
-        public CreateQuestionDto()
-        {
-        }
-        public string Content { get; set; }
-        public Domain.Entities.Type Type { get; set; }
+        public string Name { get; set; }
+        public Type Type { get; set; }
+        public byte IsReusable { get; set; }
 
-        public ICollection<Answer> Answers = new HashSet<Answer>();
+        public ICollection<CreateUpdateAnswerDto> Answers { get; set; }
     }
 }

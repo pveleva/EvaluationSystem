@@ -1,14 +1,11 @@
-﻿using EvaluationSystem.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Type = EvaluationSystem.Domain.Entities.Type;
 
 namespace EvaluationSystem.Application.Questions
 {
     public class UpdateQuestionDto
     {
-        public int Id { get; set; }
-        public string Content { get; set; }
-        public Domain.Entities.Type Type { get; set; }
+        public string Name { get; set; }
+        public Type Type { get; set; }
+        public byte IsReusable { get; set; }
     }
 }

@@ -13,6 +13,8 @@ namespace EvaluationSystem.Application.Profiles
             CreateMap<CreateQuestionDto, QuestionDto>();
             CreateMap<UpdateQuestionDto, Question>();
             CreateMap<UpdateQuestionDto, QuestionDto>();
+            CreateMap<GetQuestionsDto, QuestionDto>();
+            CreateMap<Question, GetQuestionsDto>();
         }
     }
 }

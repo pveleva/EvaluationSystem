@@ -1,10 +1,9 @@
 ﻿using EvaluationSystem.Application.Questions;
-using EvaluationSystem.Domain.Entities;
 using FluentValidation;
 
 namespace EvaluationSystem.Application.Validators
 {
-    public class QuestionValidator : AbstractValidator<QuestionDto>
+    public class QuestionValidator : AbstractValidator<CreateQuestionDto>
     {
         public QuestionValidator()
         {

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EvaluationSystem.Application.Questions
+﻿namespace EvaluationSystem.Application.Questions
 {
     public class DeleteQuestionDto
     {

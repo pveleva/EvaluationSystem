@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EvaluationSystem.Domain.Entities
+﻿namespace EvaluationSystem.Domain.Entities
 {
     class Modules
     {

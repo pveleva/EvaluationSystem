@@ -1,21 +1,14 @@
-using EvaluationSystem.Application.Answers;
+using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Profiles;
-using EvaluationSystem.Application.Questions;
-using EvaluationSystem.Application.Services;
-using EvaluationSystem.Persistence.Repositories;
+using EvaluationSystem.Application.Questions.Dapper;
+using EvaluationSystem.Application.Services.Dapper;
+using EvaluationSystem.Persistence.Dapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EvaluationSystem.API
 {

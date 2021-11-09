@@ -7,7 +7,7 @@ namespace EvaluationSystem.Application.Validators
     {
         public AnswerValidator()
         {
-            RuleFor(answer => answer.Content)
+            RuleFor(answer => answer.AnswerText)
                 .NotEmpty()
                 .NotNull()
                 .MinimumLength(5)
