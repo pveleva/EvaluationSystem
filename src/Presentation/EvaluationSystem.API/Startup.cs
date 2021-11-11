@@ -1,8 +1,11 @@
+using EvaluationSystem.Application;
 using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Profiles;
 using EvaluationSystem.Application.Questions.Dapper;
 using EvaluationSystem.Application.Services.Dapper;
+using EvaluationSystem.Persistence;
 using EvaluationSystem.Persistence.Dapper;
+using EvaluationSystem.Persistence.Migrations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,13 +27,9 @@ namespace EvaluationSystem.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IAnswerService, AnswerService>();
-            services.AddScoped<IAnswerRepository, AnswerRepository>();
+            services.AddApplication();
+            services.AddPersistence(Configuration);
 
-            services.AddScoped<IQuestionService, QuestionService>();
-            services.AddScoped<IQuestionRepository, QuestionRepository>();
-
-            services.AddAutoMapper(typeof(AnswerProfile).Assembly);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -48,6 +47,11 @@ namespace EvaluationSystem.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "EvaluationSystem.API v1"));
             }
+
+            CreateDatabase
+                .EnsureDatabase("Data Source=INTERN06-PC\\SQLEXPRESS;Initial Catalog=master; Integrated Security=True; MultipleActiveResultSets=True;", "EvaluationSystemDB");
+
+            app.UpdateDatabase();
 
             app.UseHttpsRedirection();
 

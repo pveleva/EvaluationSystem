@@ -9,14 +9,10 @@ using System.Data.SqlClient;
 
 namespace EvaluationSystem.Persistence.Dapper
 {
-    public class QuestionRepository : IQuestionRepository
+    public class QuestionRepository : DbConfigConnection, IQuestionRepository
     {
-        protected readonly IConfiguration _configuration;
         public QuestionRepository(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-        public IDbConnection Connection => new SqlConnection(_configuration.GetConnectionString("EvaluationSystemDBConnection"));
+            : base(configuration) { }
         public List<GetQuestionsDto> GetAllQuestions()
         {
             using (IDbConnection dbConnection = Connection)

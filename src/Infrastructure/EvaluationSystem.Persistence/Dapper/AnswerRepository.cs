@@ -8,15 +8,10 @@ using System.Data.SqlClient;
 
 namespace EvaluationSystem.Persistence.Dapper
 {
-    public class AnswerRepository : IAnswerRepository
+    public class AnswerRepository : DbConfigConnection, IAnswerRepository
     {
-        protected readonly IConfiguration _configuration;
         public AnswerRepository(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
-        public IDbConnection Connection => new SqlConnection(_configuration.GetConnectionString("EvaluationSystemDBConnection"));
+            : base(configuration) { }
 
         public void AddAnswerToDatabase(Answer answer)
         {
