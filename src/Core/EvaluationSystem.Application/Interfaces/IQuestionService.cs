@@ -7,7 +7,7 @@ namespace EvaluationSystem.Application.Questions.Dapper
 {
     public interface IQuestionService
     {
-        List<QuestionDto> GetAllQuestions();
+        List<QuestionDto> GetAll();
         QuestionDto GetQuestionById(int id);
         QuestionDto CreateQuestion(CreateQuestionDto question);
         QuestionDto UpdateQuestion(int id, UpdateQuestionDto questionDto);

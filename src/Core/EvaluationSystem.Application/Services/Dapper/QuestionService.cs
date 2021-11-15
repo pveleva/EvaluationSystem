@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Answers.Dapper;
+using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Questions.Dapper;
 using EvaluationSystem.Domain.Entities;
@@ -14,93 +15,119 @@ namespace EvaluationSystem.Application.Services.Dapper
         private IMapper _mapper;
         private IQuestionRepository _questionRepository;
         private IAnswerRepository _answerRepository;
-        public QuestionService(IMapper mapper, IQuestionRepository questionRepository, IAnswerRepository answerRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public QuestionService(IMapper mapper, IQuestionRepository questionRepository, IAnswerRepository answerRepository, IUnitOfWork unitOfWork)
         {
             _mapper = mapper;
             _questionRepository = questionRepository;
             _answerRepository = answerRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public List<QuestionDto> GetAllQuestions()
+        public List<QuestionDto> GetAll()
         {
-            List<GetQuestionsDto> questionsRepo = _questionRepository.GetAllQuestions();
-
-            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion })
-                .Select(q => new QuestionDto()
-                {
-                    IdQuestion = q.Key.IdQuestion,
-                    Name = q.Key.Name,
-                    AnswerText = new List<AnswerDto>()
-                }).ToList();
-
-            List<AnswerDto> answers = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
-                .Select(q => new AnswerDto()
-                {
-                    IdQuestion = q.Key.IdQuestion,
-                    IdAnswer = q.Key.IdAnswer,
-                    AnswerText = q.Key.AnswerText
-                }).ToList();
-
-            foreach (var question in questions)
+            using (_unitOfWork)
             {
-                question.AnswerText = answers.Where(a => a.IdQuestion == question.IdQuestion);
-            }
+                List<GetQuestionsDto> questionsRepo = _questionRepository.GetAll();
 
-            return questions;
+                List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion })
+                    .Select(q => new QuestionDto()
+                    {
+                        IdQuestion = q.Key.IdQuestion,
+                        Name = q.Key.Name,
+                        AnswerText = new List<AnswerDto>()
+                    }).ToList();
+
+                List<AnswerDto> answers = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
+                    .Select(q => new AnswerDto()
+                    {
+                        IdQuestion = q.Key.IdQuestion,
+                        Id = q.Key.IdAnswer,
+                        AnswerText = q.Key.AnswerText
+                    }).ToList();
+
+                foreach (var question in questions)
+                {
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.IdQuestion);
+                }
+
+                _unitOfWork.Commit();
+                return questions;
+            }
         }
 
         public QuestionDto GetQuestionById(int id)
         {
-            List<GetQuestionsDto> questionRepo = _questionRepository.GetQuestionById(id);
+            using (_unitOfWork)
+            {
+                List<GetQuestionsDto> questionRepo = _questionRepository.GetByIDFromRepo(id);
 
-            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion })
-                .Select(q => new QuestionDto()
-                {
-                    IdQuestion = q.Key.IdQuestion,
-                    Name = q.Key.Name,
-                    AnswerText = new List<AnswerDto>()
-                }).ToList();
+                List<QuestionDto> question = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion })
+                    .Select(q => new QuestionDto()
+                    {
+                        IdQuestion = q.Key.IdQuestion,
+                        Name = q.Key.Name,
+                        AnswerText = new List<AnswerDto>()
+                    }).ToList();
 
-            List<AnswerDto> answers = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
-                .Select(q => new AnswerDto()
-                {
-                    IdQuestion = q.Key.IdQuestion,
-                    IdAnswer = q.Key.IdAnswer,
-                    AnswerText = q.Key.AnswerText
-                }).ToList();
+                List<AnswerDto> answers = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
+                    .Select(q => new AnswerDto()
+                    {
+                        IdQuestion = q.Key.IdQuestion,
+                        Id = q.Key.IdAnswer,
+                        AnswerText = q.Key.AnswerText
+                    }).ToList();
 
-            question.FirstOrDefault().AnswerText = answers;
-            return question.FirstOrDefault();
+                question.FirstOrDefault().AnswerText = answers;
+
+                _unitOfWork.Commit();
+                return question.FirstOrDefault();
+            }
         }
 
         public QuestionDto CreateQuestion(CreateQuestionDto questionDto)
         {
-            Question question = _mapper.Map<Question>(questionDto);
-            int questionId = _questionRepository.AddQuestionToDatabase(question);
-
-            ICollection<Answer> answers = _mapper.Map<ICollection<Answer>>(questionDto.Answers);
-
-            foreach (var answer in answers)
+            using (_unitOfWork)
             {
-                answer.IdQuestion = questionId;
-                _answerRepository.AddAnswerToDatabase(answer);
-            }
+                QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
+                int questionId = (int)_questionRepository.Create(question);
 
-            return GetQuestionById(questionId);
+                ICollection<AnswerTemplate> answers = _mapper.Map<ICollection<AnswerTemplate>>(questionDto.Answers);
+
+                foreach (var answer in answers)
+                {
+                    answer.IdQuestion = questionId;
+                    _answerRepository.Create(answer);
+                }
+
+                _unitOfWork.Commit();
+                return GetQuestionById(questionId);
+            }
         }
 
         public QuestionDto UpdateQuestion(int id, UpdateQuestionDto questionDto)
         {
-            Question questionToUpdate = _mapper.Map<Question>(questionDto);
-            questionToUpdate.Id = id;
-            _questionRepository.UpdateQuestion(questionToUpdate);
+            using (_unitOfWork)
+            {
+                QuestionTemplate questionToUpdate = _questionRepository.GetByID(id);
 
-            return GetQuestionById(id);
+                _mapper.Map(questionDto, questionToUpdate);
+
+                questionToUpdate.Id = id;
+                _questionRepository.Update(questionToUpdate);
+
+                _unitOfWork.Commit();
+                return GetQuestionById(id);
+            }
         }
 
         public void DeleteQuestion(int id)
         {
-            _questionRepository.DeleteQuestion(id);
+            using (_unitOfWork)
+            {
+                _questionRepository.DeleteFromRepo(id);
+                _unitOfWork.Commit();
+            }
         }
     }
 }

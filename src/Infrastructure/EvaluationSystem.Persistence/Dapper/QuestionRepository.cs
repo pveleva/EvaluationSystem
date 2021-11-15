@@ -5,15 +5,16 @@ using EvaluationSystem.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 
 namespace EvaluationSystem.Persistence.Dapper
 {
-    public class QuestionRepository : DbConfigConnection, IQuestionRepository
+    public class QuestionRepository : BaseRepository<QuestionTemplate>, IQuestionRepository
     {
         public QuestionRepository(IConfiguration configuration)
-            : base(configuration) { }
-        public List<GetQuestionsDto> GetAllQuestions()
+            : base(configuration)
+        {
+        }
+        public List<GetQuestionsDto> GetAll()
         {
             using (IDbConnection dbConnection = Connection)
             {
@@ -24,7 +25,7 @@ namespace EvaluationSystem.Persistence.Dapper
             }
         }
 
-        public List<GetQuestionsDto> GetQuestionById(int questionId)
+        public List<GetQuestionsDto> GetByIDFromRepo(int questionId)
         {
             using (IDbConnection dbConnection = Connection)
             {
@@ -35,35 +36,14 @@ namespace EvaluationSystem.Persistence.Dapper
             }
         }
 
-        public int AddQuestionToDatabase(Question question)
-        {
-            using (IDbConnection dbConnection = Connection)
-            {
-                string query = @"INSERT INTO QuestionTemplate ([Name], [Type], IsReusable) OUTPUT inserted.Id VALUES (@Name, @Type, @IsReusable)";
-                var index = dbConnection.QuerySingle<int>(query, question);
-                return index;
-            }
-        }
-
-        public void UpdateQuestion(Question question)
-        {
-            using (IDbConnection dbConnection = Connection)
-            {
-                string query = @"UPDATE QuestionTemplate SET [Name] = @Name, [Type] = @Type, IsReusable = @IsReusable
-                                      WHERE Id = @Id";
-                dbConnection.Execute(query, question);
-            }
-        }
-
-        public void DeleteQuestion(int id)
+        public void DeleteFromRepo(int id)
         {
             using (IDbConnection dbConnection = Connection)
             {
                 string deleteAnswers = @"DELETE FROM AnswerTemplate WHERE IdQuestion = @Id";
                 dbConnection.Execute(deleteAnswers, new { Id = id });
 
-                string deleteQuestion = @"DELETE FROM QuestionTemplate WHERE Id = @Id";
-                dbConnection.Execute(deleteQuestion, new { Id = id });
+                dbConnection.Delete<QuestionTemplate>(id);
             }
         }
     }

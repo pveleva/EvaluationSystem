@@ -1,10 +1,6 @@
-﻿using EvaluationSystem.Persistence.Migrations;
-using FluentMigrator.Runner;
+﻿using FluentMigrator.Runner;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace EvaluationSystem.Persistence
 {

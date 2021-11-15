@@ -1,10 +1,5 @@
 using EvaluationSystem.Application;
-using EvaluationSystem.Application.Answers.Dapper;
-using EvaluationSystem.Application.Profiles;
-using EvaluationSystem.Application.Questions.Dapper;
-using EvaluationSystem.Application.Services.Dapper;
 using EvaluationSystem.Persistence;
-using EvaluationSystem.Persistence.Dapper;
 using EvaluationSystem.Persistence.Migrations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -49,7 +44,7 @@ namespace EvaluationSystem.API
             }
 
             CreateDatabase
-                .EnsureDatabase("Data Source=INTERN06-PC\\SQLEXPRESS;Initial Catalog=master; Integrated Security=True; MultipleActiveResultSets=True;", "EvaluationSystemDB");
+                .EnsureDatabase(Configuration);
 
             app.UpdateDatabase();
 

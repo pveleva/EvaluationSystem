@@ -18,7 +18,7 @@ namespace EvaluationSystem.API.Controllers
         [HttpGet()]
         public List<QuestionDto> GetAllQuestions()
         {
-            return _service.GetAllQuestions();
+            return _service.GetAll();
         }
 
         [HttpGet("{questionId}")]

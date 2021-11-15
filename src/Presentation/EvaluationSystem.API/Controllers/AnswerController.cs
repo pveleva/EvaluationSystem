@@ -18,17 +18,17 @@ namespace EvaluationSystem.API.Controllers
         [HttpGet()]
         public IEnumerable<AnswerDto> GetAllAnswer(int questionId)
         {
-            return _service.GetAllAnswers(questionId);
+            return _service.GetAll(questionId);
         }
 
         [HttpGet("{answerId}")]
-        public AnswerDto GetAnswerById(int questionId, int answerId)
+        public AnswerDto GetById(int questionId, int answerId)
         {
-            return _service.GetAnswerById(questionId, answerId);
+            return _service.GetById(questionId, answerId);
         }
 
         [HttpPost()]
-        public AnswerDto CreateAnswer(int questionId, [FromBody] CreateUpdateAnswerDto answerDto)
+        public AnswerDto CreateAnswer([FromRoute] int questionId, [FromBody] CreateUpdateAnswerDto answerDto)
         {
             return _service.CreateAnswer(questionId, answerDto);
         }
@@ -40,9 +40,9 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpDelete("{answerId}")]
-        public IActionResult DeleteAnswer(int questionId, int answerId)
+        public IActionResult DeleteAnswer(int answerId)
         {
-            _service.DeleteAnswer(questionId, answerId);
+            _service.DeleteAnswer(answerId);
             return StatusCode(204);
         }
     }
