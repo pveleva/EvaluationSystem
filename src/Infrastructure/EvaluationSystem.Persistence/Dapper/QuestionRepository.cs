@@ -1,10 +1,10 @@
 ﻿using Dapper;
-using EvaluationSystem.Application.Questions;
-using EvaluationSystem.Application.Questions.Dapper;
+using System.Data;
+using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Data;
+using EvaluationSystem.Application.Questions;
+using EvaluationSystem.Application.Interfaces.IQuestion;
 
 namespace EvaluationSystem.Persistence.Dapper
 {

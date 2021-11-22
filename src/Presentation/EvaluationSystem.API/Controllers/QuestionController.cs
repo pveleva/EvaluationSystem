@@ -1,7 +1,7 @@
-﻿using EvaluationSystem.Application.Questions;
-using EvaluationSystem.Application.Questions.Dapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using EvaluationSystem.Application.Questions;
+using EvaluationSystem.Application.Interfaces.IQuestion;
 
 namespace EvaluationSystem.API.Controllers
 {
@@ -16,33 +16,33 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpGet()]
-        public List<QuestionDto> GetAllQuestions()
+        public List<QuestionDto> GetAll()
         {
             return _service.GetAll();
         }
 
         [HttpGet("{questionId}")]
-        public QuestionDto GetQuestionById(int questionId)
+        public QuestionDto GetById(int questionId)
         {
-            return _service.GetQuestionById(questionId);
+            return _service.GetById(questionId);
         }
 
         [HttpPost()]
-        public QuestionDto CreateQuestion(CreateQuestionDto questionDto)
+        public QuestionDto Create(CreateQuestionDto questionDto)
         {
-            return _service.CreateQuestion(questionDto);
+            return _service.Create(questionDto);
         }
 
         [HttpPut("{questionId}")]
-        public QuestionDto UpdateQuestion(int questionId, UpdateQuestionDto questionDto)
+        public QuestionDto Update(int questionId, UpdateQuestionDto questionDto)
         {
-            return _service.UpdateQuestion(questionId, questionDto);
+            return _service.Update(questionId, questionDto);
         }
 
         [HttpDelete("{questionId}")]
-        public IActionResult DeleteQuestion(int questionId)
+        public IActionResult Delete(int questionId)
         {
-            _service.DeleteQuestion(questionId);
+            _service.Delete(questionId);
             return StatusCode(204);
         }
     }

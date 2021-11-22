@@ -2,7 +2,7 @@
 
 namespace EvaluationSystem.Persistence.Migrations
 {
-    [Migration(202111101537)]
+    [Migration(202111191342)]
     public class AddQuestionTable : Migration
     {
         public override void Up()

@@ -3,6 +3,7 @@ using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Domain.Entities;
+using Microsoft.Extensions.Caching.Memory;
 using System.Collections.Generic;
 
 namespace EvaluationSystem.Application.Services.Dapper
@@ -12,11 +13,13 @@ namespace EvaluationSystem.Application.Services.Dapper
         private readonly IMapper _mapper;
         private readonly IAnswerRepository _answerRepository;
         private readonly IUnitOfWork _unitOfWork;
-        public AnswerService(IMapper mapper, IAnswerRepository answerRepository, IUnitOfWork unitOfWork)
+        private readonly IMemoryCache _memoryCache;
+        public AnswerService(IMapper mapper, IAnswerRepository answerRepository, IUnitOfWork unitOfWork, IMemoryCache memoryCache)
         {
             _mapper = mapper;
             _answerRepository = answerRepository;
             _unitOfWork = unitOfWork;
+            _memoryCache = memoryCache;
         }
 
         public List<AnswerDto> GetAll(int questionId)
@@ -30,17 +33,25 @@ namespace EvaluationSystem.Application.Services.Dapper
             }
         }
 
-        public AnswerDto GetById(int questionId, int answerId)
+        public AnswerDto GetByID(int questionId, int answerId)
         {
             using (_unitOfWork)
             {
+                var answerCache = _memoryCache.Get($"answer {answerId}");
+                if (answerCache != null)
+                {
+                    return (AnswerDto)answerCache;
+                }
+
                 AnswerTemplate answer = _answerRepository.GetByID(answerId);
+                AnswerDto answerDto = _mapper.Map<AnswerDto>(answer);
+                _memoryCache.Set($"answer {answerId}", answerDto);
 
                 _unitOfWork.Commit();
-                return _mapper.Map<AnswerDto>(answer);
+                return answerDto;
             }
         }
-        public AnswerDto CreateAnswer(int questionId, CreateUpdateAnswerDto answerDto)
+        public AnswerDto Create(int questionId, CreateUpdateAnswerDto answerDto)
         {
             using (_unitOfWork)
             {
@@ -54,7 +65,7 @@ namespace EvaluationSystem.Application.Services.Dapper
             }
         }
 
-        public AnswerDto UpdateAnswer(int questionId, int answerId, CreateUpdateAnswerDto answerDto)
+        public AnswerDto Update(int questionId, int answerId, CreateUpdateAnswerDto answerDto)
         {
             using (_unitOfWork)
             {
@@ -63,15 +74,17 @@ namespace EvaluationSystem.Application.Services.Dapper
                 answer.IdQuestion = questionId;
                 _answerRepository.Update(answer);
 
+                _memoryCache.Remove($"answer {answerId}");
                 _unitOfWork.Commit();
                 return _mapper.Map<AnswerDto>(answer);
             }
         }
 
-        public void DeleteAnswer(int answerId)
+        public void Delete(int answerId)
         {
             using (_unitOfWork)
-            {
+            {   
+                _memoryCache.Remove($"answer {answerId}");
                 _unitOfWork.Commit();
                 _answerRepository.Delete(answerId);
             }

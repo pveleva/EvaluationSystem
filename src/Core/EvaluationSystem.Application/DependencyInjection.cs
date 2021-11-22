@@ -1,8 +1,12 @@
-﻿using EvaluationSystem.Application.Answers.Dapper;
-using EvaluationSystem.Application.Profiles;
-using EvaluationSystem.Application.Questions.Dapper;
-using EvaluationSystem.Application.Services.Dapper;
+﻿using EvaluationSystem.Application.Profiles;
 using Microsoft.Extensions.DependencyInjection;
+using EvaluationSystem.Application.Answers.Dapper;
+using EvaluationSystem.Application.Services.Dapper;
+using EvaluationSystem.Application.Interfaces.IForm;
+using EvaluationSystem.Application.Interfaces.IModule;
+using EvaluationSystem.Application.Interfaces.IQuestion;
+using EvaluationSystem.Application.Interfaces.IFormModule;
+using EvaluationSystem.Application.Interfaces.IModuleQuestion;
 
 namespace EvaluationSystem.Application
 {
@@ -12,6 +16,10 @@ namespace EvaluationSystem.Application
         {
             services.AddScoped<IAnswerService, AnswerService>();
             services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IModuleQuestionService, ModuleQuestionService>();
+            services.AddScoped<IModuleService, ModuleService>();
+            services.AddScoped<IFormModuleService, FormModuleService>();
+            services.AddScoped<IFormService, FormService>();
 
             services.AddAutoMapper(typeof(AnswerProfile).Assembly);
 

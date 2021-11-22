@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using EvaluationSystem.Application.Answers;
-using EvaluationSystem.Application.Answers.Dapper;
-using EvaluationSystem.Application.Interfaces;
-using EvaluationSystem.Application.Questions;
-using EvaluationSystem.Application.Questions.Dapper;
-using EvaluationSystem.Domain.Entities;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
+using EvaluationSystem.Domain.Entities;
+using EvaluationSystem.Application.Answers;
+using EvaluationSystem.Application.Questions;
+using EvaluationSystem.Application.Interfaces;
+using EvaluationSystem.Application.Answers.Dapper;
+using EvaluationSystem.Application.Interfaces.IQuestion;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -56,7 +56,7 @@ namespace EvaluationSystem.Application.Services.Dapper
             }
         }
 
-        public QuestionDto GetQuestionById(int id)
+        public QuestionDto GetById(int id)
         {
             using (_unitOfWork)
             {
@@ -85,14 +85,14 @@ namespace EvaluationSystem.Application.Services.Dapper
             }
         }
 
-        public QuestionDto CreateQuestion(CreateQuestionDto questionDto)
+        public QuestionDto Create(CreateQuestionDto questionDto)
         {
             using (_unitOfWork)
             {
                 QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
-                int questionId = (int)_questionRepository.Create(question);
+                int questionId = _questionRepository.Create(question);
 
-                ICollection<AnswerTemplate> answers = _mapper.Map<ICollection<AnswerTemplate>>(questionDto.Answers);
+                ICollection<AnswerTemplate> answers = _mapper.Map<ICollection<AnswerTemplate>>(questionDto.AnswerText);
 
                 foreach (var answer in answers)
                 {
@@ -101,11 +101,11 @@ namespace EvaluationSystem.Application.Services.Dapper
                 }
 
                 _unitOfWork.Commit();
-                return GetQuestionById(questionId);
+                return GetById(questionId);
             }
         }
 
-        public QuestionDto UpdateQuestion(int id, UpdateQuestionDto questionDto)
+        public QuestionDto Update(int id, UpdateQuestionDto questionDto)
         {
             using (_unitOfWork)
             {
@@ -117,11 +117,11 @@ namespace EvaluationSystem.Application.Services.Dapper
                 _questionRepository.Update(questionToUpdate);
 
                 _unitOfWork.Commit();
-                return GetQuestionById(id);
+                return GetById(id);
             }
         }
 
-        public void DeleteQuestion(int id)
+        public void Delete(int id)
         {
             using (_unitOfWork)
             {

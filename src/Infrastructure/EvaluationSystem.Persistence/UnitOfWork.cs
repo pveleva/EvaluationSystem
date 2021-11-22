@@ -1,11 +1,11 @@
-﻿using EvaluationSystem.Application.Answers.Dapper;
-using EvaluationSystem.Application.Interfaces;
-using EvaluationSystem.Application.Questions.Dapper;
-using EvaluationSystem.Persistence.Dapper;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using EvaluationSystem.Persistence.Dapper;
+using EvaluationSystem.Application.Interfaces;
+using EvaluationSystem.Application.Answers.Dapper;
+using EvaluationSystem.Application.Interfaces.IQuestion;
 
 namespace EvaluationSystem.Persistence
 {

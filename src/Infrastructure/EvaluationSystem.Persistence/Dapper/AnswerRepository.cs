@@ -1,9 +1,9 @@
-﻿using EvaluationSystem.Application.Answers.Dapper;
+﻿using System.Data;
+using System.Linq;
+using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+using EvaluationSystem.Application.Answers.Dapper;
 
 namespace EvaluationSystem.Persistence.Dapper
 {

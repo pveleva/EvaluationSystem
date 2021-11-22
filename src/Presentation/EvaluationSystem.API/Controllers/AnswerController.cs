@@ -1,7 +1,7 @@
-﻿using EvaluationSystem.Application.Answers;
-using EvaluationSystem.Application.Answers.Dapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using EvaluationSystem.Application.Answers;
+using EvaluationSystem.Application.Answers.Dapper;
 
 namespace EvaluationSystem.API.Controllers
 {
@@ -16,7 +16,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpGet()]
-        public IEnumerable<AnswerDto> GetAllAnswer(int questionId)
+        public IEnumerable<AnswerDto> GetAll(int questionId)
         {
             return _service.GetAll(questionId);
         }
@@ -24,25 +24,25 @@ namespace EvaluationSystem.API.Controllers
         [HttpGet("{answerId}")]
         public AnswerDto GetById(int questionId, int answerId)
         {
-            return _service.GetById(questionId, answerId);
+            return _service.GetByID(questionId, answerId);
         }
 
         [HttpPost()]
-        public AnswerDto CreateAnswer([FromRoute] int questionId, [FromBody] CreateUpdateAnswerDto answerDto)
+        public AnswerDto Create([FromRoute] int questionId, [FromBody] CreateUpdateAnswerDto answerDto)
         {
-            return _service.CreateAnswer(questionId, answerDto);
+            return _service.Create(questionId, answerDto);
         }
 
         [HttpPut("{answerId}")]
-        public AnswerDto UpdateAnswer(int questionId, int answerId, [FromBody] CreateUpdateAnswerDto answerDto)
+        public AnswerDto Update(int questionId, int answerId, [FromBody] CreateUpdateAnswerDto answerDto)
         {
-            return _service.UpdateAnswer(questionId, answerId, answerDto);
+            return _service.Update(questionId, answerId, answerDto);
         }
 
         [HttpDelete("{answerId}")]
-        public IActionResult DeleteAnswer(int answerId)
+        public IActionResult Delete(int answerId)
         {
-            _service.DeleteAnswer(answerId);
+            _service.Delete(answerId);
             return StatusCode(204);
         }
     }
