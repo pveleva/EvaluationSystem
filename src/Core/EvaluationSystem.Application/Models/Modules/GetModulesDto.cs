@@ -5,8 +5,9 @@ namespace EvaluationSystem.Application.Models.Modules
 {
     public class GetModulesDto
     {
+        public int IdForm { get; set; }
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<GetQuestionsDto> QuestionsDtos { get; set; }
+        public List<QuestionDto> QuestionsDtos { get; set; }
     }
 }

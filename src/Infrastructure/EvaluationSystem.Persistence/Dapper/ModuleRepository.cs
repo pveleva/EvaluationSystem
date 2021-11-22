@@ -1,5 +1,4 @@
-﻿using System;
-using Dapper;
+﻿using Dapper;
 using System.Data;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
@@ -16,21 +15,31 @@ namespace EvaluationSystem.Persistence.Dapper
         {
         }
 
-        public List<GetModulesDto> GetAll()
+        public List<GetModuleQuestionAnswerDto> GetAll()
         {
             using (IDbConnection dbConnection = Connection)
             {
-                string query = @"SELECT m.Id, m.[Name], q.Id, q.[Name], q.[Type], q.IsReusable, a.Id, a.AnswerText, a.Position, a.IsDefault FROM ModuleTemplate AS m
-                                        LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
-                                        LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
-                                        LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id";
-                return dbConnection.Query<GetModulesDto>(query).AsList();
+                string query = @"SELECT m.Id AS IdModule, m.[Name] AS NameModule, q.Id AS IdQuestion, q.[Name] AS NameQuestion, 
+                                        a.Id AS IdAnswer, a.AnswerText AS AnswerText FROM ModuleTemplate AS m
+                                             LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
+                                             LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
+                                             LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id";
+                return dbConnection.Query<GetModuleQuestionAnswerDto>(query).AsList();
             }
         }
 
-        public List<GetModulesDto> GetByIDFromRepo(int id)
+        public List<GetModuleQuestionAnswerDto> GetByIDFromRepo(int id)
         {
-            throw new NotImplementedException();
+            using (IDbConnection dbConnection = Connection)
+            {
+                string query = @"SELECT m.Id AS IdModule, m.[Name] AS NameModule, q.Id AS IdQuestion, q.[Name] AS NameQuestion, 
+                                        a.Id AS IdAnswer, a.AnswerText AS AnswerText FROM ModuleTemplate AS m
+                                             LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
+                                             LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
+                                             LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id
+                                             WHERE m.Id = @Id";
+                return dbConnection.Query<GetModuleQuestionAnswerDto>(query, new { Id = id }).AsList();
+            }
         }
         public void DeleteFromRepo(int id)
         {

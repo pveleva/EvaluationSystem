@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Interfaces.IForm;
-using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Interfaces.IFormModule;
 
 namespace EvaluationSystem.API.Controllers
@@ -20,15 +20,15 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpGet()]
-        public IEnumerable<CreateUpdateFormDto> GetAll(int questionId)
+        public List<GetFormDto> GetAll()
         {
-            return null; //_service.GetAll(questionId);
+            return _service.GetAll();
         }
 
         [HttpGet("{formId}")]
-        public CreateUpdateFormDto GetById(int questionId, int answerId)
+        public GetFormDto GetById(int formId)
         {
-            return null; //_service.GetByID(questionId, answerId);
+            return _service.GetById(formId);
         }
 
         [HttpPost()]

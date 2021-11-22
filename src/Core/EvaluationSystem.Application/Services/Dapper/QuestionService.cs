@@ -33,7 +33,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                 List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion })
                     .Select(q => new QuestionDto()
                     {
-                        IdQuestion = q.Key.IdQuestion,
+                        Id = q.Key.IdQuestion,
                         Name = q.Key.Name,
                         AnswerText = new List<AnswerDto>()
                     }).ToList();
@@ -48,7 +48,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
                 foreach (var question in questions)
                 {
-                    question.AnswerText = answers.Where(a => a.IdQuestion == question.IdQuestion);
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
                 }
 
                 _unitOfWork.Commit();
@@ -65,7 +65,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                 List<QuestionDto> question = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion })
                     .Select(q => new QuestionDto()
                     {
-                        IdQuestion = q.Key.IdQuestion,
+                        Id = q.Key.IdQuestion,
                         Name = q.Key.Name,
                         AnswerText = new List<AnswerDto>()
                     }).ToList();
@@ -78,7 +78,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                         AnswerText = q.Key.AnswerText
                     }).ToList();
 
-                question.FirstOrDefault().AnswerText = answers;
+                var result = question.FirstOrDefault().AnswerText = answers;
 
                 _unitOfWork.Commit();
                 return question.FirstOrDefault();

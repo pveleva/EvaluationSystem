@@ -19,15 +19,15 @@ namespace EvaluationSystem.API.Controllers
             _moduleQuestionService = moduleQuestionService;
         }
         [HttpGet()]
-        public IEnumerable<CreateUpdateModuleDto> GetAll(int questionId)
+        public IEnumerable<GetModulesDto> GetAll()
         {
-            return null; //_service.GetAll(questionId);
+            return _service.GetAll();
         }
 
         [HttpGet("{moduleId}")]
-        public CreateUpdateModuleDto GetById(int questionId, int answerId)
+        public GetModulesDto GetById(int moduleId)
         {
-            return null; //_service.GetByID(questionId, answerId);
+            return _service.GetById(moduleId);
         }
 
         [HttpPost()]

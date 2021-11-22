@@ -6,8 +6,8 @@ namespace EvaluationSystem.Application.Interfaces.IModule
 {
     public interface IModuleRepository : IGenericRepository<ModuleTemplate>
     {
-        public List<GetModulesDto> GetAll();
-        public List<GetModulesDto> GetByIDFromRepo(int id);
+        public List<GetModuleQuestionAnswerDto> GetAll();
+        public List<GetModuleQuestionAnswerDto> GetByIDFromRepo(int id);
         public void DeleteFromRepo(int id);
     }
 }

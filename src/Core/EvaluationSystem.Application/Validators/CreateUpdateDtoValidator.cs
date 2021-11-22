@@ -20,9 +20,9 @@ namespace EvaluationSystem.Application.Validators
             RuleFor(answer => answer.AnswerText)
                 .NotEmpty()
                 .NotNull()
-                .MinimumLength(5)
+                .MinimumLength(1)
                 .MaximumLength(255)
-                .WithMessage("Answer could not be empty or null! It has to be wih at least 5 characters and maximum length of 255 characters."); //може ли да имаме празно текстово поле?
+                .WithMessage("Answer could not be empty or null! It has to be wih at least 1 characters and maximum length of 255 characters."); //може ли да имаме празно текстово поле?
         }
     }
 }

@@ -1,13 +1,12 @@
-﻿using System;
-using AutoMapper;
+﻿using AutoMapper;
+using System.Linq;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
+using EvaluationSystem.Application.Answers;
+using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Models.Modules;
 using EvaluationSystem.Application.Interfaces.IModule;
-using EvaluationSystem.Application.Answers;
-using EvaluationSystem.Application.Questions;
-using System.Linq;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -23,29 +22,30 @@ namespace EvaluationSystem.Application.Services.Dapper
             _moduleRepository = moduleRepository;
             _unitOfWork = unitOfWork;
         }
-        public List<CreateUpdateModuleDto> GetAll()
+        public List<GetModulesDto> GetAll()
         {
             using (_unitOfWork)
             {
-                List<GetModulesDto> modelsRepo = _moduleRepository.GetAll();
+                List<GetModuleQuestionAnswerDto> modelsRepo = _moduleRepository.GetAll();
 
-                List<GetModulesDto> models = modelsRepo.GroupBy(x => new { x.Id, x.Name })
+                List<GetModulesDto> modules = modelsRepo.GroupBy(x => new { x.IdModule, x.NameModule })
                     .Select(q => new GetModulesDto()
                     {
-                        Id = q.Key.Id,
-                        Name = q.Key.Name,
+                        Id = q.Key.IdModule,
+                        Name = q.Key.NameModule,
                         QuestionsDtos = new List<QuestionDto>()
-                    }).ToList();
+                    }).Distinct().ToList();
 
-                List<QuestionDto> questions = modelsRepo.GroupBy(x => new { x.Name, x.IdQuestion })
+                List<QuestionDto> questions = modelsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion })
                     .Select(q => new QuestionDto()
                     {
-                        IdQuestion = q.Key.IdQuestion,
-                        Name = q.Key.Name,
+                        IdModule = q.Key.IdModule,
+                        Id = q.Key.IdQuestion,
+                        Name = q.Key.NameQuestion,
                         AnswerText = new List<AnswerDto>()
                     }).ToList();
 
-                List<AnswerDto> answers = modelsRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
+                List<AnswerDto> answers = modelsRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.AnswerText })
                     .Select(q => new AnswerDto()
                     {
                         IdQuestion = q.Key.IdQuestion,
@@ -55,17 +55,61 @@ namespace EvaluationSystem.Application.Services.Dapper
 
                 foreach (var question in questions)
                 {
-                    question.AnswerText = answers.Where(a => a.IdQuestion == question.IdQuestion);
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                }
+
+                foreach (var module in modules)
+                {
+
+                    module.QuestionsDtos = questions.Where(q => q.IdModule == module.Id).ToList();
                 }
 
                 _unitOfWork.Commit();
-                return questions;
+                return modules;
             }
         }
 
-        public CreateUpdateModuleDto GetById(int id)
+        public GetModulesDto GetById(int id)
         {
-            throw new NotImplementedException();
+            using (_unitOfWork)
+            {
+                List<GetModuleQuestionAnswerDto> modelsRepo = _moduleRepository.GetByIDFromRepo(id);
+
+                List<GetModulesDto> module = modelsRepo.GroupBy(x => new { x.IdModule, x.NameModule })
+                    .Select(q => new GetModulesDto()
+                    {
+                        Id = q.Key.IdModule,
+                        Name = q.Key.NameModule,
+                        QuestionsDtos = new List<QuestionDto>()
+                    }).ToList();
+
+                List<QuestionDto> questions = modelsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion })
+                    .Select(q => new QuestionDto()
+                    {
+                        IdModule = q.Key.IdModule,
+                        Id = q.Key.IdQuestion,
+                        Name = q.Key.NameQuestion,
+                        AnswerText = new List<AnswerDto>()
+                    }).ToList();
+
+                List<AnswerDto> answers = modelsRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.AnswerText })
+                    .Select(q => new AnswerDto()
+                    {
+                        IdQuestion = q.Key.IdQuestion,
+                        Id = q.Key.IdAnswer,
+                        AnswerText = q.Key.AnswerText
+                    }).ToList();
+
+                foreach (var question in questions)
+                {
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                }
+
+                module.FirstOrDefault().QuestionsDtos = questions;
+
+                _unitOfWork.Commit();
+                return module.FirstOrDefault();
+            }
         }
         public ExposeModuleDto Create(CreateUpdateModuleDto moduleDto)
         {
