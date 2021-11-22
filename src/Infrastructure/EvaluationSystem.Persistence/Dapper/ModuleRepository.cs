@@ -45,7 +45,7 @@ namespace EvaluationSystem.Persistence.Dapper
         {
             using (IDbConnection dbConnection = Connection)
             {
-                string delete = @"DELETE FROM FormModule WHERE IdModule = @Id";
+                string delete = @"DELETE FROM ModuleQuestion WHERE IdModule = @Id";
                 dbConnection.Execute(delete, new { Id = id });
 
                 dbConnection.Delete<ModuleTemplate>(id);
