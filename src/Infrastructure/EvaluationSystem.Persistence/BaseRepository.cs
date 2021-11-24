@@ -1,61 +1,44 @@
 ﻿using Dapper;
-using EvaluationSystem.Application.Interfaces;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
+using System.Collections.Generic;
+using EvaluationSystem.Application.Interfaces;
 
 namespace EvaluationSystem.Persistence
 {
     public abstract class BaseRepository<T> : IGenericRepository<T> where T : class
     {
-        private IConfiguration _configuration;
-
-        public BaseRepository(IConfiguration configuration)
+        private readonly IUnitOfWork _unitOfWork;
+        public BaseRepository(IUnitOfWork unitOfWork)
         {
-            _configuration = configuration;
+            _unitOfWork = unitOfWork;
         }
 
-        public IDbConnection Connection => new SqlConnection(_configuration.GetConnectionString("EvaluationSystemDBConnection"));
+        public IDbConnection Connection => _unitOfWork.Connection;
+        public IDbTransaction Transaction => _unitOfWork.Transaction;
 
         public IEnumerable<T> GetList()
         {
-            using (IDbConnection dbConnection = Connection)
-            {
-                return dbConnection.GetList<T>().ToList();
-            }
+            return Connection.GetList<T>(null, null, Transaction).ToList();
         }
 
         public T GetByID(int id)
         {
-            using (IDbConnection dbConnection = Connection)
-            {
-                return dbConnection.Get<T>(id);
-            }
+            return Connection.Get<T>(id, Transaction);
         }
         public int Create(T entity)
         {
-            using (IDbConnection dbConnection = Connection)
-            {
-                return (int)dbConnection.Insert(entity);
-            }
+            return (int)Connection.Insert(entity, Transaction);
         }
 
         public void Update(T entity)
         {
-            using (IDbConnection dbConnection = Connection)
-            {
-                dbConnection.Update(entity);
-            }
+            Connection.Update(entity, Transaction);
         }
 
         public void Delete(int id)
         {
-            using (IDbConnection dbConnection = Connection)
-            {
-                dbConnection.Delete(dbConnection.Get<T>(id));
-            }
+            Connection.Delete(Connection.Get<T>(id, Transaction));
         }
     }
 }

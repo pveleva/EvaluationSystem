@@ -1,9 +1,9 @@
+using NLog.Web;
+using NLog.Extensions.Logging;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
-using NLog.Web;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace EvaluationSystem.API
 {

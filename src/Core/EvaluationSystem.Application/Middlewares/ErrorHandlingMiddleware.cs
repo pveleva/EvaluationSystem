@@ -1,13 +1,14 @@
-﻿using EvaluationSystem.Application.Exceptions;
-using EvaluationSystem.Domain.Entities;
-using FluentValidation;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
+using Newtonsoft.Json;
+using FluentValidation;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
+using EvaluationSystem.Domain.Entities;
+using EvaluationSystem.Application.Exceptions;
+using EvaluationSystem.Application.Interfaces;
 
 namespace EvaluationSystem.Application.Middlewares
 {
@@ -20,14 +21,17 @@ namespace EvaluationSystem.Application.Middlewares
             _logger = logger;
             _next = next;
         }
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IUnitOfWork unitOfWork)
         {
             try
             {
+                unitOfWork.Begin();
                 await _next.Invoke(context);
+                unitOfWork.Commit();
             }
             catch (Exception ex)
             {
+                unitOfWork.Rollback();
                 _logger.LogError(ex.ToString());
                 await HandleException(ex, context);
             }

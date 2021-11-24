@@ -1,13 +1,14 @@
-﻿using EvaluationSystem.Application.Answers.Dapper;
-using EvaluationSystem.Application.Interfaces.IQuestion;
-using System;
+﻿using System;
+using System.Data;
 
 namespace EvaluationSystem.Application.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
-        IAnswerRepository Answer { get; }
-        IQuestionRepository Question { get; }
+        IDbConnection Connection { get; }
+        IDbTransaction Transaction { get; }
+        void Begin();
         void Commit();
+        void Rollback();
     }
 }

@@ -25,14 +25,14 @@ namespace EvaluationSystem.Persistence
                             .ScanIn(typeof(AddQuestionTable).Assembly).For.Migrations())
                     .BuildServiceProvider();
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IAnswerRepository, AnswerRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
             services.AddScoped<IModuleQuestionRepository, ModuleQuestionRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IFormModuleRepository, FormModuleRepository>();
             services.AddScoped<IFormRepository, FormRepository>();
-
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
