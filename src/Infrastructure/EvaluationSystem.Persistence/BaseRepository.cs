@@ -38,7 +38,7 @@ namespace EvaluationSystem.Persistence
 
         public void Delete(int id)
         {
-            Connection.Delete(Connection.Get<T>(id, Transaction));
+            Connection.Delete(Connection.Get<T>(id, Transaction), Transaction);
         }
     }
 }

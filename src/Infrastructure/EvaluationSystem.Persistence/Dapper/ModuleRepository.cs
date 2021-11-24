@@ -42,7 +42,7 @@ namespace EvaluationSystem.Persistence.Dapper
             string deleteMQ = @"DELETE FROM ModuleQuestion WHERE IdModule = @Id";
             Connection.Execute(deleteMQ, new { Id = id }, Transaction);
 
-            Connection.Delete<ModuleTemplate>(id);
+            Connection.Delete<ModuleTemplate>(id, Transaction);
         }
     }
 }

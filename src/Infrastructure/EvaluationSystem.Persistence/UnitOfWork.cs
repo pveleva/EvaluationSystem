@@ -10,7 +10,7 @@ namespace EvaluationSystem.Persistence
         private IDbConnection _connection;
         private IDbTransaction _transaction;
 
-        public UnitOfWork(IConfiguration configuration)
+        public UnitOfWork (IConfiguration configuration)
         {
             _connection = new SqlConnection(configuration.GetConnectionString("EvaluationSystemDBConnection"));
             _connection.Open();

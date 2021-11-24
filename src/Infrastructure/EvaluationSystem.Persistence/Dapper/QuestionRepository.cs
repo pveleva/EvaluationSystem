@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using System.Data;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Questions;
@@ -24,13 +23,10 @@ namespace EvaluationSystem.Persistence.Dapper
 
         public List<GetQuestionsDto> GetByIDFromRepo(int questionId)
         {
-            using (IDbConnection dbConnection = Connection)
-            {
-                string query = @"SELECT q.Id AS IdQuestion, q.[Name], a.Id AS IdAnswer, a.AnswerText FROM AnswerTemplate AS a
+            string query = @"SELECT q.Id AS IdQuestion, q.[Name], a.Id AS IdAnswer, a.AnswerText FROM AnswerTemplate AS a
                                  RIGHT JOIN QuestionTemplate AS q ON q.Id = a.IdQuestion
                                  WHERE q.Id = @Id";
-                return Connection.Query<GetQuestionsDto>(query, new { Id = questionId }, Transaction).AsList();
-            }
+            return Connection.Query<GetQuestionsDto>(query, new { Id = questionId }, Transaction).AsList();
         }
 
         public void DeleteFromRepo(int id)
