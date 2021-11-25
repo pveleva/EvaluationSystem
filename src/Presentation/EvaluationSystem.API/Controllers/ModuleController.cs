@@ -37,12 +37,13 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPost("{moduleId}/question/{questionId}")]
-        public void SetQuestion(int moduleId, int questionId)
+        public void SetQuestion(int moduleId, int questionId, int position)
         {
             ModuleQuestion moduleQuestion = new ModuleQuestion()
             {
                 IdModule = moduleId,
-                IdQuestion = questionId
+                IdQuestion = questionId,
+                Position = position
             };
 
             _moduleQuestionService.SetQuestion(moduleQuestion);

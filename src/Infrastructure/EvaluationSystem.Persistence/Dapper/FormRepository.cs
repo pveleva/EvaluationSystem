@@ -16,8 +16,8 @@ namespace EvaluationSystem.Persistence.Dapper
 
         public List<GetFormModuleQuestionAnswerDto> GetAll()
         {
-            string query = @"SELECT f.Id AS IdForm, f.[Name] AS NameForm, m.Id AS IdModule, m.[Name] AS NameModule, 
-                                        q.Id AS IdQuestion, q.[Name] AS NameQuestion, a.Id AS IdAnswer, a.AnswerText AS AnswerText 
+            string query = @"SELECT f.Id AS IdForm, f.[Name] AS NameForm, fm.Position AS ModulePosition, m.Id AS IdModule, m.[Name] AS NameModule, mq.Position AS QuestionPosition, 
+                                    q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
                                             FROM FormTemplate AS f
                                             LEFT JOIN FormModule AS fm ON f.Id = fm.IdForm
                                             LEFT JOIN ModuleTemplate AS m ON fm.IdModule = m.Id
@@ -29,8 +29,8 @@ namespace EvaluationSystem.Persistence.Dapper
 
         public List<GetFormModuleQuestionAnswerDto> GetByIDFromRepo(int id)
         {
-            string query = @"SELECT f.Id AS IdForm, f.[Name] AS NameForm, m.Id AS IdModule, m.[Name] AS NameModule, 
-                                        q.Id AS IdQuestion, q.[Name] AS NameQuestion, a.Id AS IdAnswer, a.AnswerText AS AnswerText 
+            string query = @"SELECT f.Id AS IdForm, f.[Name] AS NameForm, fm.Position AS ModulePosition, m.Id AS IdModule, m.[Name] AS NameModule, mq.Position AS QuestionPosition, 
+                                    q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
                                             FROM FormTemplate AS f
                                             LEFT JOIN FormModule AS fm ON f.Id = fm.IdForm
                                             LEFT JOIN ModuleTemplate AS m ON fm.IdModule = m.Id

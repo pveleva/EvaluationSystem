@@ -15,17 +15,25 @@ namespace EvaluationSystem.Persistence.Dapper
         }
         public List<GetQuestionsDto> GetAll()
         {
-            string query = @"SELECT q.Id AS IdQuestion, q.[Name], a.Id AS IdAnswer, a.AnswerText FROM AnswerTemplate AS a
-                                     RIGHT JOIN QuestionTemplate AS q ON q.Id = a.IdQuestion
-                                     ORDER BY q.Id, a.Id";
+            string query = @"SELECT m.Id AS IdModule, m.[Name] AS NameModule, mq.Position AS QuestionPosition, 
+                                    q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
+                                            FROM ModuleTemplate AS m
+                                            LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
+                                            LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
+                                            LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id
+                                            ORDER BY q.Id, a.Id";
             return Connection.Query<GetQuestionsDto>(query, null, Transaction).AsList();
         }
 
         public List<GetQuestionsDto> GetByIDFromRepo(int questionId)
         {
-            string query = @"SELECT q.Id AS IdQuestion, q.[Name], a.Id AS IdAnswer, a.AnswerText FROM AnswerTemplate AS a
-                                 RIGHT JOIN QuestionTemplate AS q ON q.Id = a.IdQuestion
-                                 WHERE q.Id = @Id";
+            string query = @"SELECT m.Id AS IdModule, m.[Name] AS NameModule, mq.Position AS QuestionPosition, 
+                                    q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
+                                            FROM ModuleTemplate AS m
+                                            LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
+                                            LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
+                                            LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id
+                                            WHERE q.Id = @Id";
             return Connection.Query<GetQuestionsDto>(query, new { Id = questionId }, Transaction).AsList();
         }
 

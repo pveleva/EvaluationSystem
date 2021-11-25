@@ -26,19 +26,23 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             List<GetQuestionsDto> questionsRepo = _questionRepository.GetAll();
 
-            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion })
+            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
                 .Select(q => new QuestionDto()
                 {
+                    IdModule = q.Key.IdModule,
                     Id = q.Key.IdQuestion,
-                    Name = q.Key.Name,
+                    Name = q.Key.NameQuestion,
+                    Type = q.Key.Type,
+                    Position = q.Key.QuestionPosition,
                     AnswerText = new List<AnswerDto>()
                 }).ToList();
 
-            List<AnswerDto> answers = questionsRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
+            List<AnswerDto> answers = questionsRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.IsDefault, x.AnswerText })
                 .Select(q => new AnswerDto()
                 {
                     IdQuestion = q.Key.IdQuestion,
                     Id = q.Key.IdAnswer,
+                    IsDefault = q.Key.IsDefault,
                     AnswerText = q.Key.AnswerText
                 }).ToList();
 
@@ -54,19 +58,23 @@ namespace EvaluationSystem.Application.Services.Dapper
         {
             List<GetQuestionsDto> questionRepo = _questionRepository.GetByIDFromRepo(id);
 
-            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion })
+            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
                 .Select(q => new QuestionDto()
                 {
+                    IdModule = q.Key.IdModule,
                     Id = q.Key.IdQuestion,
-                    Name = q.Key.Name,
+                    Name = q.Key.NameQuestion,
+                    Type = q.Key.Type,
+                    Position = q.Key.QuestionPosition,
                     AnswerText = new List<AnswerDto>()
                 }).ToList();
 
-            List<AnswerDto> answers = questionRepo.GroupBy(x => new { x.Name, x.IdQuestion, x.IdAnswer, x.AnswerText })
+            List<AnswerDto> answers = questionRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.IsDefault, x.AnswerText })
                 .Select(q => new AnswerDto()
                 {
                     IdQuestion = q.Key.IdQuestion,
                     Id = q.Key.IdAnswer,
+                    IsDefault = q.Key.IsDefault,
                     AnswerText = q.Key.AnswerText
                 }).ToList();
 

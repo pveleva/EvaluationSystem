@@ -12,6 +12,7 @@ using EvaluationSystem.Application.Validators;
 using EvaluationSystem.Persistence.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using EvaluationSystem.Application.Middlewares;
+using System.Text.Json.Serialization;
 
 namespace EvaluationSystem.API
 {
@@ -49,8 +50,10 @@ namespace EvaluationSystem.API
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EvaluationSystem.API", Version = "v1" });
-                c.DescribeAllEnumsAsStrings();  //?
             });
+
+            services.AddControllers().AddJsonOptions(options =>
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

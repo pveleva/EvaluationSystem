@@ -6,6 +6,7 @@ using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Models.Modules;
 using EvaluationSystem.Application.Interfaces.IModule;
+using EvaluationSystem.Application.Models.Forms;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -21,30 +22,35 @@ namespace EvaluationSystem.Application.Services.Dapper
         }
         public List<GetModulesDto> GetAll()
         {
-            List<GetModuleQuestionAnswerDto> modelsRepo = _moduleRepository.GetAll();
+            List<GetFormModuleQuestionAnswerDto> modelsRepo = _moduleRepository.GetAll();
 
-            List<GetModulesDto> modules = modelsRepo.GroupBy(x => new { x.IdModule, x.NameModule })
+            List<GetModulesDto> modules = modelsRepo.GroupBy(x => new { x.IdForm, x.IdModule, x.NameModule, x.ModulePosition })
                 .Select(q => new GetModulesDto()
                 {
+                    IdForm = q.Key.IdForm,
                     Id = q.Key.IdModule,
                     Name = q.Key.NameModule,
+                    Position = q.Key.ModulePosition,
                     QuestionsDtos = new List<QuestionDto>()
                 }).Distinct().ToList();
 
-            List<QuestionDto> questions = modelsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion })
+            List<QuestionDto> questions = modelsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
                 .Select(q => new QuestionDto()
                 {
                     IdModule = q.Key.IdModule,
                     Id = q.Key.IdQuestion,
                     Name = q.Key.NameQuestion,
+                    Type = q.Key.Type,
+                    Position = q.Key.QuestionPosition,
                     AnswerText = new List<AnswerDto>()
                 }).ToList();
 
-            List<AnswerDto> answers = modelsRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.AnswerText })
+            List<AnswerDto> answers = modelsRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.IsDefault, x.AnswerText })
                 .Select(q => new AnswerDto()
                 {
                     IdQuestion = q.Key.IdQuestion,
                     Id = q.Key.IdAnswer,
+                    IsDefault = q.Key.IsDefault,
                     AnswerText = q.Key.AnswerText
                 }).ToList();
 
@@ -64,30 +70,35 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public GetModulesDto GetById(int id)
         {
-            List<GetModuleQuestionAnswerDto> modelsRepo = _moduleRepository.GetByIDFromRepo(id);
+            List<GetFormModuleQuestionAnswerDto> modelsRepo = _moduleRepository.GetByIDFromRepo(id);
 
-            List<GetModulesDto> module = modelsRepo.GroupBy(x => new { x.IdModule, x.NameModule })
+            List<GetModulesDto> modules = modelsRepo.GroupBy(x => new { x.IdForm, x.IdModule, x.NameModule, x.ModulePosition })
                 .Select(q => new GetModulesDto()
                 {
+                    IdForm = q.Key.IdForm,
                     Id = q.Key.IdModule,
                     Name = q.Key.NameModule,
+                    Position = q.Key.ModulePosition,
                     QuestionsDtos = new List<QuestionDto>()
-                }).ToList();
+                }).Distinct().ToList();
 
-            List<QuestionDto> questions = modelsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion })
+            List<QuestionDto> questions = modelsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
                 .Select(q => new QuestionDto()
                 {
                     IdModule = q.Key.IdModule,
                     Id = q.Key.IdQuestion,
                     Name = q.Key.NameQuestion,
+                    Type = q.Key.Type,
+                    Position = q.Key.QuestionPosition,
                     AnswerText = new List<AnswerDto>()
                 }).ToList();
 
-            List<AnswerDto> answers = modelsRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.AnswerText })
+            List<AnswerDto> answers = modelsRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.IsDefault, x.AnswerText })
                 .Select(q => new AnswerDto()
                 {
                     IdQuestion = q.Key.IdQuestion,
                     Id = q.Key.IdAnswer,
+                    IsDefault = q.Key.IsDefault,
                     AnswerText = q.Key.AnswerText
                 }).ToList();
 
@@ -96,9 +107,9 @@ namespace EvaluationSystem.Application.Services.Dapper
                 question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
             }
 
-            module.FirstOrDefault().QuestionsDtos = questions;
+            modules.FirstOrDefault().QuestionsDtos = questions;
 
-            return module.FirstOrDefault();
+            return modules.FirstOrDefault();
         }
         public ExposeModuleDto Create(CreateUpdateModuleDto moduleDto)
         {
