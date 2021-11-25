@@ -6,19 +6,22 @@ using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Interfaces.IQuestion;
+using EvaluationSystem.Application.Interfaces.IModuleQuestion;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
     public class QuestionService : IQuestionService
     {
         private IMapper _mapper;
-        private IQuestionRepository _questionRepository;
         private IAnswerRepository _answerRepository;
-        public QuestionService(IMapper mapper, IQuestionRepository questionRepository, IAnswerRepository answerRepository)
+        private IQuestionRepository _questionRepository;
+        private IModuleQuestionRepository _moduleQuestionRepository;
+        public QuestionService(IMapper mapper, IAnswerRepository answerRepository, IQuestionRepository questionRepository, IModuleQuestionRepository moduleQuestionRepository)
         {
             _mapper = mapper;
-            _questionRepository = questionRepository;
             _answerRepository = answerRepository;
+            _questionRepository = questionRepository;
+            _moduleQuestionRepository = moduleQuestionRepository;
         }
 
         public List<QuestionDto> GetAll()
@@ -95,6 +98,13 @@ namespace EvaluationSystem.Application.Services.Dapper
                 answer.IdQuestion = questionId;
                 _answerRepository.Create(answer);
             }
+
+            _moduleQuestionRepository.Create(new ModuleQuestion()
+            {
+                IdModule = questionDto.idModule,
+                IdQuestion = questionId,
+                Position = questionDto.Position
+            });
 
             return GetById(questionId);
         }

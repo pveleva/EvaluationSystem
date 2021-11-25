@@ -1,6 +1,6 @@
 ﻿namespace EvaluationSystem.Application.Models.Modules
 {
-    public class CreateUpdateModuleDto
+    public class UpdateModuleDto
     {
         public string Name { get; set; }
     }

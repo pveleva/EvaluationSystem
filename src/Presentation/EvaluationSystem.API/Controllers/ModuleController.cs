@@ -31,7 +31,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPost()]
-        public ExposeModuleDto Create(CreateUpdateModuleDto formDto)
+        public ExposeModuleDto Create(CreateModelDto formDto)
         {
             return _service.Create(formDto);
         }
@@ -50,7 +50,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPut("{moduleId}")]
-        public ExposeModuleDto Update(int moduleId, CreateUpdateModuleDto formDto)
+        public ExposeModuleDto Update(int moduleId, UpdateModuleDto formDto)
         {
             return _service.Update(moduleId, formDto);
         }

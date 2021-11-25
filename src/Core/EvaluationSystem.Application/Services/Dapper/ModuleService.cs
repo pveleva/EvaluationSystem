@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
+using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Models.Modules;
 using EvaluationSystem.Application.Interfaces.IModule;
-using EvaluationSystem.Application.Models.Forms;
+using EvaluationSystem.Application.Interfaces.IFormModule;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -14,11 +15,13 @@ namespace EvaluationSystem.Application.Services.Dapper
     {
         private IMapper _mapper;
         private IModuleRepository _moduleRepository;
+        private IFormModuleRepository _formModuleRepository;
 
-        public ModuleService(IMapper mapper, IModuleRepository moduleRepository)
+        public ModuleService(IMapper mapper, IModuleRepository moduleRepository, IFormModuleRepository formModuleRepository)
         {
             _mapper = mapper;
             _moduleRepository = moduleRepository;
+            _formModuleRepository = formModuleRepository;
         }
         public List<GetModulesDto> GetAll()
         {
@@ -111,15 +114,22 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             return modules.FirstOrDefault();
         }
-        public ExposeModuleDto Create(CreateUpdateModuleDto moduleDto)
+        public ExposeModuleDto Create(CreateModelDto moduleDto)
         {
             ModuleTemplate module = _mapper.Map<ModuleTemplate>(moduleDto);
             int moduleId = _moduleRepository.Create(module);
             module.Id = moduleId;
 
+            _formModuleRepository.Create(new FormModule()
+            {
+                IdForm = moduleDto.idForm,
+                IdModule = moduleId,
+                Position = moduleDto.Position
+            });
+
             return _mapper.Map<ExposeModuleDto>(module);
         }
-        public ExposeModuleDto Update(int id, CreateUpdateModuleDto moduleDto)
+        public ExposeModuleDto Update(int id, UpdateModuleDto moduleDto)
         {
             ModuleTemplate moduleToUpdate = _moduleRepository.GetByID(id);
 

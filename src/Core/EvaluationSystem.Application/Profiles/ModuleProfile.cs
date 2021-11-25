@@ -8,7 +8,7 @@ namespace EvaluationSystem.Application.Profiles
     {
         public ModuleProfile()
         {
-            CreateMap<CreateUpdateModuleDto, ModuleTemplate>();
+            CreateMap<UpdateModuleDto, ModuleTemplate>();
             CreateMap<ModuleTemplate, ExposeModuleDto>();
         }
     }
