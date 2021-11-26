@@ -1,17 +1,18 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using System.Linq;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
+using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Interfaces.IQuestion;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
-using System;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
-    public class QuestionService : IQuestionService
+    public class QuestionService : IQuestionService, IExceptionService
     {
         private IMapper _mapper;
         private IAnswerRepository _answerRepository;
@@ -27,6 +28,8 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public List<QuestionDto> GetAll(int moduleId)
         {
+            ThrowExceptionWhenEntityDoNotExist(moduleId, _moduleQuestionRepository);
+
             List<GetQuestionsDto> questionsRepo = _questionRepository.GetAll(moduleId);
 
             List<QuestionDto> allQuestions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
@@ -61,6 +64,9 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public QuestionDto GetById(int moduleId, int questionId)
         {
+            ThrowExceptionWhenEntityDoNotExist(moduleId, _moduleQuestionRepository);
+            ThrowExceptionWhenEntityDoNotExist(questionId, _questionRepository);
+
             List<GetQuestionsDto> questionRepo = _questionRepository.GetByIDFromRepo(moduleId, questionId);
 
             List<QuestionDto> question = questionRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
@@ -178,6 +184,8 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public QuestionDto GetById(int id)
         {
+            ThrowExceptionWhenEntityDoNotExist(id, _questionRepository);
+
             List<GetQuestionsDto> questionRepo = _questionRepository.GetByIDFromRepo(id);
 
             List<QuestionDto> question = questionRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
@@ -212,7 +220,7 @@ namespace EvaluationSystem.Application.Services.Dapper
             question.DateOfCreation = DateTime.UtcNow;
             int questionId = _questionRepository.Create(question);
 
-            if (questionDto.Type==Domain.Entities.Type.Numeric)
+            if (questionDto.Type == Domain.Entities.Type.Numeric)
             {
                 foreach (var answer in questionDto.AnswerText)
                 {
@@ -246,6 +254,16 @@ namespace EvaluationSystem.Application.Services.Dapper
             _questionRepository.Update(questionToUpdate);
 
             return GetById(id);
+        }
+
+        public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)
+        {
+            var entity = repository.GetByID(id);
+            var entityName = typeof(T).Name.Remove(typeof(T).Name.Length - 8);
+            if (entity == null)
+            {
+                throw new NullReferenceException($"{entityName} with ID:{id} doesn't exist!");
+            }
         }
     }
 }

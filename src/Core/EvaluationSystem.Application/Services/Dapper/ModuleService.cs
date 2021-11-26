@@ -1,9 +1,11 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using System.Linq;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
+using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Models.Modules;
 using EvaluationSystem.Application.Answers.Dapper;
@@ -14,7 +16,7 @@ using EvaluationSystem.Application.Interfaces.IModuleQuestion;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
-    public class ModuleService : IModuleService
+    public class ModuleService : IModuleService, IExceptionService
     {
         private IMapper _mapper;
         private IAnswerRepository _answerRepository;
@@ -83,6 +85,8 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public GetModulesDto GetById(int id)
         {
+            ThrowExceptionWhenEntityDoNotExist(id, _moduleRepository);
+
             List<GetFormModuleQuestionAnswerDto> modelsRepo = _moduleRepository.GetByIDFromRepo(id);
 
             List<GetModulesDto> modules = modelsRepo.GroupBy(x => new { x.IdForm, x.IdModule, x.NameModule, x.ModulePosition })
@@ -135,6 +139,8 @@ namespace EvaluationSystem.Application.Services.Dapper
             foreach (var questionDto in moduleDto.QuestionsDtos)
             {
                 QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
+                question.IsReusable = false;
+                question.DateOfCreation = DateTime.UtcNow;
                 int questionId = _questionRepository.Create(question);
                 question.Id = questionId;
 
@@ -180,6 +186,16 @@ namespace EvaluationSystem.Application.Services.Dapper
         {
             //NOT FINISHED
             _moduleRepository.DeleteFromRepo(id);
+        }
+
+        public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)
+        {
+            var entity = repository.GetByID(id);
+            var entityName = typeof(T).Name.Remove(typeof(T).Name.Length - 8);
+            if (entity == null)
+            {
+                throw new NullReferenceException($"{entityName} with ID:{id} doesn't exist!");
+            }
         }
     }
 }

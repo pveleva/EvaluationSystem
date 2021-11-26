@@ -3,7 +3,7 @@ using EvaluationSystem.Application.Models.Modules;
 
 namespace EvaluationSystem.Application.Models.Forms
 {
-    public class GetFormDto
+    public class CreateGetFormDto
     {
         public int Id { get; set; }
         public string Name { get; set; }

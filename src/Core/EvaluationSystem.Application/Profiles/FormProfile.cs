@@ -8,8 +8,9 @@ namespace EvaluationSystem.Application.Profiles
     {
         public FormProfile()
         {
-            CreateMap<CreateUpdateFormDto, FormTemplate>();
+            CreateMap<UpdateFormDto, FormTemplate>();
             CreateMap<FormTemplate, ExposeFormDto>();
+            CreateMap<CreateGetFormDto, FormTemplate>();
         }
     }
 }

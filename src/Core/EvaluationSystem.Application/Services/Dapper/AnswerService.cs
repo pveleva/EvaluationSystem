@@ -1,13 +1,15 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using Microsoft.Extensions.Caching.Memory;
 using EvaluationSystem.Application.Answers;
+using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Answers.Dapper;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
-    public class AnswerService : IAnswerService
+    public class AnswerService : IAnswerService, IExceptionService
     {
         private readonly IMapper _mapper;
         private readonly IAnswerRepository _answerRepository;
@@ -28,6 +30,8 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public AnswerDto GetByID(int questionId, int answerId)
         {
+            ThrowExceptionWhenEntityDoNotExist(answerId, _answerRepository);
+
             var answerCache = _memoryCache.Get($"answer {answerId}");
             if (answerCache != null)
             {
@@ -66,6 +70,16 @@ namespace EvaluationSystem.Application.Services.Dapper
             _memoryCache.Remove($"answer {answerId}");
 
             _answerRepository.Delete(answerId);
+        }
+
+        public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)
+        {
+            var entity = repository.GetByID(id);
+            var entityName = typeof(T).Name.Remove(typeof(T).Name.Length - 8);
+            if (entity == null)
+            {
+                throw new NullReferenceException($"{entityName} with ID:{id} doesn't exist!");
+            }
         }
     }
 }

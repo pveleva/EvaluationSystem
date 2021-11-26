@@ -21,8 +21,8 @@ namespace EvaluationSystem.Persistence.Dapper
                                             LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
                                             LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
                                             LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id
-                                            ORDER BY q.Id, a.Id
-                                            WHERE q.IsReusable = 0";
+                                            WHERE q.IsReusable = 0
+                                            ORDER BY q.Id, a.Id";
             return Connection.Query<GetQuestionsDto>(query, null, Transaction).AsList();
         }
 

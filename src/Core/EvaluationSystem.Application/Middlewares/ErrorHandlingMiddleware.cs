@@ -46,6 +46,9 @@ namespace EvaluationSystem.Application.Middlewares
                 case HttpException httpException:
                     errors.Add(new Error { Code = (int)httpException.StatusCode, ErrorMessage = httpException.Message });
                     break;
+                case NullReferenceException nullReferenceException:
+                    errors.Add(new Error { Code = 404, ErrorMessage = nullReferenceException.Message });
+                    break;
                 case ValidationException validationException:
                     errors.AddRange(validationException.Errors.Select(e => new Error { Code = 400, ErrorMessage = e.ErrorMessage }));
                     break;

@@ -1,6 +1,6 @@
 ﻿namespace EvaluationSystem.Application.Models.Forms
 {
-    public class CreateUpdateFormDto
+    public class UpdateFormDto
     {
         public string Name { get; set; }
     }
