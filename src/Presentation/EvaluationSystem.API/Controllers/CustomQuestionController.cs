@@ -28,7 +28,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPost()]
-        public QuestionDto CreateCustom(int moduleId, CreateModuleQuestionDto questionDto)
+        public QuestionDto CreateCustom(int moduleId, QuestionDto questionDto)
         {
             return _service.Create(moduleId, questionDto);
         }

@@ -28,7 +28,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPost()]
-        public AnswerDto Create([FromRoute] int questionId, [FromBody] CreateUpdateAnswerDto answerDto)
+        public AnswerDto Create([FromRoute] int questionId, [FromBody] AnswerDto answerDto)
         {
             return _service.Create(questionId, answerDto);
         }

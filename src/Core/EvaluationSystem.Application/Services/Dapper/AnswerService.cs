@@ -44,7 +44,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             return answerDto;
         }
-        public AnswerDto Create(int questionId, CreateUpdateAnswerDto answerDto)
+        public AnswerDto Create(int questionId, AnswerDto answerDto)
         {
             AnswerTemplate answer = _mapper.Map<AnswerTemplate>(answerDto);
             answer.IdQuestion = questionId;

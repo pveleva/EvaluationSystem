@@ -32,9 +32,9 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPost()]
-        public GetModulesDto Create(GetModulesDto formDto)
+        public GetModulesDto Create(int formId, GetModulesDto formDto)
         {
-            return _service.Create(formDto);
+            return _service.Create(formId, formDto);
         }
 
         [HttpPost("{moduleId}/question/{questionId}")]

@@ -7,7 +7,6 @@ namespace EvaluationSystem.Domain.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime DateOfCreation { get; set; }
         public Type Type { get; set; }
         public bool IsReusable { get; set; }
 

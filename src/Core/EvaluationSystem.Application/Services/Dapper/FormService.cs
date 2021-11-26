@@ -8,34 +8,21 @@ using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Models.Modules;
-using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Interfaces.IForm;
 using EvaluationSystem.Application.Interfaces.IModule;
-using EvaluationSystem.Application.Interfaces.IFormModule;
-using EvaluationSystem.Application.Interfaces.IQuestion;
-using EvaluationSystem.Application.Interfaces.IModuleQuestion;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
     public class FormService : IFormService, IExceptionService
     {
         private IMapper _mapper;
-        private IAnswerRepository _answerRepository;
-        private IQuestionRepository _questionRepository;
-        private IModuleRepository _moduleRepository;
-        private IModuleQuestionRepository _moduleQuestionRepository;
-        private IFormModuleRepository _formModuleRepository;
+        private IModuleService _moduleService;
         private IFormRepository _formRepository;
 
-        public FormService(IMapper mapper, IAnswerRepository answerRepository, IQuestionRepository questionRepository, IModuleRepository moduleRepository,
-            IModuleQuestionRepository moduleQuestionRepository, IFormModuleRepository formModuleRepository, IFormRepository formRepository)
+        public FormService(IMapper mapper, IModuleService moduleService, IFormRepository formRepository)
         {
             _mapper = mapper;
-            _answerRepository = answerRepository;
-            _questionRepository = questionRepository;
-            _moduleRepository = moduleRepository;
-            _moduleQuestionRepository = moduleQuestionRepository;
-            _formModuleRepository = formModuleRepository;
+            _moduleService = moduleService;
             _formRepository = formRepository;
         }
 
@@ -166,50 +153,9 @@ namespace EvaluationSystem.Application.Services.Dapper
             int formId = _formRepository.Create(form);
             form.Id = formId;
 
-            List<ModuleTemplate> modules = new List<ModuleTemplate>();
-
             foreach (var moduleDto in formDto.ModulesDtos)
             {
-
-                ModuleTemplate module = _mapper.Map<ModuleTemplate>(moduleDto);
-                int moduleId = _moduleRepository.Create(module);
-                module.Id = moduleId;
-
-                modules.Add(module);
-
-                List<QuestionTemplate> questions = new List<QuestionTemplate>();
-
-                foreach (var questionDto in moduleDto.QuestionsDtos)
-                {
-                    QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
-                    question.IsReusable = false;
-                    question.DateOfCreation = DateTime.UtcNow;
-                    int questionId = _questionRepository.Create(question);
-                    question.Id = questionId;
-
-                    questions.Add(question);
-
-                    _moduleQuestionRepository.Create(new ModuleQuestion()
-                    {
-                        IdModule = moduleId,
-                        IdQuestion = questionId,
-                        Position = questionDto.Position
-                    });
-
-                    List<AnswerTemplate> answers = _mapper.Map<List<AnswerTemplate>>(question.AnswerText);
-                    foreach (var answer in answers)
-                    {
-                        answer.IdQuestion = questionId;
-                        _answerRepository.Create(answer);
-                    }
-                }
-
-                _formModuleRepository.Create(new FormModule()
-                {
-                    IdForm = formId,
-                    IdModule = moduleId,
-                    Position = moduleDto.Position
-                });
+                _moduleService.Create(formId, moduleDto);
             }
 
             return GetById(formId);

@@ -15,13 +15,13 @@ namespace EvaluationSystem.Application.Services.Dapper
     public class QuestionService : IQuestionService, IExceptionService
     {
         private IMapper _mapper;
-        private IAnswerRepository _answerRepository;
+        private IAnswerService _answerService;
         private IQuestionRepository _questionRepository;
         private IModuleQuestionRepository _moduleQuestionRepository;
-        public QuestionService(IMapper mapper, IAnswerRepository answerRepository, IQuestionRepository questionRepository, IModuleQuestionRepository moduleQuestionRepository)
+        public QuestionService(IMapper mapper, IAnswerService answerService, IQuestionRepository questionRepository, IModuleQuestionRepository moduleQuestionRepository)
         {
             _mapper = mapper;
-            _answerRepository = answerRepository;
+            _answerService = answerService;
             _questionRepository = questionRepository;
             _moduleQuestionRepository = moduleQuestionRepository;
         }
@@ -94,11 +94,10 @@ namespace EvaluationSystem.Application.Services.Dapper
             return question.FirstOrDefault();
         }
 
-        public QuestionDto Create(int moduleId, CreateModuleQuestionDto questionDto)
+        public QuestionDto Create(int moduleId, QuestionDto questionDto)
         {
             QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
             question.IsReusable = false;
-            question.DateOfCreation = DateTime.UtcNow;
             int questionId = _questionRepository.Create(question);
 
             if (questionDto.Type == Domain.Entities.Type.Numeric)
@@ -114,17 +113,14 @@ namespace EvaluationSystem.Application.Services.Dapper
                 }
             }
 
-            ICollection<AnswerTemplate> answers = _mapper.Map<ICollection<AnswerTemplate>>(questionDto.AnswerText);
-
-            foreach (var answer in answers)
+            foreach (var answer in questionDto.AnswerText)
             {
-                answer.IdQuestion = questionId;
-                _answerRepository.Create(answer);
+                _answerService.Create(questionId, answer);
             }
 
             _moduleQuestionRepository.Create(new ModuleQuestion()
             {
-                IdModule = questionDto.IdModule,
+                IdModule = moduleId,
                 IdQuestion = questionId,
                 Position = questionDto.Position
             });
@@ -213,11 +209,10 @@ namespace EvaluationSystem.Application.Services.Dapper
             return question.FirstOrDefault();
         }
 
-        public QuestionDto Create(CreateQuestionDto questionDto)
+        public QuestionDto Create(QuestionDto questionDto)
         {
             QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
             question.IsReusable = true;
-            question.DateOfCreation = DateTime.UtcNow;
             int questionId = _questionRepository.Create(question);
 
             if (questionDto.Type == Domain.Entities.Type.Numeric)
@@ -233,12 +228,10 @@ namespace EvaluationSystem.Application.Services.Dapper
                 }
             }
 
-            ICollection<AnswerTemplate> answers = _mapper.Map<ICollection<AnswerTemplate>>(questionDto.AnswerText);
-
-            foreach (var answer in answers)
+            foreach (var answer in questionDto.AnswerText)
             {
                 answer.IdQuestion = questionId;
-                _answerRepository.Create(answer);
+                _answerService.Create(questionId, answer);
             }
 
             return GetById(questionId);
