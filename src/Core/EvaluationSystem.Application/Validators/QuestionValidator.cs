@@ -1,9 +1,9 @@
-﻿using EvaluationSystem.Application.Questions;
-using FluentValidation;
+﻿using FluentValidation;
+using EvaluationSystem.Application.Questions;
 
 namespace EvaluationSystem.Application.Validators
 {
-    public class QuestionValidator : AbstractValidator<CreateQuestionDto>
+    public class QuestionValidator : AbstractValidator<CreateModuleQuestionDto>
     {
         public QuestionValidator()
         {

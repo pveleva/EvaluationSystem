@@ -9,7 +9,7 @@ namespace EvaluationSystem.Persistence.Migrations
         {
             Create.Table("AnswerTemplate")
                 .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("IsDefault").AsBoolean().NotNullable()
+                .WithColumn("IsDefault").AsBoolean()
                 .WithColumn("Position").AsInt64().NotNullable()
                 .WithColumn("AnswerText").AsString(255).NotNullable()
                 .WithColumn("IdQuestion").AsInt64().ForeignKey("QuestionTemplate", "Id").NotNullable();

@@ -7,7 +7,7 @@ using EvaluationSystem.Application.Interfaces.IModuleQuestion;
 
 namespace EvaluationSystem.API.Controllers
 {
-    [Route("api/module")]
+    [Route("api/form/{formId}/module")]
     [ApiController]
     public class ModuleController : ControllerBase
     {
@@ -18,6 +18,7 @@ namespace EvaluationSystem.API.Controllers
             _service = service;
             _moduleQuestionService = moduleQuestionService;
         }
+
         [HttpGet()]
         public IEnumerable<GetModulesDto> GetAll()
         {
@@ -31,7 +32,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPost()]
-        public ExposeModuleDto Create(CreateModelDto formDto)
+        public GetModulesDto Create(GetModulesDto formDto)
         {
             return _service.Create(formDto);
         }

@@ -67,6 +67,14 @@ namespace EvaluationSystem.API
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "EvaluationSystem.API v1"));
 
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .AllowCredentials();
+            });
+
             //app.UseExceptionHandler("/error");
             //app.UseExceptionHandler(c => c.Run(async context =>
             //{

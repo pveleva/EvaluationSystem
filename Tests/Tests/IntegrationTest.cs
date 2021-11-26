@@ -47,7 +47,7 @@ namespace Tests
         [Test]
         public void CreateQuestionDtoWorksCorrectly()
         {
-            var insertable = new CreateQuestionDto()
+            var insertable = new CreateModuleQuestionDto()
             {
                 Name = "asd",
                 IsReusable = 1,

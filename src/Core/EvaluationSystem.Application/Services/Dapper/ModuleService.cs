@@ -6,21 +6,31 @@ using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Models.Modules;
+using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Interfaces.IModule;
+using EvaluationSystem.Application.Interfaces.IQuestion;
 using EvaluationSystem.Application.Interfaces.IFormModule;
+using EvaluationSystem.Application.Interfaces.IModuleQuestion;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
     public class ModuleService : IModuleService
     {
         private IMapper _mapper;
+        private IAnswerRepository _answerRepository;
+        private IQuestionRepository _questionRepository;
         private IModuleRepository _moduleRepository;
+        private IModuleQuestionRepository _moduleQuestionRepository;
         private IFormModuleRepository _formModuleRepository;
 
-        public ModuleService(IMapper mapper, IModuleRepository moduleRepository, IFormModuleRepository formModuleRepository)
+        public ModuleService(IMapper mapper, IAnswerRepository answerRepository, IQuestionRepository questionRepository, IModuleRepository moduleRepository,
+            IModuleQuestionRepository moduleQuestionRepository, IFormModuleRepository formModuleRepository)
         {
             _mapper = mapper;
+            _answerRepository = answerRepository;
+            _questionRepository = questionRepository;
             _moduleRepository = moduleRepository;
+            _moduleQuestionRepository = moduleQuestionRepository;
             _formModuleRepository = formModuleRepository;
         }
         public List<GetModulesDto> GetAll()
@@ -114,20 +124,45 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             return modules.FirstOrDefault();
         }
-        public ExposeModuleDto Create(CreateModelDto moduleDto)
+        public GetModulesDto Create(GetModulesDto moduleDto)
         {
             ModuleTemplate module = _mapper.Map<ModuleTemplate>(moduleDto);
             int moduleId = _moduleRepository.Create(module);
             module.Id = moduleId;
 
+            List<QuestionTemplate> questions = new List<QuestionTemplate>();
+
+            foreach (var questionDto in moduleDto.QuestionsDtos)
+            {
+                QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
+                int questionId = _questionRepository.Create(question);
+                question.Id = questionId;
+
+                questions.Add(question);
+
+                _moduleQuestionRepository.Create(new ModuleQuestion()
+                {
+                    IdModule = moduleId,
+                    IdQuestion = questionId,
+                    Position = questionDto.Position
+                });
+
+                List<AnswerTemplate> answers = _mapper.Map<List<AnswerTemplate>>(question.AnswerText);
+                foreach (var answer in answers)
+                {
+                    answer.IdQuestion = questionId;
+                    _answerRepository.Create(answer);
+                }
+            }
+
             _formModuleRepository.Create(new FormModule()
             {
-                IdForm = moduleDto.idForm,
+                IdForm = moduleDto.IdForm,
                 IdModule = moduleId,
                 Position = moduleDto.Position
             });
 
-            return _mapper.Map<ExposeModuleDto>(module);
+            return GetById(moduleId);
         }
         public ExposeModuleDto Update(int id, UpdateModuleDto moduleDto)
         {
@@ -143,6 +178,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public void DeleteFromRepo(int id)
         {
+            //NOT FINISHED
             _moduleRepository.DeleteFromRepo(id);
         }
     }

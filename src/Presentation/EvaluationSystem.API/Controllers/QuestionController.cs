@@ -27,7 +27,7 @@ namespace EvaluationSystem.API.Controllers
             return _service.GetById(questionId);
         }
 
-        [HttpPost()]
+        [HttpPost]
         public QuestionDto Create(CreateQuestionDto questionDto)
         {
             return _service.Create(questionDto);

@@ -7,7 +7,7 @@ namespace EvaluationSystem.Application.Interfaces.IModule
     {
         List<GetModulesDto> GetAll();
         GetModulesDto GetById(int id);
-        ExposeModuleDto Create(CreateModelDto form);
+        GetModulesDto Create(GetModulesDto form);
         ExposeModuleDto Update(int id, UpdateModuleDto formDto);
         void DeleteFromRepo(int id);
     }

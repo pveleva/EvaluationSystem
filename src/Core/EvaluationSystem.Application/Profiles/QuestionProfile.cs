@@ -9,11 +9,14 @@ namespace EvaluationSystem.Application.Profiles
         public QuestionProfile()
         {
             CreateMap<QuestionTemplate, QuestionDto>();
-            CreateMap<CreateQuestionDto, QuestionTemplate>();
-            CreateMap<CreateQuestionDto, QuestionDto>();
+            CreateMap<CreateModuleQuestionDto, QuestionTemplate>();
+            CreateMap<CreateModuleQuestionDto, QuestionDto>();
             CreateMap<UpdateQuestionDto, QuestionTemplate>();
             CreateMap<GetQuestionsDto, QuestionDto>();
             CreateMap<QuestionTemplate, GetQuestionsDto>();
+            CreateMap<QuestionDto, QuestionTemplate>();
+            CreateMap<CreateQuestionDto, QuestionTemplate>();
+            CreateMap<CreateQuestionDto, QuestionDto>();
         }
     }
 }

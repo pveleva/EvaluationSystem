@@ -7,6 +7,7 @@ using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Interfaces.IQuestion;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
+using System;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -22,6 +23,124 @@ namespace EvaluationSystem.Application.Services.Dapper
             _answerRepository = answerRepository;
             _questionRepository = questionRepository;
             _moduleQuestionRepository = moduleQuestionRepository;
+        }
+
+        public List<QuestionDto> GetAll(int moduleId)
+        {
+            List<GetQuestionsDto> questionsRepo = _questionRepository.GetAll(moduleId);
+
+            List<QuestionDto> allQuestions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
+                .Select(q => new QuestionDto()
+                {
+                    IdModule = q.Key.IdModule,
+                    Id = q.Key.IdQuestion,
+                    Name = q.Key.NameQuestion,
+                    Type = q.Key.Type,
+                    Position = q.Key.QuestionPosition,
+                    AnswerText = new List<AnswerDto>()
+                }).ToList();
+
+            List<AnswerDto> answers = questionsRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.IsDefault, x.AnswerText })
+                .Select(q => new AnswerDto()
+                {
+                    IdQuestion = q.Key.IdQuestion,
+                    Id = q.Key.IdAnswer,
+                    IsDefault = q.Key.IsDefault,
+                    AnswerText = q.Key.AnswerText
+                }).ToList();
+
+            foreach (var question in allQuestions)
+            {
+                question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+            }
+
+            var moduleQuestions = allQuestions.Where(q => q.IdModule == moduleId).ToList();
+
+            return moduleQuestions;
+        }
+
+        public QuestionDto GetById(int moduleId, int questionId)
+        {
+            List<GetQuestionsDto> questionRepo = _questionRepository.GetByIDFromRepo(moduleId, questionId);
+
+            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
+                .Select(q => new QuestionDto()
+                {
+                    IdModule = q.Key.IdModule,
+                    Id = q.Key.IdQuestion,
+                    Name = q.Key.NameQuestion,
+                    Type = q.Key.Type,
+                    Position = q.Key.QuestionPosition,
+                    AnswerText = new List<AnswerDto>()
+                }).ToList();
+
+            List<AnswerDto> answers = questionRepo.GroupBy(x => new { x.IdQuestion, x.IdAnswer, x.IsDefault, x.AnswerText })
+                .Select(q => new AnswerDto()
+                {
+                    IdQuestion = q.Key.IdQuestion,
+                    Id = q.Key.IdAnswer,
+                    IsDefault = q.Key.IsDefault,
+                    AnswerText = q.Key.AnswerText
+                }).ToList();
+
+            var result = question.FirstOrDefault().AnswerText = answers;
+
+            return question.FirstOrDefault();
+        }
+
+        public QuestionDto Create(int moduleId, CreateModuleQuestionDto questionDto)
+        {
+            QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
+            question.IsReusable = false;
+            question.DateOfCreation = DateTime.UtcNow;
+            int questionId = _questionRepository.Create(question);
+
+            if (questionDto.Type == Domain.Entities.Type.Numeric)
+            {
+                foreach (var answer in questionDto.AnswerText)
+                {
+                    int answerParsed;
+                    bool isNumeric = int.TryParse(answer.AnswerText, out answerParsed);
+                    if (!isNumeric)
+                    {
+                        throw new ArgumentException("Answer type is not numeric!");
+                    }
+                }
+            }
+
+            ICollection<AnswerTemplate> answers = _mapper.Map<ICollection<AnswerTemplate>>(questionDto.AnswerText);
+
+            foreach (var answer in answers)
+            {
+                answer.IdQuestion = questionId;
+                _answerRepository.Create(answer);
+            }
+
+            _moduleQuestionRepository.Create(new ModuleQuestion()
+            {
+                IdModule = questionDto.IdModule,
+                IdQuestion = questionId,
+                Position = questionDto.Position
+            });
+
+            return GetById(moduleId, questionId);
+        }
+
+        public QuestionDto Update(int moduleId, int questionId, UpdateQuestionDto questionDto)
+        {
+            QuestionTemplate questionToUpdate = _mapper.Map<QuestionTemplate>(GetById(moduleId, questionId));
+
+            _mapper.Map(questionDto, questionToUpdate);
+
+            questionToUpdate.Id = questionId;
+            _questionRepository.Update(questionToUpdate);
+
+            return GetById(moduleId, questionId);
+        }
+
+        public void Delete(int id)
+        {
+            _questionRepository.DeleteFromRepo(id);
         }
 
         public List<QuestionDto> GetAll()
@@ -89,7 +208,22 @@ namespace EvaluationSystem.Application.Services.Dapper
         public QuestionDto Create(CreateQuestionDto questionDto)
         {
             QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
+            question.IsReusable = true;
+            question.DateOfCreation = DateTime.UtcNow;
             int questionId = _questionRepository.Create(question);
+
+            if (questionDto.Type==Domain.Entities.Type.Numeric)
+            {
+                foreach (var answer in questionDto.AnswerText)
+                {
+                    int answerParsed;
+                    bool isNumeric = int.TryParse(answer.AnswerText, out answerParsed);
+                    if (!isNumeric)
+                    {
+                        throw new ArgumentException("Answer type is not numeric!");
+                    }
+                }
+            }
 
             ICollection<AnswerTemplate> answers = _mapper.Map<ICollection<AnswerTemplate>>(questionDto.AnswerText);
 
@@ -98,13 +232,6 @@ namespace EvaluationSystem.Application.Services.Dapper
                 answer.IdQuestion = questionId;
                 _answerRepository.Create(answer);
             }
-
-            _moduleQuestionRepository.Create(new ModuleQuestion()
-            {
-                IdModule = questionDto.idModule,
-                IdQuestion = questionId,
-                Position = questionDto.Position
-            });
 
             return GetById(questionId);
         }
@@ -119,11 +246,6 @@ namespace EvaluationSystem.Application.Services.Dapper
             _questionRepository.Update(questionToUpdate);
 
             return GetById(id);
-        }
-
-        public void Delete(int id)
-        {
-            _questionRepository.DeleteFromRepo(id);
         }
     }
 }

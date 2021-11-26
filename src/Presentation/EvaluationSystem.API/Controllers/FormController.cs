@@ -37,19 +37,6 @@ namespace EvaluationSystem.API.Controllers
             return _service.Create(formDto);
         }
 
-        [HttpPost("{formId}/module/{moduleId}")]
-        public void SetModule(int formId, int moduleId, int position)
-        {
-            FormModule formModule = new FormModule()
-            {
-                IdForm = formId,
-                IdModule = moduleId,
-                Position = position
-            };
-
-            _formModuleService.SetModule(formModule);
-        }
-
         [HttpPut("{formId}")]
         public ExposeFormDto Update(int formId, CreateUpdateFormDto formDto)
         {

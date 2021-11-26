@@ -1,10 +1,9 @@
 ﻿using Dapper;
-using EvaluationSystem.Application.Interfaces;
-using EvaluationSystem.Application.Interfaces.IModule;
-using EvaluationSystem.Application.Models.Forms;
-using EvaluationSystem.Application.Models.Modules;
-using EvaluationSystem.Domain.Entities;
 using System.Collections.Generic;
+using EvaluationSystem.Domain.Entities;
+using EvaluationSystem.Application.Interfaces;
+using EvaluationSystem.Application.Models.Forms;
+using EvaluationSystem.Application.Interfaces.IModule;
 
 namespace EvaluationSystem.Persistence.Dapper
 {
@@ -43,6 +42,11 @@ namespace EvaluationSystem.Persistence.Dapper
         {
             string deleteFM = @"DELETE FROM FormModule WHERE IdModule = @Id";
             Connection.Execute(deleteFM, new { Id = id }, Transaction);
+
+            string IDsNotReusQuestForDel = @"SELECT  q.Id AS IdQuestion
+                                            FROM ModuleQuestion AS mq
+                                            LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
+                                            WHERE mq.IdModule = @Id AND q.IsReusable = 0";
 
             string deleteMQ = @"DELETE FROM ModuleQuestion WHERE IdModule = @Id";
             Connection.Execute(deleteMQ, new { Id = id }, Transaction);
