@@ -9,7 +9,7 @@ namespace EvaluationSystem.Persistence.Migrations
         {
             Alter.Table("ModuleQuestion")
                 .AddColumn("Position")
-                .AsInt64();
+                .AsInt64().Nullable();
         }
 
         public override void Down()
