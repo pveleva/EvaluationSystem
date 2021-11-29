@@ -3,15 +3,10 @@ using FluentValidation;
 
 namespace EvaluationSystem.Application.Validators
 {
-    public class CreateUpdateDtoValidator : AbstractValidator<CreateUpdateAnswerDto>
+    public class CreateUpdateAnswerDtoValidator : AbstractValidator<CreateUpdateAnswerDto>
     {
-        public CreateUpdateDtoValidator()
+        public CreateUpdateAnswerDtoValidator()
         {
-            RuleFor(answer => answer.IsDefault)
-                 .NotEmpty()
-                 .NotNull()
-                 .WithMessage($"Property value {nameof(CreateUpdateAnswerDto.IsDefault)} could not be empty or null!");
-
             RuleFor(answer => answer.Position)
                  .NotEmpty()
                  .NotNull()

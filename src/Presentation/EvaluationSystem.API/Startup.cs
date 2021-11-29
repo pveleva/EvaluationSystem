@@ -32,7 +32,7 @@ namespace EvaluationSystem.API
             services.AddPersistence(Configuration);
 
             services.AddControllers()
-                    .AddFluentValidation(validator => validator.RegisterValidatorsFromAssemblyContaining<CreateUpdateDtoValidator>());
+                    .AddFluentValidation(validator => validator.RegisterValidatorsFromAssemblyContaining<CreateUpdateAnswerDtoValidator>());
 
             services.Configure<ApiBehaviorOptions>(options =>
             {
