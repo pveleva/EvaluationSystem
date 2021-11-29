@@ -9,12 +9,12 @@ namespace EvaluationSystem.Persistence.Migrations
         {
             Alter.Table("ModuleQuestion")
                 .AddColumn("Position")
-                .AsInt64().NotNullable();
+                .AsInt64();
         }
 
         public override void Down()
         {
-            Delete.Column("Position").FromTable("Position");
+            Delete.Column("Position").FromTable("ModuleQuestion");
         }
     }
 }
