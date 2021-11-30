@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 using EvaluationSystem.Domain.Entities;
 
-namespace EvaluationSystem.PersistenceEF
+namespace EvaluationSystem.Persistence.EF
 {
     public class EvaluationSystemDbContext : DbContext
     {
