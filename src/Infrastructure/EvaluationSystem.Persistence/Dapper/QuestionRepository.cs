@@ -21,7 +21,7 @@ namespace EvaluationSystem.Persistence.Dapper
                                             LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
                                             LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
                                             LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id
-                                            WHERE m.Id =@IdModule AND q.IsReusable = 0";
+                                            WHERE mq.IdModule =IdModule AND q.IsReusable = 0";
             return Connection.Query<GetQuestionsDto>(query, new { IdModule = moduleId }, Transaction).AsList();
         }
 

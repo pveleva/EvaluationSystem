@@ -7,6 +7,7 @@ using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Answers.Dapper;
+using EvaluationSystem.Application.Interfaces.IModule;
 using EvaluationSystem.Application.Interfaces.IQuestion;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
 
@@ -17,18 +18,20 @@ namespace EvaluationSystem.Application.Services.Dapper
         private IMapper _mapper;
         private IAnswerService _answerService;
         private IQuestionRepository _questionRepository;
+        private IModuleRepository _moduleRepository;
         private IModuleQuestionRepository _moduleQuestionRepository;
-        public QuestionService(IMapper mapper, IAnswerService answerService, IQuestionRepository questionRepository, IModuleQuestionRepository moduleQuestionRepository)
+        public QuestionService(IMapper mapper, IAnswerService answerService, IQuestionRepository questionRepository, IModuleRepository moduleRepository, IModuleQuestionRepository moduleQuestionRepository)
         {
             _mapper = mapper;
             _answerService = answerService;
             _questionRepository = questionRepository;
+            _moduleRepository = moduleRepository;
             _moduleQuestionRepository = moduleQuestionRepository;
         }
 
         public List<QuestionDto> GetAll(int moduleId)
         {
-            ThrowExceptionWhenEntityDoNotExist(moduleId, _moduleQuestionRepository);
+            ThrowExceptionWhenEntityDoNotExist(moduleId, _moduleRepository);
 
             List<GetQuestionsDto> questionsRepo = _questionRepository.GetAll(moduleId);
 
@@ -64,7 +67,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public QuestionDto GetById(int moduleId, int questionId)
         {
-            ThrowExceptionWhenEntityDoNotExist(moduleId, _moduleQuestionRepository);
+            ThrowExceptionWhenEntityDoNotExist(moduleId, _moduleRepository);
             ThrowExceptionWhenEntityDoNotExist(questionId, _questionRepository);
 
             List<GetQuestionsDto> questionRepo = _questionRepository.GetByIDFromRepo(moduleId, questionId);
