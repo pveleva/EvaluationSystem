@@ -175,6 +175,13 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public void DeleteFromRepo(int id)
         {
+            var form = GetById(id);
+
+            foreach (var module in form.ModulesDtos)
+            {
+                _moduleService.DeleteFromRepo(module.Id);
+            }
+
             _formRepository.DeleteFromRepo(id);
         }
 

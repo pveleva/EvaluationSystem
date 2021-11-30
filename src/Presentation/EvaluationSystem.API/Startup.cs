@@ -1,18 +1,20 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using System.Collections.Generic;
 using FluentValidation.AspNetCore;
 using EvaluationSystem.Application;
 using EvaluationSystem.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Configuration;
 using EvaluationSystem.Application.Validators;
 using EvaluationSystem.Persistence.Migrations;
 using Microsoft.Extensions.DependencyInjection;
 using EvaluationSystem.Application.Middlewares;
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace EvaluationSystem.API
 {
@@ -47,9 +49,39 @@ namespace EvaluationSystem.API
                 };
             });
 
+            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            //                .AddJwtBearer(options =>
+            //                {
+            //                    options.Authority = "AuthenticationConfig:Authority";
+            //                    options.Audience = "AuthenticationConfig:Audience";
+            //                });
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EvaluationSystem.API", Version = "v1" });
+
+                //c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+                //{
+                //    Type = SecuritySchemeType.Http,
+                //    Scheme = "bearer",
+                //    BearerFormat = "JWT",
+                //    Description = "Standard Authorization header using the Bearer scheme."
+                //});
+
+                //c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                //{
+                //    {
+                //        new OpenApiSecurityScheme
+                //        {
+                //            Reference = new OpenApiReference
+                //            {
+                //                Id = "bearerAuth",
+                //                Type = ReferenceType.SecurityScheme
+                //            }
+                //        },
+                //        new List<string>()
+                //    }
+                //});
             });
 
             services.AddControllers().AddJsonOptions(options =>

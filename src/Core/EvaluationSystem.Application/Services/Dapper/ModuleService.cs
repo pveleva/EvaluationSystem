@@ -155,7 +155,14 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public void DeleteFromRepo(int id)
         {
-            //NOT FINISHED
+            var moduleDto = GetById(id);
+            moduleDto.QuestionsDtos = _questionService.GetAll(id);
+
+            foreach (var question in moduleDto.QuestionsDtos)
+            {
+                _questionService.Delete(question.Id);
+            }
+
             _moduleRepository.DeleteFromRepo(id);
         }
 

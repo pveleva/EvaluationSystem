@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
+using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
-using EvaluationSystem.Domain.Entities;
 
 namespace EvaluationSystem.Application.Profiles
 {

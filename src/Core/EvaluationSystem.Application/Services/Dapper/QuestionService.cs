@@ -20,7 +20,8 @@ namespace EvaluationSystem.Application.Services.Dapper
         private IQuestionRepository _questionRepository;
         private IModuleRepository _moduleRepository;
         private IModuleQuestionRepository _moduleQuestionRepository;
-        public QuestionService(IMapper mapper, IAnswerService answerService, IQuestionRepository questionRepository, IModuleRepository moduleRepository, IModuleQuestionRepository moduleQuestionRepository)
+        public QuestionService(IMapper mapper, IAnswerService answerService, IQuestionRepository questionRepository, IModuleRepository moduleRepository, 
+            IModuleQuestionRepository moduleQuestionRepository)
         {
             _mapper = mapper;
             _answerService = answerService;
