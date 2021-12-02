@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Interfaces.IQuestion;
+using Microsoft.AspNetCore.Authorization;
 
 namespace EvaluationSystem.API.Controllers
 {
     [Route("api/question")]
     [ApiController]
+    //[Authorize]
     public class QuestionController : ControllerBase
     {
         private IQuestionService _service;

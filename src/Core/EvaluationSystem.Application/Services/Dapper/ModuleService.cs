@@ -64,13 +64,18 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var question in questions)
             {
-                question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                if (answers.Any(a => a.IdQuestion == question.Id && a.Id != 0))
+                {
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                }
             }
 
             foreach (var module in modules)
             {
-
-                module.QuestionsDtos = questions.Where(q => q.IdModule == module.Id).ToList();
+                if (questions.Any(q => q.IdModule == module.Id && q.Id != 0))
+                {
+                    module.QuestionsDtos = questions.Where(q => q.IdModule == module.Id).ToList();
+                }
             }
 
             return modules;
@@ -114,7 +119,10 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var question in questions)
             {
-                question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                if (answers.Any(a => a.IdQuestion == question.Id && a.Id != 0))
+                {
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                }
             }
 
             modules.FirstOrDefault().QuestionsDtos = questions;
@@ -129,14 +137,14 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var questionDto in moduleDto.QuestionsDtos)
             {
-                _questionService.Create(moduleId,questionDto);
+                _questionService.Create(moduleId, questionDto);
             }
 
             _formModuleRepository.Create(new FormModule()
             {
                 IdForm = formId,
                 IdModule = moduleId,
-                Position = moduleDto.Position
+                Position = moduleDto.Position != 0 ? moduleDto.Position : 1
             });
 
             return GetById(moduleId);
@@ -160,7 +168,10 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var question in moduleDto.QuestionsDtos)
             {
-                _questionService.Delete(question.Id);
+                if (question.Id != 0)
+                {
+                    _questionService.Delete(question.Id);
+                }
             }
 
             _moduleRepository.DeleteFromRepo(id);

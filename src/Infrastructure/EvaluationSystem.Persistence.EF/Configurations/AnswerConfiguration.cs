@@ -10,14 +10,14 @@ namespace EvaluationSystem.Persistence.EF.Configurations
         {
             builder.ToTable("AnswerTemplate");
 
-            builder.Property(e => e.AnswerText)
-                .HasMaxLength(200)
-                .IsRequired();
+            //builder.Property(e => e.AnswerText)
+            //    .HasMaxLength(200)
+            //    .IsRequired();
 
-            builder.HasOne(w => w.AnswerText)
-                   .WithMany()
-                   .HasForeignKey(w => w.IdQuestion)
-                   .IsRequired();
+            //builder.HasOne(w => w.AnswerText)
+            //       .WithMany()
+            //       .HasForeignKey(w => w.IdQuestion)
+            //       .IsRequired();
         }
     }
 }

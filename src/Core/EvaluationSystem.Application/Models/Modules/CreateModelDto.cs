@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using EvaluationSystem.Application.Questions;
-
-namespace EvaluationSystem.Application.Models.Modules
+﻿namespace EvaluationSystem.Application.Models.Modules
 {
     public class CreateModelDto
     {

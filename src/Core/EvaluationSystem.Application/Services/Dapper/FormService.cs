@@ -71,17 +71,26 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var question in questions)
             {
-                question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                if (answers.Any(a => a.IdQuestion == question.Id && a.Id != 0))
+                {
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                }
             }
 
             foreach (var module in modules)
             {
-                module.QuestionsDtos = questions.Where(q => q.IdModule == module.Id).ToList();
+                if (questions.Any(q => q.IdModule == module.Id && q.Id != 0))
+                {
+                    module.QuestionsDtos = questions.Where(q => q.IdModule == module.Id).ToList();
+                }
             }
 
             foreach (var form in forms)
             {
-                form.ModulesDtos = modules.Where(m => m.IdForm == form.Id).ToList();
+                if (modules.Any(m => m.IdForm == form.Id && m.Id != 0))
+                {
+                    form.ModulesDtos = modules.Where(m => m.IdForm == form.Id).ToList();
+                }
             }
 
             return forms;
@@ -134,15 +143,24 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var question in questions)
             {
-                question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                if (answers.Any(a => a.IdQuestion == question.Id && a.Id != 0))
+                {
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                }
             }
 
             foreach (var module in modules)
             {
-                module.QuestionsDtos = questions.Where(q => q.IdModule == module.Id).ToList();
+                if (questions.Any(q => q.IdModule == module.Id && q.Id != 0))
+                {
+                    module.QuestionsDtos = questions.Where(q => q.IdModule == module.Id).ToList();
+                }
             }
 
-            forms.FirstOrDefault().ModulesDtos = modules;
+            if (forms.FirstOrDefault().ModulesDtos != null)
+            {
+                forms.FirstOrDefault().ModulesDtos = modules;
+            }
 
             return forms.FirstOrDefault();
         }
@@ -179,7 +197,10 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var module in form.ModulesDtos)
             {
-                _moduleService.DeleteFromRepo(module.Id);
+                if (module.Id != 0)
+                {
+                    _moduleService.DeleteFromRepo(module.Id);
+                }
             }
 
             _formRepository.DeleteFromRepo(id);

@@ -52,8 +52,8 @@ namespace EvaluationSystem.API
             //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             //                .AddJwtBearer(options =>
             //                {
-            //                    options.Authority = "AuthenticationConfig:Authority";
-            //                    options.Audience = "AuthenticationConfig:Audience";
+            //                    options.Authority = Configuration["Auth2:Domain"];
+            //                    options.Audience = Configuration["Auth2:Audience"];
             //                });
 
             services.AddSwaggerGen(c =>
@@ -98,7 +98,6 @@ namespace EvaluationSystem.API
 
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "EvaluationSystem.API v1"));
-
 
             //app.UseExceptionHandler("/error");
             //app.UseExceptionHandler(c => c.Run(async context =>

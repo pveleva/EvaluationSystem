@@ -18,14 +18,14 @@ namespace EvaluationSystem.Persistence.EF
                         .Name)));
 
             services.AddScoped<DbContext, EvaluationSystemDbContext>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            services.Scan(scan => scan
-                .FromAssembliesOf(typeof(BaseRepository<>))
-                .AddClasses(f => f.AssignableTo(typeof(IGenericRepository<>)))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime()
-            );
+            //services.Scan(scan => scan
+            //    .FromAssembliesOf(typeof(BaseRepository<>))
+            //    .AddClasses(f => f.AssignableTo(typeof(IGenericRepository<>)))
+            //    .AsImplementedInterfaces()
+            //    .WithScopedLifetime()
+            //);
 
             return services;
         }

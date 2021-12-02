@@ -8,14 +8,6 @@ namespace EvaluationSystem.Persistence.EF.Configurations
     {
         public void Configure(EntityTypeBuilder<ModuleQuestion> builder)
         {
-            //builder.HasMany<QuestionTemplate>(s => s.IdQuestion)
-            //    .WithMany(c => c.Students)
-            //    .Map(cs =>
-            //    {
-            //        cs.MapLeftKey("StudentRefId");
-            //        cs.MapRightKey("CourseRefId");
-            //        cs.ToTable("StudentCourse");
-            //    });
         }
     }
 }

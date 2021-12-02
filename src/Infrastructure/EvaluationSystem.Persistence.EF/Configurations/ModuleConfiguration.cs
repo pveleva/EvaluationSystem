@@ -10,6 +10,11 @@ namespace EvaluationSystem.Persistence.EF.Configurations
         {
             builder.ToTable("ModuleTemplate");
 
+            builder
+                .HasMany<ModuleQuestion>()
+                .WithOne()
+                .HasForeignKey(mq => mq.IdModule);
+
             builder.Property(e => e.Name)
                 .HasMaxLength(200)
                 .IsRequired();

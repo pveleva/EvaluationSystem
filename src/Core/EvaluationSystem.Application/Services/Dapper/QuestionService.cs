@@ -20,7 +20,7 @@ namespace EvaluationSystem.Application.Services.Dapper
         private IQuestionRepository _questionRepository;
         private IModuleRepository _moduleRepository;
         private IModuleQuestionRepository _moduleQuestionRepository;
-        public QuestionService(IMapper mapper, IAnswerService answerService, IQuestionRepository questionRepository, IModuleRepository moduleRepository, 
+        public QuestionService(IMapper mapper, IAnswerService answerService, IQuestionRepository questionRepository, IModuleRepository moduleRepository,
             IModuleQuestionRepository moduleQuestionRepository)
         {
             _mapper = mapper;
@@ -36,7 +36,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             List<GetQuestionsDto> questionsRepo = _questionRepository.GetAll(moduleId);
 
-            List<QuestionDto> allQuestions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
+            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
                 .Select(q => new QuestionDto()
                 {
                     IdModule = q.Key.IdModule,
@@ -56,12 +56,15 @@ namespace EvaluationSystem.Application.Services.Dapper
                     AnswerText = q.Key.AnswerText
                 }).ToList();
 
-            foreach (var question in allQuestions)
+            foreach (var question in questions)
             {
-                question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                if (answers.Any(a => a.IdQuestion == question.Id && a.Id != 0))
+                {
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                }
             }
 
-            var moduleQuestions = allQuestions.Where(q => q.IdModule == moduleId).ToList();
+            var moduleQuestions = questions.Where(q => q.IdModule == moduleId).ToList();
 
             return moduleQuestions;
         }
@@ -126,7 +129,7 @@ namespace EvaluationSystem.Application.Services.Dapper
             {
                 IdModule = moduleId,
                 IdQuestion = questionId,
-                Position = questionDto.Position
+                Position = questionDto.Position != 0 ? questionDto.Position : 1
             });
 
             return GetById(moduleId, questionId);
@@ -176,7 +179,10 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var question in questions)
             {
-                question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                if (answers.Any(a => a.IdQuestion == question.Id && a.Id != 0))
+                {
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                }
             }
 
             return questions;
