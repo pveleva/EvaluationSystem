@@ -1,6 +1,6 @@
-﻿using EvaluationSystem.Application.Questions;
+﻿using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
-using System.Collections.Generic;
+using EvaluationSystem.Application.Questions;
 
 namespace EvaluationSystem.Application.Interfaces.IQuestion
 {

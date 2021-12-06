@@ -1,6 +1,6 @@
-﻿using EvaluationSystem.Application.Interfaces;
+﻿using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
-using System.Collections.Generic;
+using EvaluationSystem.Application.Interfaces;
 
 namespace EvaluationSystem.Application.Answers.Dapper
 {

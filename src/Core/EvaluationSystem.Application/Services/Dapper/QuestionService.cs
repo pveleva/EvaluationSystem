@@ -147,11 +147,6 @@ namespace EvaluationSystem.Application.Services.Dapper
             return GetById(moduleId, questionId);
         }
 
-        public void Delete(int id)
-        {
-            _questionRepository.DeleteFromRepo(id);
-        }
-
         public List<QuestionDto> GetAll()
         {
 
@@ -257,6 +252,10 @@ namespace EvaluationSystem.Application.Services.Dapper
             _questionRepository.Update(questionToUpdate);
 
             return GetById(id);
+        }
+        public void Delete(int id)
+        {
+            _questionRepository.DeleteFromRepo(id);
         }
 
         public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)

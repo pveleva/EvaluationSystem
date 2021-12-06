@@ -5,11 +5,14 @@ using EvaluationSystem.Persistence.Migrations;
 using EvaluationSystem.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using EvaluationSystem.Application.Answers.Dapper;
+using EvaluationSystem.Application.Interfaces.IUser;
 using EvaluationSystem.Application.Interfaces.IForm;
 using EvaluationSystem.Application.Interfaces.IModule;
 using EvaluationSystem.Application.Interfaces.IQuestion;
 using EvaluationSystem.Application.Interfaces.IFormModule;
+using EvaluationSystem.Application.Interfaces.IAttestation;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
+using EvaluationSystem.Application.Interfaces.IAttestationParticipant;
 
 namespace EvaluationSystem.Persistence
 {
@@ -33,6 +36,9 @@ namespace EvaluationSystem.Persistence
             services.AddScoped<IModuleRepository, ModuleRepository>();
             services.AddScoped<IFormModuleRepository, FormModuleRepository>();
             services.AddScoped<IFormRepository, FormRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IAttestationRepository, AttestationRepository>();
+            services.AddScoped<IAttestationParticipantRepository, AttestationParticipantRepository>();
 
             return services;
         }
