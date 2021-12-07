@@ -30,12 +30,11 @@ namespace EvaluationSystem.Application.Services.Dapper
         {
             List<GetFormModuleQuestionAnswerDto> formsRepo = _formRepository.GetAll();
 
-            List<CreateGetFormDto> forms = formsRepo.GroupBy(x => new { x.IdForm, x.NameForm, x.IdModule })
+            List<CreateGetFormDto> forms = formsRepo.GroupBy(x => new { x.IdForm, x.NameForm})
                 .Select(q => new CreateGetFormDto()
                 {
                     Id = q.Key.IdForm,
                     Name = q.Key.NameForm,
-                    IdModule = q.Key.IdModule,
                     ModulesDtos = new List<GetModulesDto>()
                 }).ToList();
 
