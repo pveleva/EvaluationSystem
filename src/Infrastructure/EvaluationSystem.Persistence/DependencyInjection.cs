@@ -28,7 +28,7 @@ namespace EvaluationSystem.Persistence
                             .ScanIn(typeof(AddQuestionTable).Assembly).For.Migrations())
                     .BuildServiceProvider();
 
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IAnswerRepository, AnswerRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
