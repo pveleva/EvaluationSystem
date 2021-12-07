@@ -28,7 +28,7 @@ namespace EvaluationSystem.Persistence
         }
         public int Create(T entity)
         {
-            return (int)Connection.Insert(entity, Transaction);
+            return (int)Connection.Insert(entity, Transaction, Transaction.IsolationLevel.);
         }
 
         public void Update(T entity)
