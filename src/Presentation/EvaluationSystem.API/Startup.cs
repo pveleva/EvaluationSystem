@@ -49,39 +49,39 @@ namespace EvaluationSystem.API
                 };
             });
 
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //                .AddJwtBearer(options =>
-            //                {
-            //                    options.Authority = Configuration["Auth2:Domain"];
-            //                    options.Audience = Configuration["Auth2:Audience"];
-            //                });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                            .AddJwtBearer(options =>
+                            {
+                                options.Authority = Configuration["Auth2:Domain"];
+                                options.Audience = Configuration["Auth2:Audience"];
+                            });
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "EvaluationSystem.API", Version = "v1" });
 
-                //c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
-                //{
-                //    Type = SecuritySchemeType.Http,
-                //    Scheme = "bearer",
-                //    BearerFormat = "JWT",
-                //    Description = "Standard Authorization header using the Bearer scheme."
-                //});
+                c.AddSecurityDefinition("bearerAuth", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    Description = "Standard Authorization header using the Bearer scheme."
+                });
 
-                //c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                //{
-                //    {
-                //        new OpenApiSecurityScheme
-                //        {
-                //            Reference = new OpenApiReference
-                //            {
-                //                Id = "bearerAuth",
-                //                Type = ReferenceType.SecurityScheme
-                //            }
-                //        },
-                //        new List<string>()
-                //    }
-                //});
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "bearerAuth",
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        new List<string>()
+                    }
+                });
             });
 
             services.AddControllers().AddJsonOptions(options =>

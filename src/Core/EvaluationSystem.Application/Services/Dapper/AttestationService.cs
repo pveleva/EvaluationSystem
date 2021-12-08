@@ -16,7 +16,8 @@ namespace EvaluationSystem.Application.Services.Dapper
         private readonly IAttestationParticipantRepository _attestationParticipantRepository;
         private readonly IFormRepository _formRepository;
         private readonly IUserRepository _userRepository;
-        public AttestationService(IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository, IFormRepository formRepository, IUserRepository userRepository)
+        public AttestationService(IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository, 
+            IFormRepository formRepository, IUserRepository userRepository)
         {
             _attestationRepository = attestationRepository;
             _attestationParticipantRepository = attestationParticipantRepository;
