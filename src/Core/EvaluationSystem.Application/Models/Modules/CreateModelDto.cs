@@ -4,6 +4,6 @@
     {
         public int idForm { get; set; }
         public string Name { get; set; }
-        public int Position { get; set; }
+        public int Position { get; set; } = 1;
     }
 }

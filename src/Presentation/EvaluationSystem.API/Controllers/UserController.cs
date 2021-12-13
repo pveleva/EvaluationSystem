@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
+using EvaluationSystem.Application.Models.Users;
 using EvaluationSystem.Application.Interfaces.IUser;
 
 namespace EvaluationSystem.API.Controllers
@@ -19,6 +20,11 @@ namespace EvaluationSystem.API.Controllers
         public IEnumerable<User> GetAll()
         {
             return _service.GetAll();
+        }
+        [HttpGet("GetUsersToEvaluate")]
+        public IEnumerable<ExposeUserDto> GetUsersToEvaluate()
+        {
+            return _service.GetUsersToEvaluate();
         }
     }
 }

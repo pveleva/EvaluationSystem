@@ -36,7 +36,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             List<GetQuestionsDto> questionsRepo = _questionRepository.GetAll(moduleId);
 
-            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
+            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition, x.DateOfCreation })
                 .Select(q => new QuestionDto()
                 {
                     IdModule = q.Key.IdModule,
@@ -44,6 +44,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     Name = q.Key.NameQuestion,
                     Type = q.Key.Type,
                     Position = q.Key.QuestionPosition,
+                    DateOfCreation = q.Key.DateOfCreation,
                     AnswerText = new List<AnswerDto>()
                 }).ToList();
 
@@ -76,7 +77,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             List<GetQuestionsDto> questionRepo = _questionRepository.GetByIDFromRepo(moduleId, questionId);
 
-            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
+            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition, x.DateOfCreation })
                 .Select(q => new QuestionDto()
                 {
                     IdModule = q.Key.IdModule,
@@ -84,6 +85,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     Name = q.Key.NameQuestion,
                     Type = q.Key.Type,
                     Position = q.Key.QuestionPosition,
+                    DateOfCreation = q.Key.DateOfCreation,
                     AnswerText = new List<AnswerDto>()
                 }).ToList();
 
@@ -105,6 +107,7 @@ namespace EvaluationSystem.Application.Services.Dapper
         {
             QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
             question.IsReusable = false;
+            question.DateOfCreation = DateTime.UtcNow;
             int questionId = _questionRepository.Create(question);
 
             if (questionDto.Type == Domain.Entities.Type.Numeric)
@@ -135,24 +138,28 @@ namespace EvaluationSystem.Application.Services.Dapper
             return GetById(moduleId, questionId);
         }
 
-        public QuestionDto Update(int moduleId, int questionId, UpdateQuestionDto questionDto)
+        public QuestionDto Update(int moduleId, int questionId, UpdateCustomQuestionDto questionDto)
         {
-            QuestionTemplate questionToUpdate = _mapper.Map<QuestionTemplate>(GetById(moduleId, questionId));
-
-            _mapper.Map(questionDto, questionToUpdate);
+            QuestionTemplate questionToUpdate = _questionRepository.GetByID(questionId);
+            questionToUpdate.Name = questionDto.Name == null ? questionToUpdate.Name : questionDto.Name;
+            questionToUpdate.Type = questionDto.Type == 0 ? questionToUpdate.Type : questionDto.Type;
 
             questionToUpdate.Id = questionId;
             _questionRepository.Update(questionToUpdate);
+
+            if (questionDto.Position != 0)
+            {
+                _moduleQuestionRepository.UpdateFromRepo(moduleId, questionId, questionDto.Position);
+            }
 
             return GetById(moduleId, questionId);
         }
 
         public List<QuestionDto> GetAll()
         {
-
             List<GetQuestionsDto> questionsRepo = _questionRepository.GetAll();
 
-            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
+            List<QuestionDto> questions = questionsRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition, x.DateOfCreation })
                 .Select(q => new QuestionDto()
                 {
                     IdModule = q.Key.IdModule,
@@ -160,6 +167,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     Name = q.Key.NameQuestion,
                     Type = q.Key.Type,
                     Position = q.Key.QuestionPosition,
+                    DateOfCreation = q.Key.DateOfCreation,
                     AnswerText = new List<AnswerDto>()
                 }).ToList();
 
@@ -189,7 +197,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             List<GetQuestionsDto> questionRepo = _questionRepository.GetByIDFromRepo(id);
 
-            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition })
+            List<QuestionDto> question = questionRepo.GroupBy(x => new { x.IdModule, x.IdQuestion, x.NameQuestion, x.Type, x.QuestionPosition, x.DateOfCreation })
                 .Select(q => new QuestionDto()
                 {
                     IdModule = q.Key.IdModule,
@@ -197,6 +205,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     Name = q.Key.NameQuestion,
                     Type = q.Key.Type,
                     Position = q.Key.QuestionPosition,
+                    DateOfCreation = q.Key.DateOfCreation,
                     AnswerText = new List<AnswerDto>()
                 }).ToList();
 
@@ -218,6 +227,7 @@ namespace EvaluationSystem.Application.Services.Dapper
         {
             QuestionTemplate question = _mapper.Map<QuestionTemplate>(questionDto);
             question.IsReusable = true;
+            question.DateOfCreation = DateTime.UtcNow;
             int questionId = _questionRepository.Create(question);
 
             if (questionDto.Type == Domain.Entities.Type.Numeric)
@@ -245,8 +255,8 @@ namespace EvaluationSystem.Application.Services.Dapper
         public QuestionDto Update(int id, UpdateQuestionDto questionDto)
         {
             QuestionTemplate questionToUpdate = _questionRepository.GetByID(id);
-
-            _mapper.Map(questionDto, questionToUpdate);
+            questionToUpdate.Name = questionDto.Name == null ? questionToUpdate.Name : questionDto.Name;
+            questionToUpdate.Type = questionDto.Type == 0 ? questionToUpdate.Type : questionDto.Type;
 
             questionToUpdate.Id = id;
             _questionRepository.Update(questionToUpdate);

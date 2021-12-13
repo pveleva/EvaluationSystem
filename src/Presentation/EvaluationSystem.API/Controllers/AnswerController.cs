@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Answers.Dapper;
 
@@ -7,6 +8,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/question/{questionId}/answer")]
     [ApiController]
+    [Authorize]
     public class AnswerController : ControllerBase
     {
         private IAnswerService _service;

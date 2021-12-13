@@ -99,16 +99,6 @@ namespace EvaluationSystem.API
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "EvaluationSystem.API v1"));
 
-            //app.UseExceptionHandler("/error");
-            //app.UseExceptionHandler(c => c.Run(async context =>
-            //{
-            //    var exception = context.Features
-            //        .Get<IExceptionHandlerPathFeature>()
-            //        .Error;
-            //    var response = new { error = exception.Message };
-            //    await context.Response.WriteAsJsonAsync(response);
-            //}));
-
             CreateDatabase
                 .EnsureDatabase(Configuration);
 
@@ -125,9 +115,11 @@ namespace EvaluationSystem.API
                     .AllowAnyHeader();
             });
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
+            app.UseMiddleware<UserMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

@@ -11,7 +11,7 @@ namespace EvaluationSystem.Application.Interfaces.IQuestion
         QuestionDto GetById(int id);
         QuestionDto Create(int moduleId, QuestionDto questionDto);
         QuestionDto Create(QuestionDto questionDto);
-        QuestionDto Update(int moduleId, int questionId, UpdateQuestionDto questionDto);
+        QuestionDto Update(int moduleId, int questionId, UpdateCustomQuestionDto questionDto);
         QuestionDto Update(int id, UpdateQuestionDto questionDto);
         void Delete(int id);
     }

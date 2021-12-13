@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Interfaces.IForm;
 using EvaluationSystem.Application.Interfaces.IFormModule;
@@ -8,6 +9,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/form")]
     [ApiController]
+    [Authorize]
     public class FormController : ControllerBase
     {
         private IFormService _service;

@@ -6,6 +6,6 @@ namespace EvaluationSystem.Application.Exceptions
     public class HttpException : Exception
     {
         public HttpStatusCode StatusCode { get; set; }
-        public string Message { get; set; }
+        public override string Message { get; }
     }
 }

@@ -2,8 +2,8 @@
 {
     public class CreateUpdateAnswerDto
     {
-        public byte IsDefault { get; set; }
-        public int Position { get; set; }
+        public bool IsDefault { get; set; }
+        public int Position { get; set; } = 1;
         public string AnswerText { get; set; }
     }
 }

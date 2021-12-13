@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Interfaces.IQuestion;
 
@@ -7,6 +8,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/module/{moduleId}/question")]
     [ApiController]
+    [Authorize]
     public class CustomQuestionController : ControllerBase
     {
         private IQuestionService _service;
@@ -34,7 +36,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPut("{questionId}")]
-        public QuestionDto Update(int moduleId, int questionId, UpdateQuestionDto questionDto)
+        public QuestionDto Update(int moduleId, int questionId, UpdateCustomQuestionDto questionDto)
         {
             return _service.Update(moduleId, questionId, questionDto);
         }

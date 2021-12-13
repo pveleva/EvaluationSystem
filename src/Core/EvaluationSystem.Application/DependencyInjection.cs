@@ -1,5 +1,6 @@
 ﻿using EvaluationSystem.Application.Profiles;
 using Microsoft.Extensions.DependencyInjection;
+using EvaluationSystem.Application.Models.Users;
 using EvaluationSystem.Application.Answers.Dapper;
 using EvaluationSystem.Application.Services.Dapper;
 using EvaluationSystem.Application.Interfaces.IUser;
@@ -22,6 +23,7 @@ namespace EvaluationSystem.Application
             services.AddScoped<IModuleService, ModuleService>();
             services.AddScoped<IFormModuleService, FormModuleService>();
             services.AddScoped<IFormService, FormService>();
+            services.AddScoped<IUser, CurrentUser>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAttestationService, AttestationService>();
 

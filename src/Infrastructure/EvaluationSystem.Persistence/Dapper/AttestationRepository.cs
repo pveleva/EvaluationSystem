@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using System.Linq;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Interfaces;
@@ -15,63 +14,29 @@ namespace EvaluationSystem.Persistence.Dapper
         {
         }
 
-        public List<GetAttestationDto> GetAll()
+        public List<GetAttestationDtoFromRepo> GetAll()
         {
-            string query = @"SELECT a.Id AS IdAttestation, f.[Name] AS FormName, a.CreateDate, u.[Name] AS UsernameToEvaluate, ap.[Status], up.[Name] AS UsernameParticipant
-                                    FROM Attestation AS a
-                                    JOIN [User] AS u ON u.Id = a.IdUserToEvaluate
-                                    JOIN FormTemplate AS f ON f.Id = a.IdForm
-                                    JOIN AttestationParticipant ap ON ap.IdAttestation = a.Id
-                                    JOIN [User] up ON up.Id = ap.IdUserParticipant";
+            string query = @"SELECT  a.Id AS IdAttestation, u.[Name] AS UsernameToEvaluate, f.[Name] AS FormName, up.[Name] AS UsernameParticipant, ap.[Status], a.CreateDate
+                                     FROM Attestation AS a
+                                     JOIN [User] AS u ON u.Id = a.IdUserToEvaluate
+                                     JOIN FormTemplate AS f ON f.Id = a.IdForm
+                                     JOIN AttestationParticipant ap ON ap.IdAttestation = a.Id
+                                     JOIN [User] up ON up.Id = ap.IdUserParticipant";
 
-            var attestationDictionary = new Dictionary<int, GetAttestationDto>();
-
-            var attestations = Connection.Query<GetAttestationDto, string, GetAttestationDto>(query, (attestation, userParticipant) =>
-            {
-                if (!attestationDictionary.TryGetValue(attestation.IdAttestation, out var currentAttestation))
-                {
-                    currentAttestation = attestation;
-                    attestationDictionary.Add(currentAttestation.IdAttestation, currentAttestation);
-                }
-
-                currentAttestation.UsernameParticipant.Add(userParticipant);
-                return currentAttestation;
-            }, null, Transaction,
-               splitOn: "IdAttestation, FormName, CreateDate, UsernameToEvaluate, Status, UsernameParticipant")
-            .Distinct()
-            .ToList();
-
-            return attestations;
+            return Connection.Query<GetAttestationDtoFromRepo>(query, null, Transaction).AsList();
         }
 
-        public GetAttestationDto GetById(int id)
+        public List<GetAttestationDtoFromRepo> GetByEmail(string email)
         {
-            var query = @"SELECT a.Id AS IdAttestation, f.[Name] AS FormName, a.CreateDate, u.[Name] AS UsernameToEvaluate, ap.[Status], up.[Name] AS UsernameParticipant
+            var query = @"SELECT  a.Id AS IdAttestation, u.[Name] AS UsernameToEvaluate, f.[Name] AS FormName, up.[Name] AS UsernameParticipant, ap.[Status], a.CreateDate
                                     FROM Attestation AS a
                                     JOIN [User] AS u ON u.Id = a.IdUserToEvaluate
                                     JOIN FormTemplate AS f ON f.Id = a.IdForm
                                     JOIN AttestationParticipant ap ON ap.IdAttestation = a.Id
                                     JOIN [User] up ON up.Id = ap.IdUserParticipant
-                                    WHERE IdAttestation = @Id";
+                                    WHERE [Email] = @Email";
 
-            var attestationDictionary = new Dictionary<int, GetAttestationDto>();
-
-            var attestations = Connection.Query<GetAttestationDto, string, GetAttestationDto>(query, (attestation, userParticipant) =>
-            {
-                if (!attestationDictionary.TryGetValue(attestation.IdAttestation, out var currentAttestation))
-                {
-                    currentAttestation = attestation;
-                    attestationDictionary.Add(currentAttestation.IdAttestation, currentAttestation);
-                }
-
-                currentAttestation.UsernameParticipant.Add(userParticipant);
-                return currentAttestation;
-            }, new { Id = id }, Transaction,
-               splitOn: "IdAttestation, FormName, CreateDate, UsernameToEvaluate, Status, UsernameParticipant")
-            .Distinct()
-            .ToList();
-
-            return attestations.FirstOrDefault();
+            return Connection.Query<GetAttestationDtoFromRepo>(query, new { Email = email }, Transaction).AsList();
         }
 
         public void DeleteFromRepo(int id)

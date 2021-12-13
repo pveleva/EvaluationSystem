@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Domain.Entities;
+using EvaluationSystem.Application.Questions;
 
 namespace EvaluationSystem.Application.Profiles
 {
@@ -12,6 +12,7 @@ namespace EvaluationSystem.Application.Profiles
             CreateMap<CreateModuleQuestionDto, QuestionTemplate>();
             CreateMap<CreateModuleQuestionDto, QuestionDto>();
             CreateMap<UpdateQuestionDto, QuestionTemplate>();
+            CreateMap<UpdateCustomQuestionDto, QuestionTemplate>();
             CreateMap<GetQuestionsDto, QuestionDto>();
             CreateMap<QuestionTemplate, GetQuestionsDto>();
             CreateMap<QuestionDto, QuestionTemplate>();

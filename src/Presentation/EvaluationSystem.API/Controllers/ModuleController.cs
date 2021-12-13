@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Models.Modules;
 using EvaluationSystem.Application.Interfaces.IModule;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
@@ -9,6 +10,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/form/{formId}/module")]
     [ApiController]
+    [Authorize]
     public class ModuleController : ControllerBase
     {
         private IModuleService _service;
@@ -51,7 +53,7 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpPut("{moduleId}")]
-        public ExposeModuleDto Update(int moduleId, UpdateModuleDto formDto)
+        public GetModulesDto Update(int moduleId, UpdateModuleDto formDto)
         {
             return _service.Update(moduleId, formDto);
         }

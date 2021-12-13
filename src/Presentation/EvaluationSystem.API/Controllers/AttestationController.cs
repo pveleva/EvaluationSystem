@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Models.Attestations;
 using EvaluationSystem.Application.Interfaces.IAttestation;
 
@@ -7,6 +8,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/attestation")]
     [ApiController]
+    [Authorize]
     public class AttestationController : ControllerBase
     {
         private IAttestationService _service;
@@ -21,10 +23,10 @@ namespace EvaluationSystem.API.Controllers
             return _service.GetAll();
         }
 
-        [HttpGet("{attestationId}")]
-        public GetAttestationDto GetById(int attestationId)
+        [HttpGet("GetCurrentUserAttestations")]
+        public GetAttestationDto GetByEmail()
         {
-            return _service.GetById(attestationId);
+            return _service.GetByEmail();
         }
 
         [HttpPost]

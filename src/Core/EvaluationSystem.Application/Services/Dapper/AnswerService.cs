@@ -6,6 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Answers.Dapper;
+using EvaluationSystem.Application.Interfaces.IQuestion;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -13,11 +14,13 @@ namespace EvaluationSystem.Application.Services.Dapper
     {
         private readonly IMapper _mapper;
         private readonly IAnswerRepository _answerRepository;
+        private IQuestionRepository _questionRepository;
         private readonly IMemoryCache _memoryCache;
-        public AnswerService(IMapper mapper, IAnswerRepository answerRepository, IMemoryCache memoryCache)
+        public AnswerService(IMapper mapper, IAnswerRepository answerRepository, IQuestionRepository questionRepository, IMemoryCache memoryCache)
         {
             _mapper = mapper;
             _answerRepository = answerRepository;
+            _questionRepository = questionRepository;
             _memoryCache = memoryCache;
         }
 
@@ -46,6 +49,16 @@ namespace EvaluationSystem.Application.Services.Dapper
         }
         public AnswerDto Create(int questionId, AnswerDto answerDto)
         {
+            if (_questionRepository.GetByID(questionId).Type == Domain.Entities.Type.Numeric)
+            {
+                int answerParsed;
+                bool isNumeric = int.TryParse(answerDto.AnswerText, out answerParsed);
+                if (!isNumeric)
+                {
+                    throw new ArgumentException("Answer type is not numeric!");
+                }
+            }
+
             AnswerTemplate answer = _mapper.Map<AnswerTemplate>(answerDto);
             answer.IdQuestion = questionId;
             int answerId = _answerRepository.Create(answer);
@@ -56,13 +69,15 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public AnswerDto Update(int questionId, int answerId, CreateUpdateAnswerDto answerDto)
         {
-            AnswerTemplate answer = _mapper.Map<AnswerTemplate>(answerDto);
-            answer.Id = answerId;
-            answer.IdQuestion = questionId;
-            _answerRepository.Update(answer);
+            AnswerTemplate answerToUpdate = _answerRepository.GetByID(answerId);
+            answerToUpdate.IsDefault = answerDto.IsDefault == false ? answerToUpdate.IsDefault : answerDto.IsDefault;
+            answerToUpdate.Position = answerDto.Position == 0 ? answerToUpdate.Position : answerDto.Position;
+            answerToUpdate.AnswerText = answerDto.AnswerText == null ? answerToUpdate.AnswerText : answerDto.AnswerText;
+
+            _answerRepository.Update(answerToUpdate);
 
             _memoryCache.Remove($"answer {answerId}");
-            return _mapper.Map<AnswerDto>(answer);
+            return _mapper.Map<AnswerDto>(answerToUpdate);
         }
 
         public void Delete(int answerId)

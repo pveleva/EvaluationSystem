@@ -15,8 +15,8 @@ namespace EvaluationSystem.Persistence.Dapper
         }
         public List<GetQuestionsDto> GetAll(int moduleId)
         {
-            string query = @"SELECT m.Id AS IdModule, m.[Name] AS NameModule, mq.Position AS QuestionPosition, 
-                                    q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
+            string query = @"  SELECT m.Id AS IdModule, m.[Name] AS NameModule, mq.Position AS QuestionPosition, 
+                                    q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], q.DateOfCreation, a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
                                             FROM ModuleTemplate AS m
                                             LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
                                             LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
@@ -28,7 +28,7 @@ namespace EvaluationSystem.Persistence.Dapper
         public List<GetQuestionsDto> GetByIDFromRepo(int moduleId, int questionId)
         {
             string query = @"SELECT m.Id AS IdModule, m.[Name] AS NameModule, mq.Position AS QuestionPosition, 
-                                    q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
+                                    q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], q.DateOfCreation, a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
                                             FROM ModuleTemplate AS m
                                             LEFT JOIN ModuleQuestion AS mq ON m.Id = mq.IdModule
                                             LEFT JOIN QuestionTemplate AS q ON q.Id = mq.IdQuestion
@@ -39,7 +39,7 @@ namespace EvaluationSystem.Persistence.Dapper
 
         public List<GetQuestionsDto> GetAll()
         {
-            string query = @"SELECT q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], 
+            string query = @"SELECT q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], q.DateOfCreation, 
 	                                a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
                                             FROM QuestionTemplate AS q
                                             LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id
@@ -49,7 +49,7 @@ namespace EvaluationSystem.Persistence.Dapper
 
         public List<GetQuestionsDto> GetByIDFromRepo(int questionId)
         {
-            string query = @"SELECT q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], 
+            string query = @"SELECT q.Id AS IdQuestion, q.[Name] AS NameQuestion, q.[Type], q.DateOfCreation,
 	                                a.Id AS IdAnswer, a.IsDefault, a.AnswerText AS AnswerText 
                                             FROM QuestionTemplate AS q
                                             LEFT JOIN AnswerTemplate AS a ON a.IdQuestion = q.Id

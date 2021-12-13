@@ -149,16 +149,19 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             return GetById(moduleId);
         }
-        public ExposeModuleDto Update(int id, UpdateModuleDto moduleDto)
+        public GetModulesDto Update(int id, UpdateModuleDto moduleDto)
         {
-            ModuleTemplate moduleToUpdate = _moduleRepository.GetByID(id);
+            GetModulesDto moduleToUpdate = GetById(id);
+            moduleToUpdate.Name = moduleDto.Name == null ? moduleToUpdate.Name : moduleDto.Name;
 
-            _mapper.Map(moduleDto, moduleToUpdate);
+            _moduleRepository.Update(_mapper.Map<ModuleTemplate>(moduleToUpdate));
 
-            moduleToUpdate.Id = id;
-            _moduleRepository.Update(moduleToUpdate);
+            if (moduleDto.Position != 0)
+            {
+                _formModuleRepository.UpdateFromRepo(moduleToUpdate.IdForm, id, moduleDto.Position);
+            }
 
-            return _mapper.Map<ExposeModuleDto>(moduleToUpdate);
+            return _mapper.Map<GetModulesDto>(moduleToUpdate);
         }
 
         public void DeleteFromRepo(int id)

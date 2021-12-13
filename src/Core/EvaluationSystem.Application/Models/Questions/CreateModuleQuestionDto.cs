@@ -9,7 +9,7 @@ namespace EvaluationSystem.Application.Questions
         public int IdModule { get; set; }
         public string Name { get; set; }
         public Type Type { get; set; }
-        public int Position { get; set; }
+        public int Position { get; set; } = 1;
         public ICollection<CreateUpdateAnswerDto> AnswerText { get; set; }
     }
 }

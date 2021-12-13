@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Interfaces;
+using EvaluationSystem.Application.Models.Users;
 using EvaluationSystem.Application.Interfaces.IForm;
 using EvaluationSystem.Application.Interfaces.IUser;
 using EvaluationSystem.Application.Models.Attestations;
@@ -16,51 +18,142 @@ namespace EvaluationSystem.Application.Services.Dapper
         private readonly IAttestationParticipantRepository _attestationParticipantRepository;
         private readonly IFormRepository _formRepository;
         private readonly IUserRepository _userRepository;
-        public AttestationService(IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository, 
-            IFormRepository formRepository, IUserRepository userRepository)
+        private readonly IUser _currentUser;
+        public AttestationService(IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository,
+            IFormRepository formRepository, IUserRepository userRepository, IUser currentUser)
         {
             _attestationRepository = attestationRepository;
             _attestationParticipantRepository = attestationParticipantRepository;
             _formRepository = formRepository;
             _userRepository = userRepository;
+            _currentUser = currentUser;
         }
         public List<GetAttestationDto> GetAll()
         {
-            return _attestationRepository.GetAll();
+            List<GetAttestationDtoFromRepo> attestationsRepo = _attestationRepository.GetAll();
+
+            List<GetAttestationDto> attestations = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameToEvaluate, x.FormName, x.CreateDate })
+                    .Select(q => new GetAttestationDto()
+                    {
+                        IdAttestation = q.Key.IdAttestation,
+                        UsernameToEvaluate = q.Key.UsernameToEvaluate,
+                        FormName = q.Key.FormName,
+                        Participants = new List<ExposeUserParticipantDto>(),
+                        CreateDate = q.Key.CreateDate
+                    }).ToList();
+
+            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.UsernameToEvaluate, x.UsernameParticipant, x.Status })
+                    .Select(q => new ExposeUserParticipantDto()
+                    {
+                        UsernameToEvaluate = q.Key.UsernameToEvaluate,
+                        UsernameParticipant = q.Key.UsernameParticipant,
+                        Status = q.Key.Status
+                    }).ToList();
+
+            foreach (var attestation in attestations)
+            {
+                attestation.Participants = participants.Where(ute => ute.UsernameToEvaluate == attestation.UsernameToEvaluate).ToList();
+                if (attestation.Participants.All(p => p.Status == Domain.Enums.Status.Done))
+                {
+                    attestation.Status = Domain.Enums.Status.Done;
+                }
+                else if (attestation.Participants.All(p => p.Status == Domain.Enums.Status.Open))
+                {
+                    attestation.Status = Domain.Enums.Status.Open;
+                }
+                else
+                {
+                    attestation.Status = Domain.Enums.Status.InProgress;
+                }
+            }
+
+            return attestations;
         }
-        public GetAttestationDto GetById(int id)
+
+        public GetAttestationDto GetByEmail()
         {
-            ThrowExceptionWhenEntityDoNotExist(id, _attestationRepository);
-            return _attestationRepository.GetById(id);
+            List<GetAttestationDtoFromRepo> attestationsRepo = _attestationRepository.GetByEmail(_currentUser.Email);
+
+            List<GetAttestationDto> attestations = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameToEvaluate, x.FormName, x.CreateDate })
+                    .Select(q => new GetAttestationDto()
+                    {
+                        IdAttestation = q.Key.IdAttestation,
+                        UsernameToEvaluate = q.Key.UsernameToEvaluate,
+                        FormName = q.Key.FormName,
+                        Participants = new List<ExposeUserParticipantDto>(),
+                        CreateDate = q.Key.CreateDate
+                    }).ToList();
+
+            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.UsernameToEvaluate, x.UsernameParticipant, x.Status })
+                    .Select(q => new ExposeUserParticipantDto()
+                    {
+                        UsernameToEvaluate = q.Key.UsernameToEvaluate,
+                        UsernameParticipant = q.Key.UsernameParticipant,
+                        Status = q.Key.Status
+                    }).ToList();
+
+            foreach (var attestation in attestations)
+            {
+                attestation.Participants = participants.Where(ute => ute.UsernameToEvaluate == attestation.UsernameToEvaluate).ToList();
+                if (attestation.Participants.All(p => p.Status == Domain.Enums.Status.Done))
+                {
+                    attestation.Status = Domain.Enums.Status.Done;
+                }
+                else if (attestation.Participants.All(p => p.Status == Domain.Enums.Status.Open))
+                {
+                    attestation.Status = Domain.Enums.Status.Open;
+                }
+                else
+                {
+                    attestation.Status = Domain.Enums.Status.InProgress;
+                }
+            }
+
+            return attestations.FirstOrDefault();
         }
+
         public GetAttestationDto Create(CreateAttestationDto createAttestationDto)
         {
             ThrowExceptionWhenEntityDoNotExist(createAttestationDto.IdForm, _formRepository);
-            ThrowExceptionWhenEntityDoNotExist(createAttestationDto.IdUserToEvaluate, _userRepository);
+            int idUserToEvaluate = 0;
+            int idUserParticipant = 0;
 
-            foreach (var participant in createAttestationDto.IdUserParticipant)
+            if (_userRepository.GetList().Where(u => u.Name == createAttestationDto.Username) == null)
             {
-                ThrowExceptionWhenEntityDoNotExist(participant, _userRepository);
+                idUserToEvaluate = _userRepository.Create(new User { Name = createAttestationDto.Username, Email = createAttestationDto.UserEmail });
+            }
+            else
+            {
+                idUserToEvaluate = _userRepository.GetList().FirstOrDefault(u => u.Name == createAttestationDto.Username).Id;
             }
 
             int attestationId = _attestationRepository.Create(new Attestation()
             {
                 IdForm = createAttestationDto.IdForm,
-                IdUserToEvaluate = createAttestationDto.IdUserToEvaluate,
+                IdUserToEvaluate = idUserToEvaluate,
                 CreateDate = DateTime.Now
             });
 
-            foreach (var participant in createAttestationDto.IdUserParticipant)
+            foreach (var participant in createAttestationDto.UserParticipants)
             {
+                if (_userRepository.GetList().Where(u => u.Name == participant.ParticipantName) == null)
+                {
+                    idUserParticipant = _userRepository.Create(new User { Name = participant.ParticipantName, Email = participant.ParticipantEmail });
+                }
+                else
+                {
+                    idUserParticipant = _userRepository.GetList().FirstOrDefault(u => u.Name == participant.ParticipantName).Id;
+                }
+
                 _attestationParticipantRepository.Create(new AttestationParticipant()
                 {
                     IdAttestation = attestationId,
-                    IdUserParticipant = participant,
-                    Status = createAttestationDto.Status
+                    IdUserParticipant = idUserParticipant,
+                    Status = Domain.Enums.Status.Open
                 });
             }
 
-            return GetById(attestationId);
+            return GetAll().Where(u => u.UsernameToEvaluate == createAttestationDto.Username).FirstOrDefault();
         }
 
         public void DeleteFromRepo(int id)

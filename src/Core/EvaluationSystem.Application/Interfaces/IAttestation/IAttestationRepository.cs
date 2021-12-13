@@ -6,8 +6,8 @@ namespace EvaluationSystem.Application.Interfaces.IAttestation
 {
     public interface IAttestationRepository : IGenericRepository<Attestation>
     {
-        public List<GetAttestationDto> GetAll();
-        public GetAttestationDto GetById(int id);
+        public List<GetAttestationDtoFromRepo> GetAll();
+        public List<GetAttestationDtoFromRepo> GetByEmail(string email);
         public void DeleteFromRepo(int id);
     }
 }
