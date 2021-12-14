@@ -12,6 +12,7 @@ using EvaluationSystem.Application.Interfaces.IQuestion;
 using EvaluationSystem.Application.Interfaces.IFormModule;
 using EvaluationSystem.Application.Interfaces.IAttestation;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
+using EvaluationSystem.Application.Interfaces.IAttestationAnswer;
 using EvaluationSystem.Application.Interfaces.IAttestationParticipant;
 
 namespace EvaluationSystem.Persistence
@@ -39,6 +40,7 @@ namespace EvaluationSystem.Persistence
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAttestationRepository, AttestationRepository>();
             services.AddScoped<IAttestationParticipantRepository, AttestationParticipantRepository>();
+            services.AddScoped<IAttestationAnswerRepository, AttestationAnswerRepository>();
 
             return services;
         }

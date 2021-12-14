@@ -10,6 +10,6 @@ namespace EvaluationSystem.Domain.Entities
         public int IdModuleTemplate { get; set; }
         public int IdQuestionTemplate { get; set; }
         public IEnumerable<int> IdAnswerTemplate { get; set; }
-        public string AnswerText { get; set; }
+        public string TextAnswer { get; set; }
     }
 }

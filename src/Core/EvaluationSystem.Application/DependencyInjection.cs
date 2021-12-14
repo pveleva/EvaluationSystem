@@ -10,6 +10,7 @@ using EvaluationSystem.Application.Interfaces.IQuestion;
 using EvaluationSystem.Application.Interfaces.IFormModule;
 using EvaluationSystem.Application.Interfaces.IAttestation;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
+using EvaluationSystem.Application.Interfaces.IAttestationAnswer;
 
 namespace EvaluationSystem.Application
 {
@@ -26,6 +27,7 @@ namespace EvaluationSystem.Application
             services.AddScoped<IUser, CurrentUser>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAttestationService, AttestationService>();
+            services.AddScoped<IAttestationAnswerService, AttestationAnswerService>();
 
             services.AddAutoMapper(typeof(AnswerProfile).Assembly);
 

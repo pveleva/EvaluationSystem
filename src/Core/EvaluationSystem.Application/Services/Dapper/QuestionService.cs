@@ -98,7 +98,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     AnswerText = q.Key.AnswerText
                 }).ToList();
 
-            var result = question.FirstOrDefault().AnswerText = answers;
+            question.FirstOrDefault().AnswerText = answers;
 
             return question.FirstOrDefault();
         }
@@ -218,7 +218,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     AnswerText = q.Key.AnswerText
                 }).ToList();
 
-            var result = question.FirstOrDefault().AnswerText = answers;
+            question.FirstOrDefault().AnswerText = answers;
 
             return question.FirstOrDefault();
         }
