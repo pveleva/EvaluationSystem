@@ -152,7 +152,8 @@ namespace EvaluationSystem.Application.Services.Dapper
                 {
                     IdAttestation = attestationId,
                     IdUserParticipant = idUserParticipant,
-                    Status = Domain.Enums.Status.Open
+                    Status = Domain.Enums.Status.Open,
+                    Position = participant.Position
                 });
             }
 

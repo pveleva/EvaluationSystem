@@ -42,11 +42,11 @@ namespace EvaluationSystem.Persistence
                 _transaction.Dispose();
                 _transaction = null;
             }
-            //if (_connection != null)
-            //{
+            if (_connection != null)
+            {
                 _connection.Dispose();
-            //    _connection = null;
-            //}
+                _connection = null;
+            }
         }
     }
 }

@@ -6,6 +6,6 @@ namespace EvaluationSystem.Application.Models.Users
     {
         public string ParticipantName { get; set; }
         public string ParticipantEmail { get; set; }
-        public Position Position { get; set; }
+        public string Position { get; set; }
     }
 }

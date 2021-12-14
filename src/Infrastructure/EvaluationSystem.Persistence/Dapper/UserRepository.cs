@@ -15,11 +15,11 @@ namespace EvaluationSystem.Persistence.Dapper
 
         public List<User> GetUsersToEvaluate(string email)
         {
-            string query = @"SELECT u.[Name] AS Name FROM Attestation AS a
-                                    JOIN [User] AS u ON u.Id = a.IdUserToEvaluate
-                                    JOIN AttestationParticipant ap ON ap.IdAttestation = a.Id
-                                    JOIN [User] up ON up.Id = ap.IdUserParticipant
-									WHERE up.Email = @Email";
+            string query = @"SELECT u.[Name] FROM [USER] AS u 
+									JOIN [Attestation] AS a ON u.Id = a.IdUserToEvaluate
+									JOIN [AttestationParticipant] AS ap ON a.Id = ap.IdAttestation
+									JOIN [User] AS ue ON ap.IdUserParticipant = ue.Id
+									WHERE ue.Email = @Email AND ap.[Status] = 1";
             return Connection.Query<User>(query, new { Email = email }, Transaction).AsList();
         }
     }

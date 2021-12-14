@@ -9,7 +9,7 @@ namespace EvaluationSystem.Domain.Entities
         public int IdUserParticipant { get; set; }
         public int IdModuleTemplate { get; set; }
         public int IdQuestionTemplate { get; set; }
-        public IEnumerable<int> IdAnswerTemplate { get; set; }
+        public int IdAnswerTemplate { get; set; }
         public string TextAnswer { get; set; }
     }
 }

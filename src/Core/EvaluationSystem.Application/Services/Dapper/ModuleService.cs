@@ -66,7 +66,7 @@ namespace EvaluationSystem.Application.Services.Dapper
             {
                 if (answers.Any(a => a.IdQuestion == question.Id && a.Id != 0))
                 {
-                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id).ToList();
                 }
             }
 
@@ -121,7 +121,7 @@ namespace EvaluationSystem.Application.Services.Dapper
             {
                 if (answers.Any(a => a.IdQuestion == question.Id && a.Id != 0))
                 {
-                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id);
+                    question.AnswerText = answers.Where(a => a.IdQuestion == question.Id).ToList();
                 }
             }
 
