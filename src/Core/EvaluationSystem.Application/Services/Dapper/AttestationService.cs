@@ -118,13 +118,15 @@ namespace EvaluationSystem.Application.Services.Dapper
             int idUserToEvaluate = 0;
             int idUserParticipant = 0;
 
-            if (_userRepository.GetList().Where(u => u.Name == createAttestationDto.Username) == null)
+            var userToEvaluate = _userRepository.GetList().Where(u => u.Name == createAttestationDto.Username).FirstOrDefault();
+
+            if (userToEvaluate == null)
             {
                 idUserToEvaluate = _userRepository.Create(new User { Name = createAttestationDto.Username, Email = createAttestationDto.UserEmail });
             }
             else
             {
-                idUserToEvaluate = _userRepository.GetList().FirstOrDefault(u => u.Name == createAttestationDto.Username).Id;
+                idUserToEvaluate = userToEvaluate.Id;
             }
 
             int attestationId = _attestationRepository.Create(new Attestation()
@@ -136,13 +138,14 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var participant in createAttestationDto.UserParticipants)
             {
-                if (_userRepository.GetList().Where(u => u.Name == participant.ParticipantName) == null)
+                var userParticipant = _userRepository.GetList().Where(u => u.Name == participant.ParticipantName).FirstOrDefault();
+                if (userParticipant == null)
                 {
                     idUserParticipant = _userRepository.Create(new User { Name = participant.ParticipantName, Email = participant.ParticipantEmail });
                 }
                 else
                 {
-                    idUserParticipant = _userRepository.GetList().FirstOrDefault(u => u.Name == participant.ParticipantName).Id;
+                    idUserParticipant = userParticipant.Id;
                 }
 
                 _attestationParticipantRepository.Create(new AttestationParticipant()
