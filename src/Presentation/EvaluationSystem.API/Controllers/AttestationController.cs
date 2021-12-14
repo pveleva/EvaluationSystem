@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Models.Attestations;
 using EvaluationSystem.Application.Interfaces.IAttestation;
 
@@ -8,8 +7,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/attestation")]
     [ApiController]
-    [Authorize]
-    public class AttestationController : ControllerBase
+    public class AttestationController : AuthorizeControllerBase
     {
         private IAttestationService _service;
         public AttestationController(IAttestationService service)

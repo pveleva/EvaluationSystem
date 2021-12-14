@@ -1,23 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Interfaces.IForm;
-using EvaluationSystem.Application.Interfaces.IFormModule;
 
 namespace EvaluationSystem.API.Controllers
 {
     [Route("api/form")]
     [ApiController]
-    [Authorize]
-    public class FormController : ControllerBase
+    public class FormController : AuthorizeControllerBase
     {
         private IFormService _service;
-        private IFormModuleService _formModuleService;
-        public FormController(IFormService service, IFormModuleService formModuleService)
+        public FormController(IFormService service)
         {
             _service = service;
-            _formModuleService = formModuleService;
         }
 
         [HttpGet()]

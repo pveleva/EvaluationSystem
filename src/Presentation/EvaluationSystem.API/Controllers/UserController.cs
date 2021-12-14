@@ -8,7 +8,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/user")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : AuthorizeControllerBase
     {
         private IUserService _service;
         public UserController(IUserService service)

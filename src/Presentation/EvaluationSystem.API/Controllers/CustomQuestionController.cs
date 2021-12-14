@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Interfaces.IQuestion;
 
@@ -8,8 +7,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/module/{moduleId}/question")]
     [ApiController]
-    [Authorize]
-    public class CustomQuestionController : ControllerBase
+    public class CustomQuestionController : AuthorizeControllerBase
     {
         private IQuestionService _service;
         public CustomQuestionController(IQuestionService service)

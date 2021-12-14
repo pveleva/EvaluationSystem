@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
-using Microsoft.AspNetCore.Authorization;
 using EvaluationSystem.Application.Models.Modules;
 using EvaluationSystem.Application.Interfaces.IModule;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
@@ -10,8 +9,7 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/form/{formId}/module")]
     [ApiController]
-    [Authorize]
-    public class ModuleController : ControllerBase
+    public class ModuleController : AuthorizeControllerBase
     {
         private IModuleService _service;
         private IModuleQuestionService _moduleQuestionService;
