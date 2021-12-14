@@ -70,9 +70,9 @@ namespace EvaluationSystem.Application.Services.Dapper
         public AnswerDto Update(int questionId, int answerId, CreateUpdateAnswerDto answerDto)
         {
             AnswerTemplate answerToUpdate = _answerRepository.GetByID(answerId);
-            answerToUpdate.IsDefault = answerDto.IsDefault == 0 ? answerToUpdate.IsDefault : answerDto.IsDefault;
-            answerToUpdate.Position = answerDto.Position == 0 ? answerToUpdate.Position : answerDto.Position;
-            answerToUpdate.AnswerText = answerDto.AnswerText == null ? answerToUpdate.AnswerText : answerDto.AnswerText;
+            answerToUpdate.IsDefault = answerDto.IsDefault == answerToUpdate.IsDefault ? answerToUpdate.IsDefault : answerDto.IsDefault;
+            answerToUpdate.Position = answerDto.Position == answerToUpdate.Position ? answerToUpdate.Position : answerDto.Position;
+            answerToUpdate.AnswerText = answerDto.AnswerText == answerToUpdate.AnswerText ? answerToUpdate.AnswerText : answerDto.AnswerText;
 
             _answerRepository.Update(answerToUpdate);
 
