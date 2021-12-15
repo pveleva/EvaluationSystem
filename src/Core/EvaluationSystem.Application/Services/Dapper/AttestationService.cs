@@ -18,15 +18,14 @@ namespace EvaluationSystem.Application.Services.Dapper
         private readonly IAttestationParticipantRepository _attestationParticipantRepository;
         private readonly IFormRepository _formRepository;
         private readonly IUserRepository _userRepository;
-        private readonly IUser _currentUser;
+
         public AttestationService(IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository,
-            IFormRepository formRepository, IUserRepository userRepository, IUser currentUser)
+            IFormRepository formRepository, IUserRepository userRepository)
         {
             _attestationRepository = attestationRepository;
             _attestationParticipantRepository = attestationParticipantRepository;
             _formRepository = formRepository;
             _userRepository = userRepository;
-            _currentUser = currentUser;
         }
         public List<GetAttestationDto> GetAll()
         {
@@ -94,6 +93,17 @@ namespace EvaluationSystem.Application.Services.Dapper
                 CreateDate = DateTime.Now
             });
 
+            if (createAttestationDto.UserParticipants.Count == 0)
+            {
+                _attestationParticipantRepository.Create(new AttestationParticipant()
+                {
+                    IdAttestation = attestationId,
+                    IdUserParticipant = idUserToEvaluate,
+                    Status = Domain.Enums.Status.Open,
+                    Position = Domain.Enums.Position.Peer
+                });
+            }
+
             foreach (var participant in createAttestationDto.UserParticipants)
             {
                 var userParticipant = _userRepository.GetList().Where(u => u.Name == participant.ParticipantName).FirstOrDefault();
@@ -106,6 +116,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     idUserParticipant = userParticipant.Id;
                 }
 
+
                 _attestationParticipantRepository.Create(new AttestationParticipant()
                 {
                     IdAttestation = attestationId,
@@ -115,7 +126,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                 });
             }
 
-            return GetAll().Where(u => u.UsernameToEvaluate == createAttestationDto.Username).FirstOrDefault();
+            return GetAll().Where(a => a.IdAttestation == attestationId).FirstOrDefault();
         }
 
         public void DeleteFromRepo(int id)
