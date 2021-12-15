@@ -34,7 +34,7 @@ namespace EvaluationSystem.Persistence.Dapper
                                     JOIN FormTemplate AS f ON f.Id = a.IdForm
                                     JOIN AttestationParticipant ap ON ap.IdAttestation = a.Id
                                     JOIN [User] up ON up.Id = ap.IdUserParticipant
-                                    WHERE [Email] = @Email";
+                                    WHERE up.[Email] = @Email";
 
             return Connection.Query<GetAttestationDtoFromRepo>(query, new { Email = email }, Transaction).AsList();
         }

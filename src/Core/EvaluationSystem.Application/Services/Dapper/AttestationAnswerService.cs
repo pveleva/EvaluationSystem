@@ -59,14 +59,13 @@ namespace EvaluationSystem.Application.Services.Dapper
                 {
                     foreach (var a in question.AnswerText)
                     {
-                        if (a.AnswerText == ans.IdAnswerTemplate.ToString())
+                        if (a.Id == ans.IdAnswerTemplate)
                         {
                             a.IsAnswered = 1;
                         }
                     }
                 }
             }
-
             return form;
         }
         public GetAttestationAnswerDto Create(CreateAttestationAnswerDto createAttestationAnswerDto)
