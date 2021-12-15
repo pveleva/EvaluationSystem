@@ -1,15 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace EvaluationSystem.Domain.Entities
+﻿namespace EvaluationSystem.Domain.Entities
 {
-    public class AttestationAnswer
+    public class AttestationAnswer : BaseEntity
     {
-        public int Id { get; set; }
-        public int IdAttestation { get; set; }
-        public int IdUserParticipant { get; set; }
-        public int IdModuleTemplate { get; set; }
-        public int IdQuestionTemplate { get; set; }
-        public int IdAnswerTemplate { get; set; }
-        public string TextAnswer { get; set; }
+        public byte IsDefault { get; set; }
+        public int Position { get; set; }
+        public string AnswerText { get; set; }
+        public int IdQuestion { get; set; }
     }
 }

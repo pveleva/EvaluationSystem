@@ -8,14 +8,14 @@ using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Interfaces.IForm;
 using EvaluationSystem.Application.Interfaces.IUser;
 using EvaluationSystem.Application.Interfaces.IQuestion;
+using EvaluationSystem.Application.Interfaces.IUserAnswer;
 using EvaluationSystem.Application.Interfaces.IAttestation;
 using EvaluationSystem.Application.Models.AttestationAnswers;
-using EvaluationSystem.Application.Interfaces.IAttestationAnswer;
 using EvaluationSystem.Application.Interfaces.IAttestationParticipant;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
-    public class AttestationAnswerService : IAttestationAnswerService, IExceptionService
+    public class UserAnswerService : IUserAnswerService, IExceptionService
     {
         private readonly IQuestionService _questionService;
         private readonly IFormService _formService;
@@ -23,10 +23,10 @@ namespace EvaluationSystem.Application.Services.Dapper
         private readonly IAttestationRepository _attestationRepository;
         private readonly IAttestationService _attestationService;
         private readonly IAttestationParticipantRepository _attestationParticipantRepository;
-        private readonly IAttestationAnswerRepository _attestationAnswerRepository;
+        private readonly IUserAnswerRepository _userAnswerRepository;
         private readonly IUser _currentUser;
-        public AttestationAnswerService(IQuestionService questionService, IFormService formService, IUserRepository userRepository, IAttestationRepository attestationRepository,
-            IAttestationService attestationService, IAttestationParticipantRepository attestationParticipantRepository, IAttestationAnswerRepository attestationAnswerRepository, IUser currentUser)
+        public UserAnswerService(IQuestionService questionService, IFormService formService, IUserRepository userRepository, IAttestationRepository attestationRepository,
+            IAttestationService attestationService, IAttestationParticipantRepository attestationParticipantRepository, IUserAnswerRepository userAnswerRepository, IUser currentUser)
         {
             _questionService = questionService;
             _formService = formService;
@@ -34,14 +34,14 @@ namespace EvaluationSystem.Application.Services.Dapper
             _attestationRepository = attestationRepository;
             _attestationService = attestationService;
             _attestationParticipantRepository = attestationParticipantRepository;
-            _attestationAnswerRepository = attestationAnswerRepository;
+            _userAnswerRepository = userAnswerRepository;
             _currentUser = currentUser;
         }
         public CreateGetFormDto Get(int idAttestation, string email)
         {
             var attestation = _attestationService.GetAll().Where(a => a.IdAttestation == idAttestation).FirstOrDefault();
             var user = _userRepository.GetList().Where(u => u.Email == email).FirstOrDefault();
-            var attestationAnswer = _attestationAnswerRepository.GetList().Where(aa => aa.IdAttestation == idAttestation && aa.IdUserParticipant == user.Id).ToList();
+            var attestationAnswer = _userAnswerRepository.GetList().Where(aa => aa.IdAttestation == idAttestation && aa.IdUserParticipant == user.Id).ToList();
             var form = _formService.GetAll().Where(f => f.Name == attestation.FormName).FirstOrDefault();
 
             foreach (var ans in attestationAnswer)
@@ -72,7 +72,7 @@ namespace EvaluationSystem.Application.Services.Dapper
         {
             ThrowExceptionWhenEntityDoNotExist(createAttestationAnswerDto.IdAttestation, _attestationRepository);
 
-            var attestationAnswer = new AttestationAnswer()
+            var attestationAnswer = new UserAnswer()
             {
                 IdAttestation = createAttestationAnswerDto.IdAttestation,
                 IdUserParticipant = _currentUser.Id
@@ -89,7 +89,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     attestationAnswer.IdAnswerTemplate = 0;
                     attestationAnswer.TextAnswer = answer.AnswerText;
 
-                    _attestationAnswerRepository.Create(attestationAnswer);
+                    _userAnswerRepository.Create(attestationAnswer);
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                         attestationAnswer.IdAnswerTemplate = ans;
                         attestationAnswer.TextAnswer = "";
 
-                        _attestationAnswerRepository.Create(attestationAnswer);
+                        _userAnswerRepository.Create(attestationAnswer);
                     }
                 };
             }

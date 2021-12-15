@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using EvaluationSystem.Application.Models.Forms;
+using EvaluationSystem.Application.Interfaces.IUserAnswer;
 using EvaluationSystem.Application.Models.AttestationAnswers;
-using EvaluationSystem.Application.Interfaces.IAttestationAnswer;
 
 namespace EvaluationSystem.API.Controllers
 {
@@ -9,8 +9,8 @@ namespace EvaluationSystem.API.Controllers
     [ApiController]
     public class AttestationAnswerController : AuthorizeControllerBase
     {
-        private IAttestationAnswerService _service;
-        public AttestationAnswerController(IAttestationAnswerService service)
+        private IUserAnswerService _service;
+        public AttestationAnswerController(IUserAnswerService service)
         {
             _service = service;
         }
