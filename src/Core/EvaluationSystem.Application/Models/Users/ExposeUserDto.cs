@@ -2,6 +2,8 @@
 {
     public class ExposeUserDto
     {
-        public string Name { get; set; }
+        public int IdAttestation { get; set; }
+        public int IdForm { get; set; }
+        public string Email { get; set; }
     }
 }

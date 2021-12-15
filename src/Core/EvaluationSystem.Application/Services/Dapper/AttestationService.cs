@@ -70,48 +70,6 @@ namespace EvaluationSystem.Application.Services.Dapper
             return attestations;
         }
 
-        public GetAttestationDto GetByEmail()
-        {
-            List<GetAttestationDtoFromRepo> attestationsRepo = _attestationRepository.GetByEmail(_currentUser.Email);
-
-            List<GetAttestationDto> attestations = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameToEvaluate, x.FormName, x.CreateDate })
-                    .Select(q => new GetAttestationDto()
-                    {
-                        IdAttestation = q.Key.IdAttestation,
-                        UsernameToEvaluate = q.Key.UsernameToEvaluate,
-                        FormName = q.Key.FormName,
-                        Participants = new List<ExposeUserParticipantDto>(),
-                        CreateDate = q.Key.CreateDate
-                    }).ToList();
-
-            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameParticipant, x.Status })
-                    .Select(q => new ExposeUserParticipantDto()
-                    {
-                        IdAttestation = q.Key.IdAttestation,
-                        UsernameParticipant = q.Key.UsernameParticipant,
-                        Status = q.Key.Status
-                    }).ToList();
-
-            foreach (var attestation in attestations)
-            {
-                attestation.Participants = participants.Where(ute => ute.IdAttestation == attestation.IdAttestation).ToList();
-                if (attestation.Participants.All(p => p.Status == Domain.Enums.Status.Done))
-                {
-                    attestation.Status = Domain.Enums.Status.Done;
-                }
-                else if (attestation.Participants.All(p => p.Status == Domain.Enums.Status.Open))
-                {
-                    attestation.Status = Domain.Enums.Status.Open;
-                }
-                else
-                {
-                    attestation.Status = Domain.Enums.Status.InProgress;
-                }
-            }
-
-            return attestations.FirstOrDefault();
-        }
-
         public GetAttestationDto Create(CreateAttestationDto createAttestationDto)
         {
             ThrowExceptionWhenEntityDoNotExist(createAttestationDto.IdForm, _formRepository);

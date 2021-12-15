@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Interfaces.IUser;
+using EvaluationSystem.Application.Models.Users;
 
 namespace EvaluationSystem.Persistence.Dapper
 {
@@ -13,14 +14,14 @@ namespace EvaluationSystem.Persistence.Dapper
         {
         }
 
-        public List<User> GetUsersToEvaluate(string email)
+        public List<ExposeUserDto> GetUsersToEvaluate(string email)
         {
-            string query = @"SELECT u.[Name] FROM [USER] AS u 
+            string query = @"SELECT a.Id AS IdAttestation, a.IdForm AS IdForm, u.[Email] FROM [USER] AS u 
 									JOIN [Attestation] AS a ON u.Id = a.IdUserToEvaluate
 									JOIN [AttestationParticipant] AS ap ON a.Id = ap.IdAttestation
 									JOIN [User] AS ue ON ap.IdUserParticipant = ue.Id
 									WHERE ue.Email = @Email AND ap.[Status] = 1";
-            return Connection.Query<User>(query, new { Email = email }, Transaction).AsList();
+            return Connection.Query<ExposeUserDto>(query, new { Email = email }, Transaction).AsList();
         }
     }
 }

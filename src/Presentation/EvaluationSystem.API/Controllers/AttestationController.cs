@@ -21,12 +21,6 @@ namespace EvaluationSystem.API.Controllers
             return _service.GetAll();
         }
 
-        [HttpGet("GetCurrentUserAttestations")]
-        public GetAttestationDto GetByEmail()
-        {
-            return _service.GetByEmail();
-        }
-
         [HttpPost]
         public GetAttestationDto Create(CreateAttestationDto attestationDto)
         {
