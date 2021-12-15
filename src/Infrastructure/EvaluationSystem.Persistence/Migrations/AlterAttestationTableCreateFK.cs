@@ -11,7 +11,7 @@ namespace EvaluationSystem.Persistence.Migrations
         }
         public override void Down()
         {
-            Execute.Sql("ALTER TABLE [Attestation] DROP CONSTRAINT FK_Attestation_IdForm_FormTemplate_Id;");
+            Execute.Sql("ALTER TABLE [Attestation] DROP CONSTRAINT FK_Attestation_IdForm_AttestationForm_Id;");
         }
     }
 }
