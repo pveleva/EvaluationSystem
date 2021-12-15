@@ -3,7 +3,7 @@
 namespace EvaluationSystem.Persistence.Migrations
 {
     [Migration(202112141107)]
-    public class AlterAttestationAnswerTableRemoveFK : Migration
+    public class AlterAttestationAnswerTableDropFK : Migration
     {
         public override void Up()
         {
