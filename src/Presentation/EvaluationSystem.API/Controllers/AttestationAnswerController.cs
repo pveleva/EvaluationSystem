@@ -16,9 +16,9 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpGet("{idAttestation}")]
-        public CreateGetFormDto GetAll(int idAttestation)
+        public CreateGetFormDto GetAll(int idAttestation, string email)
         {
-            return _service.Get(idAttestation);
+            return _service.Get(idAttestation, email);
         }
 
         [HttpPost()]

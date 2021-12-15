@@ -12,7 +12,6 @@ using EvaluationSystem.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -20,26 +19,29 @@ namespace EvaluationSystem.Application.Services.Dapper
     {
         private readonly IQuestionService _questionService;
         private readonly IFormService _formService;
+        private readonly IUserRepository _userRepository;
         private readonly IAttestationRepository _attestationRepository;
         private readonly IAttestationService _attestationService;
         private readonly IAttestationParticipantRepository _attestationParticipantRepository;
         private readonly IAttestationAnswerRepository _attestationAnswerRepository;
         private readonly IUser _currentUser;
-        public AttestationAnswerService(IQuestionService questionService, IFormService formService, IAttestationRepository attestationRepository,
+        public AttestationAnswerService(IQuestionService questionService, IFormService formService, IUserRepository userRepository, IAttestationRepository attestationRepository,
             IAttestationService attestationService, IAttestationParticipantRepository attestationParticipantRepository, IAttestationAnswerRepository attestationAnswerRepository, IUser currentUser)
         {
             _questionService = questionService;
             _formService = formService;
+            _userRepository = userRepository;
             _attestationRepository = attestationRepository;
             _attestationService = attestationService;
             _attestationParticipantRepository = attestationParticipantRepository;
             _attestationAnswerRepository = attestationAnswerRepository;
             _currentUser = currentUser;
         }
-        public CreateGetFormDto Get(int idAttestation)
+        public CreateGetFormDto Get(int idAttestation, string email)
         {
             var attestation = _attestationService.GetAll().Where(a => a.IdAttestation == idAttestation).FirstOrDefault();
-            var attestationAnswer = _attestationAnswerRepository.GetList().Where(aa => aa.IdAttestation == idAttestation).ToList();
+            var user = _userRepository.GetList().Where(u => u.Email == email).FirstOrDefault();
+            var attestationAnswer = _attestationAnswerRepository.GetList().Where(aa => aa.IdAttestation == idAttestation && aa.IdUserParticipant == user.Id).ToList();
             var form = _formService.GetAll().Where(f => f.Name == attestation.FormName).FirstOrDefault();
 
             foreach (var ans in attestationAnswer)
@@ -49,8 +51,8 @@ namespace EvaluationSystem.Application.Services.Dapper
 
                 if (question.Type == Domain.Entities.Type.TextField)
                 {
-                    question.AnswerText = new List<AnswerDto>() 
-                    { new AnswerDto() 
+                    question.AnswerText = new List<AnswerDto>()
+                    { new AnswerDto()
                     { AnswerText = ans.TextAnswer, IsAnswered = 1 } };
                 }
                 else

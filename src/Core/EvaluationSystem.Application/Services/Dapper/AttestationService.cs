@@ -42,17 +42,17 @@ namespace EvaluationSystem.Application.Services.Dapper
                         CreateDate = q.Key.CreateDate
                     }).ToList();
 
-            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.UsernameToEvaluate, x.UsernameParticipant, x.Status })
+            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameParticipant, x.Status })
                     .Select(q => new ExposeUserParticipantDto()
                     {
-                        UsernameToEvaluate = q.Key.UsernameToEvaluate,
+                        IdAttestation = q.Key.IdAttestation,
                         UsernameParticipant = q.Key.UsernameParticipant,
                         Status = q.Key.Status
                     }).ToList();
 
             foreach (var attestation in attestations)
             {
-                attestation.Participants = participants.Where(ute => ute.UsernameToEvaluate == attestation.UsernameToEvaluate).ToList();
+                attestation.Participants = participants.Where(ute => ute.IdAttestation == attestation.IdAttestation).ToList();
                 if (attestation.Participants.All(p => p.Status == Domain.Enums.Status.Done))
                 {
                     attestation.Status = Domain.Enums.Status.Done;
@@ -84,17 +84,17 @@ namespace EvaluationSystem.Application.Services.Dapper
                         CreateDate = q.Key.CreateDate
                     }).ToList();
 
-            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.UsernameToEvaluate, x.UsernameParticipant, x.Status })
+            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameParticipant, x.Status })
                     .Select(q => new ExposeUserParticipantDto()
                     {
-                        UsernameToEvaluate = q.Key.UsernameToEvaluate,
+                        IdAttestation = q.Key.IdAttestation,
                         UsernameParticipant = q.Key.UsernameParticipant,
                         Status = q.Key.Status
                     }).ToList();
 
             foreach (var attestation in attestations)
             {
-                attestation.Participants = participants.Where(ute => ute.UsernameToEvaluate == attestation.UsernameToEvaluate).ToList();
+                attestation.Participants = participants.Where(ute => ute.IdAttestation == attestation.IdAttestation).ToList();
                 if (attestation.Participants.All(p => p.Status == Domain.Enums.Status.Done))
                 {
                     attestation.Status = Domain.Enums.Status.Done;
