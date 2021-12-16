@@ -9,7 +9,7 @@ namespace EvaluationSystem.Persistence.Migrations
         {
             Create.Table("FormTemplate")
                   .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-                  .WithColumn("[Name]").AsString(1024).NotNullable();
+                  .WithColumn("[Name]").AsString(1024).Unique().NotNullable();
         }
 
         public override void Down()

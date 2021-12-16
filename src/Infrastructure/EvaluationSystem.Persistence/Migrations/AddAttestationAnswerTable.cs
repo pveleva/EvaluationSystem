@@ -2,19 +2,17 @@
 
 namespace EvaluationSystem.Persistence.Migrations
 {
-    [Migration(202112061549)]
+    [Migration(202112151549)]
     public class AddAttestationAnswerTable : Migration
     {
         public override void Up()
         {
             Create.Table("AttestationAnswer")
-                .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("IdAttestation").AsInt64().ForeignKey("Attestation", "Id").NotNullable()
-                .WithColumn("IdUserParticipant").AsInt64().ForeignKey("User", "Id").NotNullable()
-                .WithColumn("IdModuleTemplate").AsInt64().ForeignKey("ModuleTemplate", "Id").NotNullable()
-                .WithColumn("IdQuestionTemplate").AsInt64().ForeignKey("QuestionTemplate", "Id").NotNullable()
-                .WithColumn("IdAnswerTemplate").AsInt64().Nullable()
-                .WithColumn("TextAnswer").AsString(255).Nullable();
+                    .WithColumn("Id").AsInt64().PrimaryKey().Identity()
+                    .WithColumn("IsDefault").AsBoolean()
+                    .WithColumn("Position").AsInt64().NotNullable()
+                    .WithColumn("AnswerText").AsString(255).NotNullable()
+                    .WithColumn("IdQuestion").AsInt64().ForeignKey("QuestionTemplate", "Id").NotNullable();
         }
         public override void Down()
         {

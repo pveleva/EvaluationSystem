@@ -11,7 +11,8 @@ namespace EvaluationSystem.Persistence.Migrations
                   .WithColumn("Id").AsInt64().PrimaryKey().Identity()
                   .WithColumn("[Name]").AsString(1024).NotNullable()
                   .WithColumn("[Type]").AsString(20).NotNullable()
-                  .WithColumn("IsReusable").AsBoolean();
+                  .WithColumn("IsReusable").AsBoolean()
+                  .WithColumn("DateOfCreation").AsDateTime();
         }
 
         public override void Down()

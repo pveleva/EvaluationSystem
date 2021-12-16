@@ -10,7 +10,8 @@ namespace EvaluationSystem.Persistence.Migrations
             Create.Table("ModuleQuestion")
                   .WithColumn("Id").AsInt64().PrimaryKey().Identity()
                   .WithColumn("IdModule").AsInt64().ForeignKey("ModuleTemplate", "Id").NotNullable()
-                  .WithColumn("IdQuestion").AsInt64().ForeignKey("QuestionTemplate", "Id").NotNullable();
+                  .WithColumn("IdQuestion").AsInt64().ForeignKey("QuestionTemplate", "Id").NotNullable()
+                  .WithColumn("Position").AsInt64().NotNullable();
         }
 
         public override void Down()
