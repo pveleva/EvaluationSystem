@@ -9,7 +9,7 @@ namespace EvaluationSystem.Persistence.Migrations
         {
             Create.Table("Attestation")
                 .WithColumn("Id").AsInt64().PrimaryKey().Identity()
-                .WithColumn("IdForm").AsInt64().ForeignKey("FormTemplate", "Id").NotNullable()
+                .WithColumn("IdForm").AsInt64().ForeignKey("AttestationForm", "Id").NotNullable()
                 .WithColumn("IdUserToEvaluate").AsInt64().ForeignKey("User", "Id").NotNullable()
                 .WithColumn("CreateDate").AsDateTime2().NotNullable();
         }
