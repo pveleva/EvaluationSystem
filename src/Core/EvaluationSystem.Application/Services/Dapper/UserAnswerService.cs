@@ -5,27 +5,27 @@ using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Models.Forms;
-using EvaluationSystem.Application.Interfaces.IForm;
 using EvaluationSystem.Application.Interfaces.IUser;
-using EvaluationSystem.Application.Interfaces.IQuestion;
 using EvaluationSystem.Application.Interfaces.IUserAnswer;
 using EvaluationSystem.Application.Interfaces.IAttestation;
 using EvaluationSystem.Application.Models.AttestationAnswers;
+using EvaluationSystem.Application.Interfaces.IAttestationForm;
+using EvaluationSystem.Application.Interfaces.IAttestationQuestion;
 using EvaluationSystem.Application.Interfaces.IAttestationParticipant;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
     public class UserAnswerService : IUserAnswerService, IExceptionService
     {
-        private readonly IQuestionService _questionService;
-        private readonly IFormService _formService;
+        private readonly IAttestationQuestionService _questionService;
+        private readonly IAttestationFormService _formService;
         private readonly IUserRepository _userRepository;
         private readonly IAttestationRepository _attestationRepository;
         private readonly IAttestationService _attestationService;
         private readonly IAttestationParticipantRepository _attestationParticipantRepository;
         private readonly IUserAnswerRepository _userAnswerRepository;
         private readonly IUser _currentUser;
-        public UserAnswerService(IQuestionService questionService, IFormService formService, IUserRepository userRepository, IAttestationRepository attestationRepository,
+        public UserAnswerService(IAttestationQuestionService questionService, IAttestationFormService formService, IUserRepository userRepository, IAttestationRepository attestationRepository,
             IAttestationService attestationService, IAttestationParticipantRepository attestationParticipantRepository, IUserAnswerRepository userAnswerRepository, IUser currentUser)
         {
             _questionService = questionService;
@@ -46,8 +46,8 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             foreach (var ans in attestationAnswer)
             {
-                var module = form.ModulesDtos.Where(m => m.Id == ans.IdModuleTemplate).FirstOrDefault();
-                var question = module.QuestionsDtos.Where(q => q.Id == ans.IdQuestionTemplate).FirstOrDefault();
+                var module = form.ModulesDtos.Where(m => m.Id == ans.IdAttestationModule).FirstOrDefault();
+                var question = module.QuestionsDtos.Where(q => q.Id == ans.IdAttestationQuestion).FirstOrDefault();
 
                 if (question.Type == Domain.Entities.Type.TextField)
                 {
@@ -59,7 +59,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                 {
                     foreach (var a in question.AnswerText)
                     {
-                        if (a.Id == ans.IdAnswerTemplate)
+                        if (a.Id == ans.IdAttestationAnswer)
                         {
                             a.IsAnswered = 1;
                         }
@@ -84,9 +84,9 @@ namespace EvaluationSystem.Application.Services.Dapper
 
                 if (questionType == Domain.Entities.Type.TextField)
                 {
-                    attestationAnswer.IdModuleTemplate = answer.IdModuleTemplate;
-                    attestationAnswer.IdQuestionTemplate = answer.IdQuestionTemplate;
-                    attestationAnswer.IdAnswerTemplate = 0;
+                    attestationAnswer.IdAttestationModule = answer.IdModuleTemplate;
+                    attestationAnswer.IdAttestationQuestion = answer.IdQuestionTemplate;
+                    attestationAnswer.IdAttestationAnswer = 0;
                     attestationAnswer.TextAnswer = answer.AnswerText;
 
                     _userAnswerRepository.Create(attestationAnswer);
@@ -95,9 +95,9 @@ namespace EvaluationSystem.Application.Services.Dapper
                 {
                     foreach (var ans in answer.IdAnswerTemplates)
                     {
-                        attestationAnswer.IdModuleTemplate = answer.IdModuleTemplate;
-                        attestationAnswer.IdQuestionTemplate = answer.IdQuestionTemplate;
-                        attestationAnswer.IdAnswerTemplate = ans;
+                        attestationAnswer.IdAttestationModule = answer.IdModuleTemplate;
+                        attestationAnswer.IdAttestationQuestion = answer.IdQuestionTemplate;
+                        attestationAnswer.IdAttestationAnswer = ans;
                         attestationAnswer.TextAnswer = "";
 
                         _userAnswerRepository.Create(attestationAnswer);

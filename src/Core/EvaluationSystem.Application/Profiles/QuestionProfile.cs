@@ -17,7 +17,14 @@ namespace EvaluationSystem.Application.Profiles
             CreateMap<QuestionTemplate, GetQuestionsDto>();
             CreateMap<QuestionDto, QuestionTemplate>();
             CreateMap<QuestionDto, QuestionTemplate>();
-            CreateMap<QuestionDto, QuestionDto>();
+
+            CreateMap<AttestationQuestion, QuestionDto>();
+            CreateMap<CreateModuleQuestionDto, AttestationQuestion>();
+            CreateMap<UpdateQuestionDto, AttestationQuestion>();
+            CreateMap<UpdateCustomQuestionDto, AttestationQuestion>();
+            CreateMap<AttestationQuestion, GetQuestionsDto>();
+            CreateMap<QuestionDto, AttestationQuestion>();
+            CreateMap<QuestionDto, AttestationQuestion>();
         }
     }
 }

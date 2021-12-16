@@ -14,6 +14,10 @@ namespace EvaluationSystem.Application.Profiles
             CreateMap<CreateUpdateAnswerDto, AnswerTemplate>();
             CreateMap<CreateUpdateAnswerDto, AnswerDto>();
             CreateMap<GetQuestionsDto, AnswerDto>();
+
+            CreateMap<AttestationAnswer, AnswerDto>();
+            CreateMap<AnswerDto, AttestationAnswer>();
+            CreateMap<CreateUpdateAnswerDto, AttestationAnswer>();
         }
     }
 }

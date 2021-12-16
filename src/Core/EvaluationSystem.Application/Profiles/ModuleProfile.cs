@@ -10,6 +10,8 @@ namespace EvaluationSystem.Application.Profiles
         {
             CreateMap<UpdateModuleDto, ModuleTemplate>();
             CreateMap<GetModulesDto, ModuleTemplate>();
+
+            CreateMap<GetModulesDto, AttestationModule>();
         }
     }
 }

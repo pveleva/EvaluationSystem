@@ -11,6 +11,12 @@ namespace EvaluationSystem.Application.Profiles
             CreateMap<UpdateFormDto, FormTemplate>();
             CreateMap<FormTemplate, ExposeFormDto>();
             CreateMap<CreateGetFormDto, FormTemplate>();
+
+            CreateMap<UpdateFormDto, AttestationForm>();
+            CreateMap<AttestationForm, ExposeFormDto>();
+            CreateMap<CreateGetFormDto, AttestationForm>();
+
+            CreateMap<GetFormModuleQuestionAnswerDto, CreateGetFormDto>();
         }
     }
 }

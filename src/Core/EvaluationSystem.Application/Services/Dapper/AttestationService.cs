@@ -1,30 +1,38 @@
 ﻿using System;
+using AutoMapper;
 using System.Linq;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Interfaces;
 using EvaluationSystem.Application.Models.Users;
-using EvaluationSystem.Application.Interfaces.IUser;
 using EvaluationSystem.Application.Interfaces.IForm;
+using EvaluationSystem.Application.Interfaces.IUser;
 using EvaluationSystem.Application.Models.Attestations;
 using EvaluationSystem.Application.Interfaces.IAttestation;
 using EvaluationSystem.Application.Interfaces.IAttestationParticipant;
+using EvaluationSystem.Application.Interfaces.IAttestationForm;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
     public class AttestationService : IAttestationService, IExceptionService
     {
+        private readonly IMapper _mapper;
         private readonly IAttestationRepository _attestationRepository;
         private readonly IAttestationParticipantRepository _attestationParticipantRepository;
+        private readonly IAttestationFormService _attestationFormService;
         private readonly IFormRepository _formRepository;
+        private readonly IFormService _formService;
         private readonly IUserRepository _userRepository;
 
-        public AttestationService(IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository,
-            IFormRepository formRepository, IUserRepository userRepository)
+        public AttestationService(IMapper mapper, IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository,
+           IAttestationFormService attestationFormService, IFormRepository formRepository, IFormService formService, IUserRepository userRepository)
         {
+            _mapper = mapper;
             _attestationRepository = attestationRepository;
             _attestationParticipantRepository = attestationParticipantRepository;
+            _attestationFormService = attestationFormService;
             _formRepository = formRepository;
+            _formService = formService;
             _userRepository = userRepository;
         }
         public List<GetAttestationDto> GetAll()
@@ -72,6 +80,11 @@ namespace EvaluationSystem.Application.Services.Dapper
         public GetAttestationDto Create(CreateAttestationDto createAttestationDto)
         {
             ThrowExceptionWhenEntityDoNotExist(createAttestationDto.IdForm, _formRepository);
+
+            var formTemp = _formService.GetById(createAttestationDto.IdForm);
+            var attForm = _attestationFormService.Create(formTemp);
+            var attFormId = attForm.Id;
+
             int idUserToEvaluate = 0;
             int idUserParticipant = 0;
 
@@ -88,7 +101,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             int attestationId = _attestationRepository.Create(new Attestation()
             {
-                IdForm = createAttestationDto.IdForm,
+                IdForm = attFormId,
                 IdUserToEvaluate = idUserToEvaluate,
                 CreateDate = DateTime.Now
             });
@@ -100,7 +113,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                     IdAttestation = attestationId,
                     IdUserParticipant = idUserToEvaluate,
                     Status = Domain.Enums.Status.Open,
-                    Position = Domain.Enums.Position.Peer
+                    Position = Domain.Enums.ParticipantPosition.Peer
                 });
             }
 

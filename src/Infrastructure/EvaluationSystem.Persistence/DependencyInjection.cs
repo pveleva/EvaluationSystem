@@ -13,7 +13,13 @@ using EvaluationSystem.Application.Interfaces.IFormModule;
 using EvaluationSystem.Application.Interfaces.IUserAnswer;
 using EvaluationSystem.Application.Interfaces.IAttestation;
 using EvaluationSystem.Application.Interfaces.IModuleQuestion;
+using EvaluationSystem.Application.Interfaces.IAttestationForm;
+using EvaluationSystem.Application.Interfaces.IAttestationModule;
+using EvaluationSystem.Application.Interfaces.IAttestationAnswer;
+using EvaluationSystem.Application.Interfaces.IAttestationQuestion;
+using EvaluationSystem.Application.Interfaces.IAttestationFormModule;
 using EvaluationSystem.Application.Interfaces.IAttestationParticipant;
+using EvaluationSystem.Application.Interfaces.IAttestationModuleQuestion;
 
 namespace EvaluationSystem.Persistence
 {
@@ -32,11 +38,17 @@ namespace EvaluationSystem.Persistence
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddScoped<IAnswerRepository, AnswerRepository>();
+            services.AddScoped<IAttestationAnswerRepository, AttestationAnswerRepository>();
             services.AddScoped<IQuestionRepository, QuestionRepository>();
+            services.AddScoped<IAttestationQuestionRepository, AttestationQuestionRepository>();
             services.AddScoped<IModuleQuestionRepository, ModuleQuestionRepository>();
+            services.AddScoped<IAttestationModuleQuestionRepository, AttestationModuleQuestionRepository>();
             services.AddScoped<IModuleRepository, ModuleRepository>();
+            services.AddScoped<IAttestationModuleRepository, AttestationModuleRepository>();
             services.AddScoped<IFormModuleRepository, FormModuleRepository>();
+            services.AddScoped<IAttestationFormModuleRepository, AttestationFormModuleRepository>();
             services.AddScoped<IFormRepository, FormRepository>();
+            services.AddScoped<IAttestationFormRepository, AttestationFormRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAttestationRepository, AttestationRepository>();
             services.AddScoped<IAttestationParticipantRepository, AttestationParticipantRepository>();

@@ -1,6 +1,6 @@
 ﻿namespace EvaluationSystem.Domain.Enums
 {
-    public enum Position
+    public enum ParticipantPosition
     {
         Supervisor = 1,
         Peer = 2,

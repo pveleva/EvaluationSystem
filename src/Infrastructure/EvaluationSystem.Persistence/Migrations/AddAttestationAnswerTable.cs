@@ -13,8 +13,8 @@ namespace EvaluationSystem.Persistence.Migrations
                 .WithColumn("IdUserParticipant").AsInt64().ForeignKey("User", "Id").NotNullable()
                 .WithColumn("IdModuleTemplate").AsInt64().ForeignKey("ModuleTemplate", "Id").NotNullable()
                 .WithColumn("IdQuestionTemplate").AsInt64().ForeignKey("QuestionTemplate", "Id").NotNullable()
-                .WithColumn("IdAnswerTemplate").AsInt64().ForeignKey("AnswerTemplate", "Id").NotNullable()
-                .WithColumn("TextAnswer").AsString(255).NotNullable();
+                .WithColumn("IdAnswerTemplate").AsInt64().Nullable()
+                .WithColumn("TextAnswer").AsString(255).Nullable();
         }
         public override void Down()
         {

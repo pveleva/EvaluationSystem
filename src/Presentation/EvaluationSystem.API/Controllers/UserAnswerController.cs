@@ -7,10 +7,10 @@ namespace EvaluationSystem.API.Controllers
 {
     [Route("api/attestationAnswer")]
     [ApiController]
-    public class AttestationAnswerController : AuthorizeControllerBase
+    public class UserAnswerController : AuthorizeControllerBase
     {
         private IUserAnswerService _service;
-        public AttestationAnswerController(IUserAnswerService service)
+        public UserAnswerController(IUserAnswerService service)
         {
             _service = service;
         }

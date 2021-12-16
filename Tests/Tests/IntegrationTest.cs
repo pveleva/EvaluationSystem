@@ -17,7 +17,7 @@ namespace Tests
 {
     public class Tests
     {
-        private IQuestionService _questionService;
+        private IAttestationQuestionService _questionService;
         private const int ID = 1;
 
         [SetUp]

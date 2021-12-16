@@ -7,6 +7,6 @@ namespace EvaluationSystem.Domain.Entities
         public int IdAttestation { get; set; }
         public int IdUserParticipant { get; set; }
         public Status Status { get; set; }
-        public Position Position { get; set; }
+        public ParticipantPosition Position { get; set; }
     }
 }
