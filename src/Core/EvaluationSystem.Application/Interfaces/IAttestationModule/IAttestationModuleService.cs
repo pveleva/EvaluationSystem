@@ -8,5 +8,6 @@ namespace EvaluationSystem.Application.Interfaces.IAttestationModule
         List<GetModulesDto> GetAll();
         GetModulesDto GetById(int id);
         GetModulesDto Create(int formId, GetModulesDto form);
+        public void DeleteFromRepo(int id);
     }
 }

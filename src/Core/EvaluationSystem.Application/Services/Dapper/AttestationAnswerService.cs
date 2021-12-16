@@ -53,5 +53,9 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             return _mapper.Map<AnswerDto>(answer);
         }
+        public void Delete(int answerId)
+        {
+            _answerRepository.Delete(answerId);
+        }
     }
 }

@@ -31,6 +31,9 @@ namespace EvaluationSystem.Persistence.Dapper
             string deleteAttestationParticipants = @"DELETE FROM [AttestationParticipant] WHERE IdAttestation = @Id";
             Connection.Execute(deleteAttestationParticipants, new { Id = id }, Transaction);
 
+            string deleteAttestationAnswers = @"DELETE FROM [UserAnswer] WHERE IdAttestation = @Id";
+            Connection.Execute(deleteAttestationAnswers, new { Id = id }, Transaction);
+
             Connection.Delete<Attestation>(id, Transaction);
         }
     }

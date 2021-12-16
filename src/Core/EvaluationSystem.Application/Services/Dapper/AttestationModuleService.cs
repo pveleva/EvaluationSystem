@@ -6,9 +6,9 @@ using EvaluationSystem.Application.Answers;
 using EvaluationSystem.Application.Questions;
 using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Models.Modules;
-using EvaluationSystem.Application.Interfaces.IAttestationFormModule;
 using EvaluationSystem.Application.Interfaces.IAttestationModule;
 using EvaluationSystem.Application.Interfaces.IAttestationQuestion;
+using EvaluationSystem.Application.Interfaces.IAttestationFormModule;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -19,7 +19,8 @@ namespace EvaluationSystem.Application.Services.Dapper
         private IAttestationModuleRepository _moduleRepository;
         private IAttestationFormModuleRepository _formModuleRepository;
 
-        public AttestationModuleService(IMapper mapper, IAttestationQuestionService questionService, IAttestationModuleRepository moduleRepository, IAttestationFormModuleRepository formModuleRepository)
+        public AttestationModuleService(IMapper mapper, IAttestationQuestionService questionService, IAttestationModuleRepository moduleRepository, 
+            IAttestationFormModuleRepository formModuleRepository)
         {
             _mapper = mapper;
             _questionService = questionService;
@@ -145,6 +146,22 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             return GetById(moduleId);
         }
+        public void DeleteFromRepo(int id)
+        {
+            var moduleDto = GetById(id);
+            moduleDto.QuestionsDtos = _questionService.GetAll(id);
+
+            foreach (var question in moduleDto.QuestionsDtos)
+            {
+                if (question.Id != 0)
+                {
+                    _questionService.Delete(question.Id);
+                }
+            }
+
+            _moduleRepository.DeleteFromRepo(id);
+        }
+
     }
 }
 

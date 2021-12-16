@@ -8,5 +8,6 @@ namespace EvaluationSystem.Application.Interfaces.IAttestationForm
         List<CreateGetFormDto> GetAll();
         CreateGetFormDto GetById(int id);
         CreateGetFormDto Create(CreateGetFormDto form);
+        void DeleteFromRepo(int id);
     }
 }

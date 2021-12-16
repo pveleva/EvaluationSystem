@@ -38,5 +38,15 @@ namespace EvaluationSystem.Persistence.Dapper
                                             WHERE m.Id = @Id";
             return Connection.Query<GetFormModuleQuestionAnswerDto>(query, new { Id = id }, Transaction).AsList();
         }
+        public void DeleteFromRepo(int id)
+        {
+            string deleteFM = @"DELETE FROM AttestationFormModule WHERE IdModule = @Id";
+            Connection.Execute(deleteFM, new { Id = id }, Transaction);
+
+            string deleteMQ = @"DELETE FROM AttestationModuleQuestion WHERE IdModule = @Id";
+            Connection.Execute(deleteMQ, new { Id = id }, Transaction);
+
+            Connection.Delete<AttestationModule>(id, Transaction);
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace EvaluationSystem.Application.Interfaces.IAttestationAnswer
         List<AnswerDto> GetAll(int questionId);
         AnswerDto GetByID(int questionId, int answerId);
         AnswerDto Create(int questionId, AnswerDto answerDto);
+        void Delete(int answerId);
     }
 }

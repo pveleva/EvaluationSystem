@@ -8,5 +8,6 @@ namespace EvaluationSystem.Application.Interfaces.IAttestationModule
     {
         public List<GetFormModuleQuestionAnswerDto> GetAll();
         public List<GetFormModuleQuestionAnswerDto> GetByIDFromRepo(int id);
+        public void DeleteFromRepo(int id);
     }
 }

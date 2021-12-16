@@ -223,5 +223,9 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             return GetById(questionId);
         }
+        public void Delete(int id)
+        {
+            _questionRepository.DeleteFromRepo(id);
+        }
     }
 }

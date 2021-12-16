@@ -11,6 +11,7 @@ namespace EvaluationSystem.Application.Interfaces.IAttestationQuestion
         QuestionDto GetById(int id);
         QuestionDto Create(int moduleId, QuestionDto questionDto);
         QuestionDto Create(QuestionDto questionDto);
+        public void Delete(int id);
     }
 }
 

@@ -86,7 +86,6 @@ namespace EvaluationSystem.Application.Services.Dapper
 
             _answerRepository.Delete(answerId);
         }
-
         public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)
         {
             var entity = repository.GetByID(id);

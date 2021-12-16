@@ -144,7 +144,11 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public void DeleteFromRepo(int id)
         {
+            var formName = GetAll().Where(a => a.IdAttestation == id).FirstOrDefault().FormName;
+            var formId = _attestationFormService.GetAll().Where(f => f.Name == formName).FirstOrDefault().Id;
+
             _attestationRepository.DeleteFromRepo(id);
+            _attestationFormService.DeleteFromRepo(formId);
         }
 
         public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)
