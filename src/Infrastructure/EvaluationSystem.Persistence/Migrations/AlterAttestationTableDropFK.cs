@@ -2,7 +2,7 @@
 
 namespace EvaluationSystem.Persistence.Migrations
 {
-    //[Migration(202112151719)]
+    [Migration(202112151719)]
     public class AlterAttestationTableDropFK : Migration
     {
         public override void Up()
@@ -11,7 +11,7 @@ namespace EvaluationSystem.Persistence.Migrations
         }
         public override void Down()
         {
-            Execute.Sql("ALTER TABLE [Attestation] ADD FOREIGN KEY (IdForm) REFERENCES AttestationForm(Id);");
+            Execute.Sql("ALTER TABLE [Attestation] ADD FOREIGN KEY (IdForm) REFERENCES FormTemplate(Id);");
         }
     }
 }

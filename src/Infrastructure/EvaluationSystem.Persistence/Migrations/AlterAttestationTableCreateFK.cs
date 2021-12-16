@@ -2,7 +2,7 @@
 
 namespace EvaluationSystem.Persistence.Migrations
 {
-    //[Migration(202112151741)]
+    [Migration(202112151741)]
     public class AlterAttestationTableCreateFK : Migration
     {
         public override void Up()
