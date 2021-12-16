@@ -12,6 +12,7 @@ namespace EvaluationSystem.Application.Models.Attestations
             this.Participants = new HashSet<ExposeUserParticipantDto>();
         }
         public int IdAttestation { get; set; }
+        public int IdAttestationForm { get; set; }
         public string UsernameToEvaluate { get; set; }
         public string FormName { get; set; }
         public Status Status { get; set; }

@@ -39,10 +39,11 @@ namespace EvaluationSystem.Application.Services.Dapper
         {
             List<GetAttestationDtoFromRepo> attestationsRepo = _attestationRepository.GetAll();
 
-            List<GetAttestationDto> attestations = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameToEvaluate, x.FormName, x.CreateDate })
+            List<GetAttestationDto> attestations = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.IdAttestationForm, x.UsernameToEvaluate, x.FormName, x.CreateDate })
                     .Select(q => new GetAttestationDto()
                     {
                         IdAttestation = q.Key.IdAttestation,
+                        IdAttestationForm = q.Key.IdAttestationForm,
                         UsernameToEvaluate = q.Key.UsernameToEvaluate,
                         FormName = q.Key.FormName,
                         Participants = new List<ExposeUserParticipantDto>(),

@@ -2,6 +2,8 @@
 using EvaluationSystem.Application.Models.Forms;
 using EvaluationSystem.Application.Interfaces.IUserAnswer;
 using EvaluationSystem.Application.Models.AttestationAnswers;
+using EvaluationSystem.Application.Interfaces.IAttestationForm;
+using System.Linq;
 
 namespace EvaluationSystem.API.Controllers
 {
@@ -9,22 +11,24 @@ namespace EvaluationSystem.API.Controllers
     [ApiController]
     public class UserAnswerController : AuthorizeControllerBase
     {
-        private IUserAnswerService _service;
-        public UserAnswerController(IUserAnswerService service)
+        private IUserAnswerService _userAnswerService;
+        private IAttestationFormService _attestationFormService;
+        public UserAnswerController(IUserAnswerService userAnswerService, IAttestationFormService attestationFormService)
         {
-            _service = service;
+            _userAnswerService = userAnswerService;
+            _attestationFormService = attestationFormService;
         }
 
         [HttpGet("{idAttestation}")]
         public CreateGetFormDto GetAll(int idAttestation, string email)
         {
-            return _service.Get(idAttestation, email);
+            return _userAnswerService.Get(idAttestation, email);
         }
 
         [HttpPost()]
         public GetAttestationAnswerDto Create(CreateAttestationAnswerDto createAttestationAnswerDto)
         {
-            return _service.Create(createAttestationAnswerDto);
+            return _userAnswerService.Create(createAttestationAnswerDto);
         }
     }
 }
