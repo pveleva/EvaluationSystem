@@ -1,5 +1,4 @@
-﻿using EvaluationSystem.Domain.Entities;
-using System;
+﻿using System;
 
 namespace EvaluationSystem.Application.Questions
 {

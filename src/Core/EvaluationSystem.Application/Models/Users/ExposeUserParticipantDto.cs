@@ -6,6 +6,7 @@ namespace EvaluationSystem.Application.Models.Users
     {
         public int IdAttestation { get; set; }
         public string UsernameParticipant { get; set; }
+        public string EmailParticipant { get; set; }
         public Status Status { get; set; }
     }
 }

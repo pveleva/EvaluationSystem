@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using EvaluationSystem.Domain.Entities;
-using EvaluationSystem.Application.Exceptions;
 using EvaluationSystem.Application.Interfaces;
 
 namespace EvaluationSystem.Application.Middlewares
@@ -43,9 +42,6 @@ namespace EvaluationSystem.Application.Middlewares
 
             switch (ex)
             {
-                case HttpException httpException:
-                    errors.Add(new Error { Code = (int)httpException.StatusCode, ErrorMessage = httpException.Message });
-                    break;
                 case NullReferenceException nullReferenceException:
                     errors.Add(new Error { Code = 404, ErrorMessage = nullReferenceException.Message });
                     break;

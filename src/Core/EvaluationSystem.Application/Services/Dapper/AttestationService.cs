@@ -9,8 +9,8 @@ using EvaluationSystem.Application.Interfaces.IForm;
 using EvaluationSystem.Application.Interfaces.IUser;
 using EvaluationSystem.Application.Models.Attestations;
 using EvaluationSystem.Application.Interfaces.IAttestation;
-using EvaluationSystem.Application.Interfaces.IAttestationParticipant;
 using EvaluationSystem.Application.Interfaces.IAttestationForm;
+using EvaluationSystem.Application.Interfaces.IAttestationParticipant;
 
 namespace EvaluationSystem.Application.Services.Dapper
 {
@@ -50,11 +50,12 @@ namespace EvaluationSystem.Application.Services.Dapper
                         CreateDate = q.Key.CreateDate
                     }).ToList();
 
-            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameParticipant, x.Status })
+            List<ExposeUserParticipantDto> participants = attestationsRepo.GroupBy(x => new { x.IdAttestation, x.UsernameParticipant, x.EmailParticipant, x.Status })
                     .Select(q => new ExposeUserParticipantDto()
                     {
                         IdAttestation = q.Key.IdAttestation,
                         UsernameParticipant = q.Key.UsernameParticipant,
+                        EmailParticipant = q.Key.EmailParticipant,
                         Status = q.Key.Status
                     }).ToList();
 

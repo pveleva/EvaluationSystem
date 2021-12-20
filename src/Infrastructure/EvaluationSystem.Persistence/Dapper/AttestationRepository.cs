@@ -16,7 +16,8 @@ namespace EvaluationSystem.Persistence.Dapper
 
         public List<GetAttestationDtoFromRepo> GetAll()
         {
-            string query = @"SELECT  a.Id AS IdAttestation, f.Id AS IdAttestationForm, u.[Name] AS UsernameToEvaluate, f.[Name] AS FormName, up.[Name] AS UsernameParticipant, ap.[Status], a.CreateDate
+            string query = @"SELECT  a.Id AS IdAttestation, f.Id AS IdAttestationForm, u.[Name] AS UsernameToEvaluate, f.[Name] AS FormName, up.[Name] AS UsernameParticipant, 
+                                     up.[Email] AS EmailParticipant, ap.[Status], a.CreateDate
                                      FROM Attestation AS a
                                      JOIN [User] AS u ON u.Id = a.IdUserToEvaluate
                                      JOIN FormTemplate AS f ON f.Id = a.IdForm

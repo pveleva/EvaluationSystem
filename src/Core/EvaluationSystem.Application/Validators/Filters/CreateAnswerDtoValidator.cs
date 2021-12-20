@@ -1,5 +1,5 @@
-﻿using EvaluationSystem.Application.Answers;
-using FluentValidation;
+﻿using FluentValidation;
+using EvaluationSystem.Application.Answers;
 
 namespace EvaluationSystem.Application.Validators
 {
