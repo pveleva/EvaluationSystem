@@ -19,7 +19,7 @@ namespace EvaluationSystem.API.Controllers
             _attestationFormService = attestationFormService;
         }
 
-        [HttpGet("{idAttestation}")]
+        [HttpGet("{idAttestation}/{email}")]
         public CreateGetFormDto GetAll(int idAttestation, string email)
         {
             return _userAnswerService.Get(idAttestation, email);
