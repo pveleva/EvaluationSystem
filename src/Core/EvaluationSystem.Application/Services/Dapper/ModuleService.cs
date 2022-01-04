@@ -170,10 +170,9 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public void DeleteFromRepo(int id)
         {
-            var moduleDto = GetById(id);
-            moduleDto.QuestionsDtos = _questionService.GetAll(id);
+            var questions = _questionService.GetAll(id);
 
-            foreach (var question in moduleDto.QuestionsDtos)
+            foreach (var question in questions)
             {
                 if (question.Id != 0)
                 {
@@ -181,8 +180,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                 }
             }
 
-            _moduleRepository.DeleteFromFormModule(id);
-            _moduleRepository.Delete(id);
+            _moduleRepository.DeleteFromRepo(id);
         }
 
         public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)

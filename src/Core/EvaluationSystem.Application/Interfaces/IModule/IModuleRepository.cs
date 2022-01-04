@@ -8,7 +8,7 @@ namespace EvaluationSystem.Application.Interfaces.IModule
     {
         public List<GetFormModuleQuestionAnswerDto> GetAll();
         public List<GetFormModuleQuestionAnswerDto> GetByIDFromRepo(int id);
-        public void DeleteFromFormModule(int id);
         public void DeleteFromModuleQuestion(int id);
+        public void DeleteFromRepo(int id);
     }
 }
