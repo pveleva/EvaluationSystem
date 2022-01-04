@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using EvaluationSystem.Application.Interfaces.IUser;
+using EvaluationSystem.Domain.Entities;
 
 namespace EvaluationSystem.Application.Middlewares
 {
@@ -16,6 +17,7 @@ namespace EvaluationSystem.Application.Middlewares
         public async Task Invoke(HttpContext context, IUserRepository userRepository, IUser currentUser)
         {
             _userRepository = userRepository;
+            
             var userEmail = context.User.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
 
             var user = _userRepository.GetList().FirstOrDefault(u => u.Email == userEmail);
@@ -23,7 +25,9 @@ namespace EvaluationSystem.Application.Middlewares
             if (user == null)
             {
                 var username = context.User.Claims.FirstOrDefault(c => c.Type == "name")?.Value;
-                var userId = _userRepository.Create(new Domain.Entities.User() { Email = userEmail, Name = username });
+                user = new User { Name = username, Email = userEmail };
+                var id = userRepository.Create(user);
+                user.Id = id;
             }
 
             currentUser.Id = user.Id;

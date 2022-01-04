@@ -135,9 +135,13 @@ namespace EvaluationSystem.Application.Services.Dapper
             int moduleId = _moduleRepository.Create(module);
             module.Id = moduleId;
 
+            GetModulesDto moduleToReturn = _mapper.Map<GetModulesDto>(module);
+            moduleToReturn.QuestionsDtos = new List<QuestionDto>();
+
             foreach (var questionDto in moduleDto.QuestionsDtos)
             {
-                _questionService.Create(moduleId, questionDto);
+                var a = _questionService.Create(moduleId, questionDto);
+                moduleToReturn.QuestionsDtos.Add(a);
             }
 
             _formModuleRepository.Create(new FormModule()

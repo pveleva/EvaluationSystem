@@ -123,9 +123,12 @@ namespace EvaluationSystem.Application.Services.Dapper
                 }
             }
 
+            QuestionDto questionToReturn = _mapper.Map<QuestionDto>(question);
+            questionToReturn.AnswerText = new List<AnswerDto>();
+
             foreach (var answer in questionDto.AnswerText)
             {
-                _answerService.Create(questionId, answer);
+                questionToReturn.AnswerText.Add(_answerService.Create(questionId, answer));
             }
 
             _moduleQuestionRepository.Create(new ModuleQuestion()
@@ -135,7 +138,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                 Position = questionDto.Position != 0 ? questionDto.Position : 1
             });
 
-            return GetById(moduleId, questionId);
+            return questionToReturn;
         }
 
         public QuestionDto Update(int moduleId, int questionId, UpdateCustomQuestionDto questionDto)
@@ -243,13 +246,15 @@ namespace EvaluationSystem.Application.Services.Dapper
                 }
             }
 
+            QuestionDto questionToReturn = _mapper.Map<QuestionDto>(question);
+            questionToReturn.AnswerText = new List<AnswerDto>();
+
             foreach (var answer in questionDto.AnswerText)
             {
-                answer.IdQuestion = questionId;
-                _answerService.Create(questionId, answer);
+                questionToReturn.AnswerText.Add(_answerService.Create(questionId, answer));
             }
 
-            return GetById(questionId);
+            return questionToReturn;
         }
 
         public QuestionDto Update(int id, UpdateQuestionDto questionDto)

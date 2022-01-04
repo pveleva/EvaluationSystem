@@ -16,10 +16,10 @@ namespace EvaluationSystem.Persistence.Migrations
         public override void Down()
         {
             Alter.Table("QuestionTemplate")
-                .AlterColumn("[Name]").AsString(1024).NotNullable();
+                .AlterColumn("[Name]").AsString(255).NotNullable();
 
             Alter.Table("ModuleTemplate")
-                .AlterColumn("[Name]").AsString(1024).NotNullable();
+                .AlterColumn("[Name]").AsString(255).NotNullable();
         }
     }
 }
