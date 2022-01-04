@@ -56,13 +56,5 @@ namespace EvaluationSystem.Persistence.Dapper
                                             WHERE q.Id = @Id AND q.IsReusable = 1";
             return Connection.Query<GetQuestionsDto>(query, new { Id = questionId }, Transaction).AsList();
         }
-
-        public void DeleteFromRepo(int id)
-        {
-            string deleteAnswers = @"DELETE FROM AnswerTemplate WHERE IdQuestion = @Id";
-            Connection.Execute(deleteAnswers, new { Id = id }, Transaction);
-
-            Connection.Delete<QuestionTemplate>(id, Transaction);
-        }
     }
 }

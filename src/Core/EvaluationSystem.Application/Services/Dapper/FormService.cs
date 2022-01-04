@@ -194,17 +194,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public void DeleteFromRepo(int id)
         {
-            var form = GetById(id);
-
-            foreach (var module in form.ModulesDtos)
-            {
-                if (module.Id != 0)
-                {
-                    _moduleService.DeleteFromRepo(module.Id);
-                }
-            }
-
-            _formRepository.DeleteFromRepo(id);
+            _formRepository.Delete(id);
         }
 
         public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)

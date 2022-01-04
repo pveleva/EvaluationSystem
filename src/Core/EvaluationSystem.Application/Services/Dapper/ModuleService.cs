@@ -170,17 +170,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public void DeleteFromRepo(int id)
         {
-            var questions = _questionService.GetAll(id);
-
-            foreach (var question in questions)
-            {
-                if (question.Id != 0)
-                {
-                    _questionService.Delete(question.Id);
-                }
-            }
-
-            _moduleRepository.DeleteFromRepo(id);
+            _moduleRepository.Delete(id);
         }
 
         public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)

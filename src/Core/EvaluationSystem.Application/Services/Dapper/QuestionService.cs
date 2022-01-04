@@ -271,8 +271,7 @@ namespace EvaluationSystem.Application.Services.Dapper
 
         public void Delete(int id)
         {
-            _moduleRepository.DeleteFromModuleQuestion(id);
-            _questionRepository.DeleteFromRepo(id);
+            _questionRepository.Delete(id);
         }
 
         public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)

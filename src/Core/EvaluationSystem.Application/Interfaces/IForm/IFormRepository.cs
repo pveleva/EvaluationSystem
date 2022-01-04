@@ -8,6 +8,5 @@ namespace EvaluationSystem.Application.Interfaces.IForm
     {
         public List<GetFormModuleQuestionAnswerDto> GetAll();
         public List<GetFormModuleQuestionAnswerDto> GetByIDFromRepo(int id);
-        public void DeleteFromRepo(int id);
     }
 }
