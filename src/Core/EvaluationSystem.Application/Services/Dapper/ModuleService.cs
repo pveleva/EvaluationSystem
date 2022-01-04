@@ -151,7 +151,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                 Position = moduleDto.Position != 0 ? moduleDto.Position : 1
             });
 
-            return GetById(moduleId);
+            return moduleToReturn;
         }
         public GetModulesDto Update(int id, UpdateModuleDto moduleDto)
         {
@@ -177,11 +177,13 @@ namespace EvaluationSystem.Application.Services.Dapper
             {
                 if (question.Id != 0)
                 {
+                    _moduleRepository.DeleteFromModuleQuestion(question.Id);
                     _questionService.Delete(question.Id);
                 }
             }
 
-            _moduleRepository.DeleteFromRepo(id);
+            _moduleRepository.DeleteFromFormModule(id);
+            _moduleRepository.Delete(id);
         }
 
         public void ThrowExceptionWhenEntityDoNotExist<T>(int id, IGenericRepository<T> repository)

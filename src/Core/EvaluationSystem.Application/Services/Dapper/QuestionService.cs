@@ -155,7 +155,7 @@ namespace EvaluationSystem.Application.Services.Dapper
                 _moduleQuestionRepository.UpdateFromRepo(moduleId, questionId, questionDto.Position);
             }
 
-            return GetById(moduleId, questionId);
+            return _mapper.Map<QuestionDto>(questionToUpdate);
         }
 
         public List<QuestionDto> GetAll()
@@ -266,10 +266,12 @@ namespace EvaluationSystem.Application.Services.Dapper
             questionToUpdate.Id = id;
             _questionRepository.Update(questionToUpdate);
 
-            return GetById(id);
+            return _mapper.Map<QuestionDto>(questionToUpdate);
         }
+
         public void Delete(int id)
         {
+            _moduleRepository.DeleteFromModuleQuestion(id);
             _questionRepository.DeleteFromRepo(id);
         }
 
