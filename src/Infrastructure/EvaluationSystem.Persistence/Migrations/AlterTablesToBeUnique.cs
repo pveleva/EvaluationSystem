@@ -8,10 +8,10 @@ namespace EvaluationSystem.Persistence.Migrations
         public override void Up()
         {
             Alter.Table("QuestionTemplate")
-                .AlterColumn("[Name]").AsString(1024).Unique().NotNullable();
+                .AlterColumn("[Name]").AsString(255).Unique().NotNullable();
 
             Alter.Table("ModuleTemplate")
-                .AlterColumn("[Name]").AsString(1024).Unique().NotNullable();
+                .AlterColumn("[Name]").AsString(255).Unique().NotNullable();
         }
         public override void Down()
         {
