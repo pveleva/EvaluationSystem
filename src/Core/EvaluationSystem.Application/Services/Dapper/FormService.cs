@@ -30,7 +30,7 @@ namespace EvaluationSystem.Application.Services.Dapper
         {
             List<GetFormModuleQuestionAnswerDto> formsRepo = _formRepository.GetAll();
 
-            List<CreateGetFormDto> forms = formsRepo.GroupBy(x => new { x.IdForm, x.NameForm})
+            List<CreateGetFormDto> forms = formsRepo.GroupBy(x => new { x.IdForm, x.NameForm })
                 .Select(q => new CreateGetFormDto()
                 {
                     Id = q.Key.IdForm,
@@ -156,9 +156,11 @@ namespace EvaluationSystem.Application.Services.Dapper
                 }
             }
 
-            if (forms.FirstOrDefault().ModulesDtos != null)
+            var form = forms.FirstOrDefault();
+
+            if (form.ModulesDtos.Any(m => m.IdForm == form.Id && m.Id != 0))
             {
-                forms.FirstOrDefault().ModulesDtos = modules;
+                form.ModulesDtos = modules.Where(m => m.IdForm == form.Id).ToList();
             }
 
             return forms.FirstOrDefault();
