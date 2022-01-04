@@ -177,7 +177,6 @@ namespace EvaluationSystem.Application.Services.Dapper
             {
                 if (question.Id != 0)
                 {
-                    _moduleRepository.DeleteFromModuleQuestion(question.Id);
                     _questionService.Delete(question.Id);
                 }
             }
