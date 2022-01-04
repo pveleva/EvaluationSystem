@@ -43,9 +43,6 @@ namespace EvaluationSystem.Persistence.Dapper
 
         public void DeleteFromRepo(int id)
         {
-            string delete = @"DELETE FROM FormModule WHERE IdForm = @Id";
-            Connection.Execute(delete, new { Id = id }, Transaction);
-
             Connection.Delete<FormTemplate>(id, Transaction);
         }
 
