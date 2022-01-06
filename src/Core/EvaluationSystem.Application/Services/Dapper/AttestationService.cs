@@ -1,5 +1,4 @@
 ﻿using System;
-using AutoMapper;
 using System.Linq;
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
@@ -16,7 +15,6 @@ namespace EvaluationSystem.Application.Services.Dapper
 {
     public class AttestationService : IAttestationService, IExceptionService
     {
-        private readonly IMapper _mapper;
         private readonly IAttestationRepository _attestationRepository;
         private readonly IAttestationParticipantRepository _attestationParticipantRepository;
         private readonly IAttestationFormService _attestationFormService;
@@ -24,10 +22,9 @@ namespace EvaluationSystem.Application.Services.Dapper
         private readonly IFormService _formService;
         private readonly IUserRepository _userRepository;
 
-        public AttestationService(IMapper mapper, IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository,
+        public AttestationService(IAttestationRepository attestationRepository, IAttestationParticipantRepository attestationParticipantRepository,
            IAttestationFormService attestationFormService, IFormRepository formRepository, IFormService formService, IUserRepository userRepository)
         {
-            _mapper = mapper;
             _attestationRepository = attestationRepository;
             _attestationParticipantRepository = attestationParticipantRepository;
             _attestationFormService = attestationFormService;

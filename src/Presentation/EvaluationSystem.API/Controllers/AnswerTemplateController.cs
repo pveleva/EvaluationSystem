@@ -5,12 +5,12 @@ using EvaluationSystem.Application.Answers.Dapper;
 
 namespace EvaluationSystem.API.Controllers
 {
-    [Route("api/form/{formId}/module/{moduleId}/question/{questionId}/answer")]
+    [Route("api/question/{questionId}/answer")]
     [ApiController]
-    public class AnswerController : AuthorizeControllerBase
+    public class AnswerTemplateController : AuthorizeControllerBase
     {
         private IAnswerService _service;
-        public AnswerController(IAnswerService service)
+        public AnswerTemplateController(IAnswerService service)
         {
             _service = service;
         }

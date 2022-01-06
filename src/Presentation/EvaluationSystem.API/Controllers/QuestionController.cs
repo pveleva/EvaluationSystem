@@ -5,7 +5,7 @@ using EvaluationSystem.Application.Interfaces.IQuestion;
 
 namespace EvaluationSystem.API.Controllers
 {
-    [Route("api/question")]
+    [Route("api/module/{moduleId}/question")]
     [ApiController]
     public class QuestionController : AuthorizeControllerBase
     {
@@ -16,27 +16,27 @@ namespace EvaluationSystem.API.Controllers
         }
 
         [HttpGet()]
-        public List<QuestionDto> GetAll()
+        public List<QuestionDto> GetAll(int moduleId)
         {
-            return _service.GetAll();
+            return _service.GetAll(moduleId);
         }
 
         [HttpGet("{questionId}")]
-        public QuestionDto GetById(int questionId)
+        public QuestionDto GetById(int moduleId, int questionId)
         {
-            return _service.GetById(questionId);
+            return _service.GetById(moduleId, questionId);
         }
 
-        [HttpPost]
-        public QuestionDto Create(QuestionDto questionDto)
+        [HttpPost()]
+        public QuestionDto CreateCustom(int moduleId, QuestionDto questionDto)
         {
-            return _service.Create(questionDto);
+            return _service.Create(moduleId, questionDto);
         }
 
         [HttpPut("{questionId}")]
-        public QuestionDto Update(int questionId, UpdateQuestionDto questionDto)
+        public QuestionDto Update(int moduleId, int questionId, UpdateCustomQuestionDto questionDto)
         {
-            return _service.Update(questionId, questionDto);
+            return _service.Update(moduleId, questionId, questionDto);
         }
 
         [HttpDelete("{questionId}")]

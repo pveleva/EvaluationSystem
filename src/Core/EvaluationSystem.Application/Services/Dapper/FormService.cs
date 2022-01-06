@@ -156,11 +156,12 @@ namespace EvaluationSystem.Application.Services.Dapper
                 }
             }
 
-            var form = forms.FirstOrDefault();
-
-            if (form.ModulesDtos.Any(m => m.IdForm == form.Id && m.Id != 0))
+            foreach (var form in forms)
             {
-                form.ModulesDtos = modules.Where(m => m.IdForm == form.Id).ToList();
+                if (modules.Any(m => m.IdForm == form.Id && m.Id != 0))
+                {
+                    form.ModulesDtos = modules.Where(m => m.IdForm == form.Id).ToList();
+                }
             }
 
             return forms.FirstOrDefault();
