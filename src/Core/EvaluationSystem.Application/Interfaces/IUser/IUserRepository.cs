@@ -6,6 +6,6 @@ namespace EvaluationSystem.Application.Interfaces.IUser
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        public List<ExposeUserDto> GetUsersToEvaluate(string email);
+        public IEnumerable<ExposeUserDto> GetUsersToEvaluate(string email);
     }
 }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using EvaluationSystem.Domain.Entities;
 using EvaluationSystem.Application.Interfaces;
-using EvaluationSystem.Application.Interfaces.IUser;
 using EvaluationSystem.Application.Models.Users;
+using EvaluationSystem.Application.Interfaces.IUser;
 
 namespace EvaluationSystem.Persistence.Dapper
 {
@@ -14,7 +14,7 @@ namespace EvaluationSystem.Persistence.Dapper
         {
         }
 
-        public List<ExposeUserDto> GetUsersToEvaluate(string email)
+        public IEnumerable<ExposeUserDto> GetUsersToEvaluate(string email)
         {
             string query = @"SELECT a.Id AS IdAttestation, a.IdForm AS IdForm, u.[Email] FROM [USER] AS u 
 									JOIN [Attestation] AS a ON u.Id = a.IdUserToEvaluate
