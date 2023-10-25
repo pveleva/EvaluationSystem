@@ -1,0 +1,32 @@
+version: '3.4'
+
+networks:
+  evaluationsystemapp:
+
+services:
+  sqlserverdb:
+    container_name: sql-server
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "+pk3pNh}cNs_MF8!"
+    networks:
+      evaluationsystemapp:
+
+  evaluationsystem.api:
+    container_name: evaluation-system-api
+    image: ${DOCKER_REGISTRY-}evaluationsystemapi
+    build:
+      context: .
+      dockerfile: src/Presentation/EvaluationSystem.API/Dockerfile
+    ports:
+      - 5000:80
+      - 5001:443
+    depends_on:
+      - sqlserverdb
+    environment:
+      DB_HOST: "sqlserverdb"
+      DB_NAME: "EvaluationSystemDocker"
+      DB_SA_PASSWORD: "+pk3pNh}cNs_MF8!"
+    networks:
+      evaluationsystemapp:
